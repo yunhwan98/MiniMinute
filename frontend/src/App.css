@@ -2,6 +2,214 @@
   text-align: center;
 }
 
+.header {
+  background-color: #C8BFE7;
+  position: fixed;
+  width: 100%;
+  height: 60px;
+  left: 0;
+  top: 0;
+  z-index: 3;
+}
+
+.header-content {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+}
+
+.header-link {
+  text-decoration: none;
+  color: white;
+}
+
+.header-link:hover {
+  color: #FFF200;
+}
+
+.footer-link {
+  text-decoration: none;
+  color: #6c757d;
+}
+
+.footer-link:hover {
+  color: #C8BFE7;
+}
+
+.logo {
+  margin-left: 30px;
+  font-weight: bold;
+  font-size: 25px;
+}
+
+.search-log {
+  margin-right: 10px;
+}
+
+.header-input {
+  border-radius: 7px;
+  border-color: transparent;
+  height: 35px;
+  width: 250px;
+}
+
+.search-btn {
+  border: none;
+  background-color: transparent;
+}
+
+.sidebar {
+  position: fixed;
+  padding: 10px 35px 0;
+  background-color: #B5ADD1;
+  /*border-right: 4px solid rgba(200, 191, 231);*/
+  margin-right: 0;
+  height: 100%;
+  color: white;
+}
+
+.profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 5px;
+}
+
+.profile-btn{
+  background-color: transparent;
+  color: #ffffff;
+  border: 2px solid #ffffff;
+  border-radius: 0.25rem;
+  width: 150px;
+  height: 35px;
+  font-weight: 550;
+}
+
+.profile-btn:hover {
+  color: #fff200;
+  border: 2px solid #fff200;
+}
+
+.directory {
+  padding: 30px 10px 0;
+  list-style: none;
+  line-height: 35px;
+  font-size: 17px;
+}
+
+.directory-link {
+  text-decoration: none;
+  padding-left: 5px;
+  color: white;
+}
+
+.directory-link:hover {
+  color: #fff200;
+}
+
+.myDirectory {
+  padding: 0 0 0 25px;
+  list-style: none;
+  line-height: 30px;
+  font-size: 17px;
+}
+
+.main {
+  display: flex;
+  flex-direction: row;
+  padding-top: 60px;
+}
+
+.article{
+  padding-left: 225px;
+  width: 100%;
+}
+
+.log-list {
+  padding: 15px 0 0 25px;
+}
+
+.directory-name {
+  display: flex;
+}
+
+#card-override {
+  border: 1px solid #C8BFE7;
+}
+
+.card-link {
+  text-decoration: none;
+  color: black;
+  transform: scale(1);
+  -webkit-transform: scale(1);
+  -moz-transform: scale(1);
+  -ms-transform: scale(1);
+  -o-transform: scale(1);
+  transition: all 0.3s ease-in-out;
+}
+
+.card-link:hover {
+  background-color: #C8BFE7;
+  color: #ffffff;
+  transform: scale(1.01);
+  -webkit-transform: scale(1.01);
+  -moz-transform: scale(1.01);
+  -ms-transform: scale(1.01);
+  -o-transform: scale(1.01);
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.fav, .recent, .my {
+  margin-bottom: 25px;
+}
+
+.my-list {
+  border: 1px solid #C8BFE7;
+  border-radius: 0.25rem;
+  margin-right: 10px;
+  width: 100px;
+  height: 30px;
+  background-color: transparent;
+}
+
+.my-list:hover {
+  border: 1px solid #ffffff;
+  color: #ffffff;
+  background-color: #C8BFE7;
+}
+
+.footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 85%;
+  height: 100px;
+  margin-top: auto;
+  padding-left: 120px;
+}
+
+.footer-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 15px 0;
+  color: #6c757d;
+  font-size: 15px;
+  width: 100%;
+}
+
+.footer-hr {
+  width: 100%;
+}
+
+.footer-li {
+  float: left;
+  margin-right: 15px;
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;
