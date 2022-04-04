@@ -24,5 +24,7 @@ from user import views
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
     path('users/', views.users_list),
+    path('users/<int:pk>/', views.users),
+    path('signin/',views.signin),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ]
