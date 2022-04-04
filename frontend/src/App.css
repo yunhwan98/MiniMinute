@@ -3,7 +3,7 @@
 }
 
 .header {
-  background-color: #C8BFE7;
+  background-color: #ffffff;
   position: fixed;
   width: 100%;
   height: 60px;
@@ -22,7 +22,7 @@
 
 .header-link {
   text-decoration: none;
-  color: white;
+  color: #C8BFE7;
 }
 
 .header-link:hover {
@@ -63,11 +63,40 @@
 .sidebar {
   position: fixed;
   padding: 10px 35px 0;
-  background-color: #B5ADD1;
+  background-color: #ffffff;
   /*border-right: 4px solid rgba(200, 191, 231);*/
   margin-right: 0;
   height: 100%;
-  color: white;
+  color: #AEA7C9;
+}
+
+.setting-btn {
+  background-color: transparent;
+  border: none;
+  color: #AEA7C9;
+}
+
+.menu {
+  background: #fff;
+  border-radius: 8px;
+  position: absolute;
+  top: 30px;
+  right: 0;
+  width: 150px;
+  text-align: center;
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-20px);
+  transition: opacity 0.4s ease, transform 0.4s ease, visibility 0.4s;
+  padding: 10px;
+  list-style: none;
+}
+
+.menu.active {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
 }
 
 .profile {
@@ -77,19 +106,19 @@
   padding-top: 5px;
 }
 
-.profile-btn{
+.new-btn{
   background-color: transparent;
-  color: #ffffff;
-  border: 2px solid #ffffff;
+  color: #C8BFE7;
+  border: 2px solid #AEA7C9;
   border-radius: 0.25rem;
   width: 150px;
   height: 35px;
   font-weight: 550;
 }
 
-.profile-btn:hover {
-  color: #fff200;
-  border: 2px solid #fff200;
+.new-btn:hover {
+  color: #FFF200;
+  border: 2px solid #FFF200;
 }
 
 .directory {
@@ -102,7 +131,7 @@
 .directory-link {
   text-decoration: none;
   padding-left: 5px;
-  color: white;
+  color: #AEA7C9;
 }
 
 .directory-link:hover {
@@ -123,7 +152,7 @@
 }
 
 .article{
-  padding-left: 225px;
+  padding-left: 235px;
   width: 100%;
 }
 
@@ -133,6 +162,7 @@
 
 .directory-name {
   display: flex;
+  font-weight: bold;
 }
 
 #card-override {
