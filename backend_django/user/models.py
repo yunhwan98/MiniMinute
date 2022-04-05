@@ -46,6 +46,16 @@ class User(AbstractBaseUser):
         unique=True,
         default=''
     )
+    first_name = models.CharField(
+        max_length=5,
+        blank=True,
+        default=""
+    )
+    last_name = models.CharField(
+        max_length=5,
+        blank=True,
+        default=""
+    )
     user_sign_up_date = models.DateTimeField(
         verbose_name="user's Date and time of membership",
         auto_now_add=True

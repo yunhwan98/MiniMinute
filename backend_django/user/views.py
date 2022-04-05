@@ -1,5 +1,4 @@
 from django.contrib.auth import authenticate
-from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
@@ -10,7 +9,9 @@ from .serializers import UserSerializer
 
 # Create your views here.
 
-#유저 전체 목록
+# 수정 필요-------------------------------------
+
+# 유저 전체 목록
 @csrf_exempt
 def user_list(request):
     if request.method == 'GET':
@@ -26,7 +27,8 @@ def user_list(request):
             return JsonResponse(serializer.data, status=201)
         return JsonResponse(serializer.errors, status=400)
 
-#유저 단일 목록
+
+# 유저 단일 목록
 @csrf_exempt
 def user(request, pk):
     obj = User.objects.get(pk=pk)
@@ -35,7 +37,6 @@ def user(request, pk):
         serializer = UserSerializer(obj)
         return JsonResponse(serializer.data, safe=False)
 
-    #수정 필요-------------------------------------
     elif request.method == 'PUT':
         data = JSONParser().parse(request)
         serializer = UserSerializer(obj, data=data)
@@ -43,4 +44,7 @@ def user(request, pk):
             serializer.save()
             return JsonResponse(serializer.data, status=201)
         return JsonResponse(serializer.errors, status=400)
-    #수정 필요-------------------------------------
+
+
+# 수정 필요-------------------------------------
+
