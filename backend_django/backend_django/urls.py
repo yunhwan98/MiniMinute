@@ -20,9 +20,15 @@ from rest_framework import routers, serializers, viewsets
 from user import views
 
 
+
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
-    path('users/', views.users_list),
-    path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
+    path('users/', views.user_list),
+    path('users/<int:pk>/', views.user),
+
+    #rest-auth
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    path('rest-auth/', include('rest_auth.urls')),
+    path('rest-auth/signup/', include('rest_auth.registration.urls'))
 ]
