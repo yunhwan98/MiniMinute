@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User
+from .models import User, Directory
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -7,3 +7,9 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ['id', 'email', 'user_profile', 'password', 'username', 'user_sign_up_date',
                   'user_access_date']
+
+
+class DirectorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Directory
+        fields = ['dr_id', 'dr_name', 'dr_pid', 'user_id']

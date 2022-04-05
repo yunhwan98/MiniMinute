@@ -1,10 +1,13 @@
 from django.contrib.auth import authenticate
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from rest_framework.parsers import JSONParser
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
-from .models import User
-from .serializers import UserSerializer
+from .models import User, Directory
+from .serializers import UserSerializer, DirectorySerializer
 
 
 # Create your views here.
@@ -48,3 +51,14 @@ def user(request, pk):
 
 # 수정 필요-------------------------------------
 
+@api_view(['GET'])
+@permission_classes((IsAuthenticated, ))
+@authentication_classes((JSONWebTokenAuthentication,))
+def directorys(request):
+    dirs = Directory.objects.all()
+    serializer = DirectorySerializer(dirs, many=True)
+    return JsonResponse(serializer.data, safe=False)
+
+
+#https://dev-yakuza.posstree.com/ko/django/response-model-to-json/
+#https://dev-yakuza.posstree.com/ko/django/jwt/

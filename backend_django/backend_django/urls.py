@@ -13,23 +13,33 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-
+from django.contrib import admin
 from django.urls import path, include
 from django.contrib.auth.models import User
 from rest_auth.registration.views import RegisterView
 from rest_auth.views import LoginView, LogoutView, PasswordChangeView
 from rest_framework import routers, serializers, viewsets
+from rest_framework_jwt.views import obtain_jwt_token, verify_jwt_token, refresh_jwt_token
+
 from user import views
 
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
-    path('users/<int:pk>/', views.user),
 
     #로그인
     path('rest-auth/login', LoginView.as_view(), name='rest_login'),
     path('rest-auth/logout', LogoutView.as_view(), name='rest_logout'),
     path('rest-auth/password/change', PasswordChangeView.as_view(), name='rest_password_change'),
+
+    #폴더
+    path('api/users/directorys/', views.directorys, name='directorys'),
+
+    #토큰
+    path('admin/', admin.site.urls),
+    path('api/token/', obtain_jwt_token),
+    path('api/token/verify/', verify_jwt_token),
+    path('api/token/refresh/', refresh_jwt_token),
 
     # rest-auth
     path('users/', include('allauth.urls')),

@@ -93,3 +93,25 @@ class User(AbstractBaseUser):
     class Meta:
         ordering = ['id']
         db_table = 'user'
+
+class Directory(models.Model):
+    dr_id = models.AutoField(
+        verbose_name="directory's ID",
+        primary_key=True,
+    )
+    user_id = models.ForeignKey(
+        "User",
+        related_name="user",
+        on_delete=models.CASCADE,
+        db_column="user_id"
+    )
+    dr_name = models.CharField(
+        verbose_name="directory's name",
+        max_length=10,
+    )
+    dr_pid = models.IntegerField(
+        verbose_name="directory's parent ID",
+    )
+
+    class Meta:
+        db_table = 'directory'
