@@ -52,7 +52,8 @@ INSTALLED_APPS = [
 
     # my Apps
     'user',
-    'corsheaders'
+    'corsheaders',
+    'minute',
 ]
 
 AUTH_USER_MODEL = 'user.User'

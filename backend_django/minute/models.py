@@ -7,29 +7,44 @@ class Minutes(models.Model):
         primary_key=True,
     )
     user_id = models.ForeignKey(
-        "User",
-        related_name="user",
+        "user.User",
+        related_name="minutes",
         on_delete=models.CASCADE,
         db_column="user_id",
     )
     dr_id = models.ForeignKey(
-        "Directory",
-        related_name="directory",
+        "user.Directory",
+        related_name="minutes",
         on_delete=models.CASCADE,
         db_column="dr_id",
     )
     mn_make_date = models.DateTimeField()
     mn_title = models.CharField(max_length=50)
-    mn_date = models.DateField()
-    mn_place = models.CharField(max_length=20)
-    mn_explanation = models.CharField(max_length=50)
-    mn_memo = models.CharField(max_length=500)
-    mn_share_link = models.CharField(max_length=512)
+    mn_date = models.DateField(
+        null=True,
+    )
+    mn_place = models.CharField(
+        max_length=20,
+        null=True,
+    )
+    mn_explanation = models.CharField(
+        max_length=50,
+        null=True,
+    )
+    mn_memo = models.CharField(
+        max_length=500,
+        null=True,
+    )
+    mn_share_link = models.CharField(
+        max_length=512,
+        null=True,
+    )
     speaker_seq = models.ForeignKey(
         "Speaker",
-        related_name="speaker",
-        on_delete=models.CASCADE,
+        related_name="minutes",
+        on_delete=models.SET_NULL,
         db_column="speaker_seq",
+        null=True,
     )
 
 class Speaker(models.Model):
@@ -39,7 +54,7 @@ class Speaker(models.Model):
     )
     mn_id = models.ForeignKey(
         "Minutes",
-        related_name="minutes",
+        related_name="speaker",
         on_delete=models.CASCADE,
         db_column="minutes_id",
     )
@@ -52,24 +67,10 @@ class Bookmark(models.Model):
     )
     mn_id = models.ForeignKey(
         "Minutes",
-        related_name="minutes",
+        related_name="bookmark",
         on_delete=models.CASCADE,
         db_column="minutes_id",
     )
     bm_start = models.CharField(max_length=10)
     bm_end = models.CharField(max_length=10)
     bm_name = models.CharField(max_length=20)
-
-class File(models.Model):
-    mn_id = models.ForeignKey(
-        "Minutes",
-        related_name="minutes",
-        on_delete=models.CASCADE,
-        db_column="minutes_id",
-    )
-    file_name = models.CharField(max_length=20)
-    file_extension = models.CharField(max_length=5)
-    file_path=models.CharField(
-        max_length=512,
-        primary_key=True,
-    )
