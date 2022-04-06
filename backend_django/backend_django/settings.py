@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'rest_auth',
     'allauth',
     'allauth.account',
+    'allauth.socialaccount',
     'rest_auth.registration',
 
     # my Apps
@@ -74,6 +75,7 @@ ACCOUNT_AUTHENTICATION_METHOD = 'email'
 
 ACCOUNT_UNIQUE_EMAIL = True
 
+ACCOUNT_LOGOUT_ON_GET = True
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
