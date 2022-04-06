@@ -21,17 +21,19 @@ const Home = () => {
                                 </svg>
                                 <p>즐겨찾기</p>
                             </div>
-                            <div id="card-override" className="card" style={{width: "18rem"}}>
-                                <Link to="" className="card-link">
-                                    <div className="card-body">
-                                        <h5 className="card-title">회의주제</h5>
-                                        <p className="card-text">Some quick example text</p>
-                                        <h5 className="card-title">회의시간</h5>
-                                        <p className="card-text">Some quick example text</p>
-                                        <h5 className="card-title">참여자</h5>
-                                        <p className="card-text">Some, quick, example, text</p>
-                                    </div>
-                                </Link>
+                            <div className="log-card">
+                                <div id="card-override" className="card" style={{width: "18rem"}}>
+                                    <Link to="" className="card-link">
+                                        <div className="card-body">
+                                            <h5 className="card-title">회의주제</h5>
+                                            <p className="card-text">Some quick example text</p>
+                                            <h5 className="card-title">회의시간</h5>
+                                            <p className="card-text">Some quick example text</p>
+                                            <h5 className="card-title">참여자</h5>
+                                            <p className="card-text">Some, quick, example, text</p>
+                                        </div>
+                                    </Link>
+                                </div>
                             </div>
                         </div>
 
@@ -44,17 +46,19 @@ const Home = () => {
                                 </svg>
                                 <p>최근 회의록</p>
                             </div>
-                            <div id="card-override" className="card" style={{width: "18rem"}}>
-                                <Link to="" className="card-link">
-                                    <div className="card-body">
-                                        <h5 className="card-title">회의주제</h5>
-                                        <p className="card-text">Some quick example text</p>
-                                        <h5 className="card-title">회의시간</h5>
-                                        <p className="card-text">Some quick example text</p>
-                                        <h5 className="card-title">참여자</h5>
-                                        <p className="card-text">Some, quick, example, text</p>
-                                    </div>
-                                </Link>
+                            <div className="log-card">
+                                <div id="card-override" className="card" style={{width: "18rem"}}>
+                                    <Link to="" className="card-link">
+                                        <div className="card-body">
+                                            <h5 className="card-title">회의주제</h5>
+                                            <p className="card-text">Some quick example text</p>
+                                            <h5 className="card-title">회의시간</h5>
+                                            <p className="card-text">Some quick example text</p>
+                                            <h5 className="card-title">참여자</h5>
+                                            <p className="card-text">Some, quick, example, text</p>
+                                        </div>
+                                    </Link>
+                                </div>
                             </div>
                         </div>
 

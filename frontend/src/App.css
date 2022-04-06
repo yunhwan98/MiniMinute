@@ -179,32 +179,50 @@
 }
 
 .main {
-  display: flex;
-  flex-direction: row;
   padding-top: 60px;
 }
 
 .article{
   padding-left: 235px;
   width: 100%;
+  min-height: 600px;
 }
 
 .log-list {
   padding: 15px 0 0 25px;
+  margin-bottom: 15px;
+  min-height: 500px;
 }
 
 .directory-name {
   display: flex;
   font-weight: bold;
+  text-decoration: underline;
+  text-underline-position: under;
+}
+
+.log-card {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.new-log-btn {
+  border: none;
+  background-color: transparent;
+  height: inherit;
+}
+
+.new-log-btn:hover {
+  border: none;
+  background-color: transparent;
+  color: #ffffff;
 }
 
 #card-override {
   border: 1px solid #C8BFE7;
-}
-
-.card-link {
-  text-decoration: none;
-  color: black;
+  height: 232px;
+  width: 248px;
+  margin: 0 10px 10px 0;
   transform: scale(1);
   -webkit-transform: scale(1);
   -moz-transform: scale(1);
@@ -213,15 +231,23 @@
   transition: all 0.3s ease-in-out;
 }
 
-.card-link:hover {
+#card-override:hover {
   background-color: #C8BFE7;
-  color: #ffffff;
   transform: scale(1.01);
   -webkit-transform: scale(1.01);
   -moz-transform: scale(1.01);
   -ms-transform: scale(1.01);
   -o-transform: scale(1.01);
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.card-link {
+  text-decoration: none;
+  color: black;
+}
+
+.card-link:hover {
+  color: #ffffff;
 }
 
 .fav, .recent, .my {
@@ -244,9 +270,6 @@
 }
 
 .footer {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   width: 85%;
   height: 100px;
   margin-top: auto;
