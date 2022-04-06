@@ -8,6 +8,7 @@ import './pages/Start_page.css';
 import Login from './components/Login_modal';
 import Log_list from './pages/Log_list'
 import Search from './pages/Search'
+import Signup from './components/Signup';
 
 function App(){
     return (
@@ -20,6 +21,7 @@ function App(){
                     <Route path="/login" element={<Login />} />
                     <Route path="/loglist" element={<Log_list />} />
                     <Route path="/search" element={<Search />} />
+                    <Route path="/signup" element={<Signup />} />
                 </Routes>
             </div>
         </BrowserRouter>
