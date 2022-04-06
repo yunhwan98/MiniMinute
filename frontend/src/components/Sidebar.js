@@ -3,12 +3,12 @@ import { Link } from 'react-router-dom';
 import profile from '../images/profile3.png';
 import setting from '../images/setting.png';
 import {Modal} from "react-bootstrap";
+import NewLog_modal from "./NewLog_modal";
 
 function Sidebar() {
     const dropDownRef = useRef(null);
     const [isOpen, setIsOpen] = useState(false);
 
-    const [logShow, setLogShow] = useState(false);
     const [dirShow, setDirShow] = useState(false);
 
     return (
@@ -28,18 +28,7 @@ function Sidebar() {
             <div className="profile">
                 <img src={profile} style={{height: "140px"}}/>
                 <h4>Username</h4>
-                <button type="button" className="new-btn" onClick={() => setLogShow(true)}>새 회의록</button>
-                <Modal show={logShow} onHide={() => setLogShow(false)}>
-                    <Modal.Header closeButton>
-                        <Modal.Title>회의록 생성</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
-                    <Modal.Footer>
-                        <button type="button" class="btn btn-primary" onClick={() => setLogShow(false)}>
-                            생성
-                        </button>
-                    </Modal.Footer>
-                </Modal>
+                <NewLog_modal />
             </div>
             <ul className="directory">
                 <li>

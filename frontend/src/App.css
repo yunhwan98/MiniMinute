@@ -70,6 +70,39 @@
   color: #AEA7C9;
 }
 
+#btn-color{
+  color: white;
+  border-color: #C8BFE7;
+  background-color: #C8BFE7;
+}
+
+.body-form {
+  padding: 0 0 10px 0;
+}
+
+#btn-override{
+  float: right;
+}
+
+.part-input {
+  color: #212529;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  padding: 0.375rem 0.75rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+#modalFooter-override {
+  flex-wrap: wrap;
+    flex-shrink: 0;
+    padding: 0.75rem;
+    border-top: 1px solid #dee2e6;
+    border-bottom-right-radius: calc(0.3rem - 1px);
+    border-bottom-left-radius: calc(0.3rem - 1px);
+}
+
 .setting-btn {
   background-color: transparent;
   border: none;
