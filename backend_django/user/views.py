@@ -51,14 +51,23 @@ def user(request, pk):
 
 # 수정 필요-------------------------------------
 
-@api_view(['GET'])
-@permission_classes((IsAuthenticated, ))
+
+@api_view(['GET', 'POST'])
+@permission_classes((IsAuthenticated,))
 @authentication_classes((JSONWebTokenAuthentication,))
 def directorys(request):
-    dirs = Directory.objects.all()
-    serializer = DirectorySerializer(dirs, many=True)
-    return JsonResponse(serializer.data, safe=False)
+    if request.method == 'GET':
+        dirs = Directory.objects.filter(user_id=request.user.id)
+        serializer = DirectorySerializer(dirs, many=True)
+        return JsonResponse(serializer.data, safe=False)
+    elif request.method == 'POST':
+        data = JSONParser().parse(request)
+        data["user_id"] = str(request.user.id)
+        serializer = DirectorySerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse(serializer.data, status=201)
+        return JsonResponse(serializer.errors, status=400)
 
-
-#https://dev-yakuza.posstree.com/ko/django/response-model-to-json/
-#https://dev-yakuza.posstree.com/ko/django/jwt/
+# https://dev-yakuza.posstree.com/ko/django/response-model-to-json/
+# https://dev-yakuza.posstree.com/ko/django/jwt/

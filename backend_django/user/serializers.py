@@ -10,6 +10,8 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class DirectorySerializer(serializers.ModelSerializer):
+    def createDirectory(self):
+        dr.id = ()
     class Meta:
         model = Directory
         fields = ['dr_id', 'dr_name', 'dr_pid', 'user_id']

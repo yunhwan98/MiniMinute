@@ -111,6 +111,7 @@ class Directory(models.Model):
     )
     dr_pid = models.IntegerField(
         verbose_name="directory's parent ID",
+        null=True
     )
 
     class Meta:

@@ -33,7 +33,7 @@ urlpatterns = [
     path('rest-auth/password/change', PasswordChangeView.as_view(), name='rest_password_change'),
 
     #폴더
-    path('api/users/directorys/', views.directorys, name='directorys'),
+    path('api/user/', include('user.urls')),
 
     #토큰
     path('admin/', admin.site.urls),
