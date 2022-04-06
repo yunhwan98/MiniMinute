@@ -33,3 +33,9 @@
 .start_footer{
   margin-top:30px;
 }
+
+.login-link,.login-link:hover, 
+.signup-link,.signup-link:hover{
+  color: inherit;
+  text-decoration: none;
+}

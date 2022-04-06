@@ -1,6 +1,7 @@
 import React from "react";
 import Start_nav from "../components/Start_nav";
 import Start_footer from "../components/Start_footer";
+import { Link } from 'react-router-dom';
 
 const Start_page = () => {
     return (
@@ -18,7 +19,7 @@ const Start_page = () => {
           </div>
         </div>
         <div className = "bottom">
-          <button class="btn btn-secondary my-2 my-sm-0" type="submit" id = "start_button">시작하기</button>
+          <button class="btn btn-secondary my-2 my-sm-0" type="submit" id = "start_button"><Link to="/login" className="login-link">시작하기</Link></button>
         </div>
         <Start_footer/>
       </div>
