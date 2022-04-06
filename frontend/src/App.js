@@ -6,6 +6,8 @@ import Home from './pages/Home';
 import Start_page from './pages/Start_page';
 import './pages/Start_page.css';
 import Login from './components/Login_modal';
+import Log_list from './pages/Log_list'
+import Search from './pages/Search'
 
 function App(){
     return (
@@ -16,6 +18,8 @@ function App(){
                     <Route path="/home" element={<Home />} />
                     <Route path="/start" element={<Start_page />} />    //초기화면 진입
                     <Route path="/login" element={<Login />} />
+                    <Route path="/loglist" element={<Log_list />} />
+                    <Route path="/search" element={<Search />} />
                 </Routes>
             </div>
         </BrowserRouter>
