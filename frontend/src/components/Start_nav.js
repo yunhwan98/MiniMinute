@@ -1,5 +1,9 @@
 import React from "react";
 import { Link, renderMatches } from 'react-router-dom';
+import LoginModal from './LoginModal';
+import SignupModal from './SignupModal';
+
+
 
 const Start_nav = () => {
     return (
@@ -13,9 +17,11 @@ const Start_nav = () => {
             </ul>
 
             <form className="d-flex">
-              <button className="btn btn-secondary my-2 my-sm-0" type="submit"><Link to="/login" className="login-link">로그인</Link></button>
+
+              <LoginModal name="로그인"/>
               <ul></ul>
-              <button className="btn btn-secondary my-2 my-sm-0" type="submit"><Link to="/signup" className="signup-link">회원가입</Link></button>
+              <SignupModal name="회원가입"/>
+
             </form>
             </div>
             </div>

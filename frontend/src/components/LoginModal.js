@@ -1,16 +1,25 @@
-import React from "react";
+import React, {useState} from "react";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import {Modal, Button} from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import './Login_modal.css';
 
 
-
-const Login_modal = () => {
-
-    return (
-        
-        <div className="login-form">
-            <div className="login-title">로그인</div>
-        
+export default function LoginModal(props) {
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+  const {name} =props;
+  return (
+    <>
+      <Button className="nextButton" id="Login-Button" onClick={handleShow}>
+        {name}
+      </Button>
+      <Modal show={show} onHide={handleClose} centered>
+      <div className="login-form">    
+        <Modal.Header closeButton>
+          <Modal.Title>로그인</Modal.Title>
+        </Modal.Header>
+           
             <form>
                 <input type="text" name="email" className="login-text" placeholder="이메일"></input>
                 <input type="password" name="password" className="login-text" placeholder="비밀번호"></input>
@@ -21,15 +30,15 @@ const Login_modal = () => {
                 <div className="links">
                                          
                         <a href="#" id="find-pw">비밀번호를 잊으셨나요?</a>
-                         <Link to="/signup" className="signup-link">회원가입</Link>
+                         
                    </div>
                 
                 <hr className="login-hr"/>
                 <div id="google-title">구글 아이디로 로그인</div>
             </form>
-           
         </div>
-    );
-};
+      </Modal>
+    </>
+  );
+}
 
-export default Login_modal;
