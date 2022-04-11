@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Link } from 'react-router-dom';
-import profile from '../images/profile3.png';
+import profile from '../images/profile2.png';
 import setting from '../images/setting.png';
 import {Modal} from "react-bootstrap";
 import NewLog_modal from "./NewLog_modal";
@@ -22,14 +22,14 @@ function Sidebar() {
                 <ul
                     ref={dropDownRef}
                     className={`menu ${isOpen ? 'active' : 'inactive'}`}>
-                    <li><Link className="dropdown-item" to="">프로필 수정</Link></li>
+                    <li><Link className="dropdown-item" to="/profile">프로필 수정</Link></li>
                     <li><Link className="dropdown-item" to="/">로그아웃</Link></li>
                 </ul>
             </div>
             <div className="profile">
                 <img src={profile} style={{height: "140px"}}/>
                 <h4>Username</h4>
-                <button type="button" className="new-btn" onClick={() => setLogShow(true)}>새 회의록</button>
+                <button type="button" id="btn-color" className="new-btn" onClick={() => setLogShow(true)}>새 회의록</button>
                 <Modal show={logShow} onHide={() => setLogShow(false)}>
                     <NewLog_modal />
                 </Modal>
@@ -95,19 +95,19 @@ function Sidebar() {
                             </svg>
                         </button>
                         <Modal show={dirShow} onHide={() => setDirShow(false)}>
-                    <Modal.Header closeButton>
-                        <Modal.Title>폴더 추가</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        <h6>폴더 이름</h6>
-                        <input type="text" className="form-control" id="directory-name" />
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <button type="button" class="btn btn-primary" onClick={() => setDirShow(false)}>
-                            추가
-                        </button>
-                    </Modal.Footer>
-                </Modal>
+                            <Modal.Header closeButton>
+                                <Modal.Title>폴더 추가</Modal.Title>
+                            </Modal.Header>
+                            <Modal.Body>
+                                <h6>폴더 이름</h6>
+                                <input type="text" className="form-control" id="directory-name" />
+                            </Modal.Body>
+                            <Modal.Footer>
+                                <button type="button" id="btn-color" className="modal-btn" onClick={() => setDirShow(false)}>
+                                    추가
+                                </button>
+                            </Modal.Footer>
+                        </Modal>
                     </li>
                 </ul>
             </ul>

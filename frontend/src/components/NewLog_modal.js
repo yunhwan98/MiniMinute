@@ -42,7 +42,7 @@ function NewLog_modal() {
                     <h6>메모</h6>
                     <input type="text" className="form-control" id="memo" />
                 </div>
-                <button type="button" id="btn-override" className="btn btn-primary" onClick={() => setLogShow(false)}>
+                <button type="button" id="btn-color" className="btn-override modal-btn" onClick={() => setLogShow(false)}>
                     생성
                 </button>
             </Modal.Body>
@@ -51,7 +51,7 @@ function NewLog_modal() {
                     <h6>공유 코드</h6>
                     <input type="text" className="form-control" id="memo" />
                 </div>
-                <button type="button" id="btn-override" class="btn btn-primary" onClick={() => setLogShow(false)}>
+                <button type="button" id="btn-color" className="btn-override modal-btn" onClick={() => setLogShow(false)}>
                     생성
                 </button>
             </div>

@@ -72,8 +72,8 @@ const Home = () => {
                                 <p>내 회의록</p>
                             </div>
                             <div>
-                                <button type="button"  className="my-list">회사</button>
-                                <button type="button"  className="my-list">학교</button>
+                                <button type="button" id="btn-color" className="my-list">회사</button>
+                                <button type="button" id="btn-color" className="my-list">학교</button>
                             </div>
                         </div>
 
