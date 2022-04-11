@@ -1,12 +1,29 @@
-.App {
-  text-align: center;
+/*버튼 색 통일용*/
+#btn-color{
+  color: #ffffff;
+  border: 2px solid #B96BC6;
+  background-color: #B96BC6;
+  border-radius: 0.25rem;
 }
 
+#btn-color:hover {
+  color: black;
+  border: 1px solid #B96BC6;
+  background-color: #ffffff;
+}
+
+.modal-btn {
+  width: fit-content;
+  height: 38px;
+  padding: 0 15px;
+}
+
+/*header*/
 .header {
   background-color: #ffffff;
   position: fixed;
   width: 100%;
-  height: 60px;
+  height: 80px;
   left: 0;
   top: 0;
   z-index: 3;
@@ -17,7 +34,6 @@
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 0;
 }
 
 .header-link {
@@ -29,17 +45,8 @@
   color: #FFF200;
 }
 
-.footer-link {
-  text-decoration: none;
-  color: #6c757d;
-}
-
-.footer-link:hover {
-  color: #C8BFE7;
-}
-
 .logo {
-  margin-left: 30px;
+  margin-left: 45px;
   font-weight: bold;
   font-size: 25px;
 }
@@ -60,27 +67,22 @@
   background-color: transparent;
 }
 
+/*sidebar*/
 .sidebar {
   position: fixed;
   padding: 10px 35px 0;
   background-color: #ffffff;
-  /*border-right: 4px solid rgba(200, 191, 231);*/
   margin-right: 0;
   height: 100%;
-  color: #AEA7C9;
-}
-
-#btn-color{
-  color: white;
-  border-color: #C8BFE7;
-  background-color: #C8BFE7;
+  color: black;
+  box-shadow: 2px 7px 8px 0 rgb(0 0 0 / 6%);
 }
 
 .body-form {
   padding: 0 0 10px 0;
 }
 
-#btn-override{
+.btn-override{
   float: right;
 }
 
@@ -94,19 +96,21 @@
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
+/*모달의 footer*/
 #modalFooter-override {
   flex-wrap: wrap;
-    flex-shrink: 0;
-    padding: 0.75rem;
-    border-top: 1px solid #dee2e6;
-    border-bottom-right-radius: calc(0.3rem - 1px);
-    border-bottom-left-radius: calc(0.3rem - 1px);
+  flex-shrink: 0;
+  padding: 0.75rem;
+  border-top: 1px solid #dee2e6;
+  border-bottom-right-radius: calc(0.3rem - 1px);
+  border-bottom-left-radius: calc(0.3rem - 1px);
 }
 
+/*sidebar: 프로필 변경/로그아웃 메뉴*/
 .setting-btn {
   background-color: transparent;
   border: none;
-  color: #AEA7C9;
+  color: black;
 }
 
 .menu {
@@ -139,19 +143,11 @@
   padding-top: 5px;
 }
 
+/*새 회의록 버튼*/
 .new-btn{
-  background-color: transparent;
-  color: #C8BFE7;
-  border: 2px solid #AEA7C9;
-  border-radius: 0.25rem;
   width: 150px;
   height: 35px;
   font-weight: 550;
-}
-
-.new-btn:hover {
-  color: #FFF200;
-  border: 2px solid #FFF200;
 }
 
 .directory {
@@ -164,11 +160,11 @@
 .directory-link {
   text-decoration: none;
   padding-left: 5px;
-  color: #AEA7C9;
+  color: black;
 }
 
 .directory-link:hover {
-  color: #fff200;
+  color: #E0BFE6;
 }
 
 .myDirectory {
@@ -178,18 +174,20 @@
   font-size: 17px;
 }
 
+/*Home.js*/
 .main {
-  padding-top: 60px;
+  padding-top: 80px;
+  background-color: #FAFBFC;
 }
 
 .article{
   padding-left: 235px;
   width: 100%;
-  min-height: 600px;
+  min-height: 480px;
 }
 
 .log-list {
-  padding: 15px 0 0 25px;
+  padding: 20px 0 0 25px;
   margin-bottom: 15px;
   min-height: 500px;
 }
@@ -219,7 +217,7 @@
 }
 
 #card-override {
-  border: 1px solid #C8BFE7;
+  border: 1px solid #B96BC6;
   height: 232px;
   width: 248px;
   margin: 0 10px 10px 0;
@@ -232,7 +230,8 @@
 }
 
 #card-override:hover {
-  background-color: #C8BFE7;
+  background-color: #E0BFE6;
+  border: 1px solid #E0BFE6;
   transform: scale(1.01);
   -webkit-transform: scale(1.01);
   -moz-transform: scale(1.01);
@@ -255,32 +254,31 @@
 }
 
 .my-list {
-  border: 1px solid #C8BFE7;
-  border-radius: 0.25rem;
   margin-right: 10px;
   width: 100px;
   height: 30px;
-  background-color: transparent;
 }
 
-.my-list:hover {
-  border: 1px solid #ffffff;
-  color: #ffffff;
-  background-color: #C8BFE7;
+/*footer*/
+.footer-link {
+  text-decoration: none;
+  color: #6c757d;
+}
+
+.footer-link:hover {
+  color: #E0BFE6;
 }
 
 .footer {
   width: 85%;
   height: 100px;
   margin-top: auto;
-  padding-left: 120px;
 }
 
 .footer-content {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   padding: 15px 0;
   color: #6c757d;
   font-size: 15px;
@@ -294,6 +292,56 @@
 .footer-li {
   float: left;
   margin-right: 15px;
+}
+
+/*Profile.js*/
+.prof-article {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 15px;
+}
+
+.img-edit {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 70px;
+}
+
+.img-btn {
+  height: 38px;
+  margin-top: 15px;
+}
+
+#prof-hr {
+  width: 50px;
+  height: 3px;
+  color: #B96BC6;
+  opacity: 0.7;
+}
+
+.prof-input {
+  margin: 5px 0 15px 0;
+}
+
+.nickname, .email, .password {
+  padding-bottom: 50px;
+}
+
+.change-btn {
+  width: 65px;
+  height: 38px;
+  margin-top: 5px;
+}
+
+.quit-btn {
+  width: 100px;
+  height: 38px;
+  margin-bottom: 30px;
+  border: 1px solid #E0BFE6;
+  border-radius: 0.3rem;
+  background-color: #ffffff;
+  color: black;
 }
 
 /*Start_page.css*/
@@ -371,21 +419,6 @@ text-decoration: none;
   border: none;
   padding: 10px;
   margin-bottom: 10px;
-}
-
-.submit-btn {
-  width: 100%;
-  font-size: 14px;
-  color: rgb(255,255,255);
-  text-align: center;
-  border: none;
-  background-color: grey;
-  padding: 10px;
- 
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 10px;
-
 }
 
 .login-form .links {
@@ -469,7 +502,7 @@ label{
   border: none;
   background-color: grey;
   padding: 10px;
- 
+
   margin-left: auto;
   margin-right: auto;
   margin-bottom: 10px;

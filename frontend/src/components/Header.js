@@ -1,12 +1,15 @@
 import React from "react";
 import { Link } from 'react-router-dom';
+import logo from '../images/logo.png';
 
 const Header = () => {
     return (
         <div className="header">
             <div className="header-content">
                 <div className="logo">
-                    <Link to="/home" className="header-link">Mini Minutes</Link>
+                    <Link to="/home" className="header-link">
+                        <img src={logo} style={{height: "70px"}}/>
+                    </Link>
                 </div>
                 <div className="search-log">
                     <form className="container-fluid">
@@ -20,12 +23,6 @@ const Header = () => {
                                    aria-describedby="basic-addon1" />
                         </div>
                     </form>
-                    {/*<span>*/}
-                    {/*<button type="submit" className="search-btn">*/}
-                    {/*    <svg xmlns="http://www.w3.org/2000/svg" height="27" viewBox="0 0 27 27" width="27"><path d="M0 0h24v24H0z" fill="none"/><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>*/}
-                    {/*</button>*/}
-                    {/*</span>*/}
-                    {/*<input type="text" className="header-input" placeholder="회의록 검색" />*/}
                     </div>
             </div>
         </div>
