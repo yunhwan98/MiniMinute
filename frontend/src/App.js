@@ -6,6 +6,7 @@ import Start_page from './pages/Start_page';
 import Log_list from './pages/Log_list';
 import Search from './pages/Search';
 import Profile from './pages/Profile';
+import NewLog from './pages/New_log';
 
 
 function App(){
@@ -18,6 +19,7 @@ function App(){
                     <Route path="/loglist" element={<Log_list />} />
                     <Route path="/search" element={<Search />} />
                     <Route path="/profile" element={<Profile />} />
+                    <Route path="/newlog" element={<NewLog />} />
                 </Routes>
             </div>
         </BrowserRouter>

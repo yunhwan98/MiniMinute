@@ -30,7 +30,7 @@ const Home = () => {
                                             <h5 className="card-title">회의시간</h5>
                                             <p className="card-text">Some quick example text</p>
                                             <h5 className="card-title">참여자</h5>
-                                            <p className="card-text">Some, quick, example, text</p>
+                                            <p className="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vitae dapibus purus. Interdum et malesuada fames ac ante ipsum primis in faucibus.</p>
                                         </div>
                                     </Link>
                                 </div>
