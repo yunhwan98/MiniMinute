@@ -6,7 +6,7 @@ import Sidebar from "../components/Sidebar";
 
 function Search() {
     return (
-        <div style={{height: "100%"}}>
+        <div>
             <Header />
             <div className="main">
                 <Sidebar/>

@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Link } from 'react-router-dom';
+import {Modal} from "react-bootstrap";
 import profile from '../images/profile2.png';
 import setting from '../images/setting.png';
-import {Modal} from "react-bootstrap";
 import NewLog_modal from "./NewLog_modal";
 
 function Sidebar() {
@@ -15,7 +15,7 @@ function Sidebar() {
     return (
         <div className="sidebar">
             <div className="dropdown">
-                <button className="setting-btn"
+                <button className="none-btn"
                     onClick={() => setIsOpen(!isOpen)}>
                     <img src={setting} style={{height: "20px"}} />
                 </button>
@@ -85,7 +85,7 @@ function Sidebar() {
                         <Link to ="" className="directory-link">학교</Link>
                     </li>
                     <li>
-                        <button type="button" className="setting-btn" onClick={() => setDirShow(true)}>
+                        <button type="button" className="none-btn" onClick={() => setDirShow(true)}>
                             <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor"
                                  className="bi bi-folder-plus" viewBox="0 2 18 18">
                                 <path

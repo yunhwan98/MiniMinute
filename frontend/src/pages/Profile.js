@@ -16,7 +16,10 @@ function Profile() {
                 <div className="prof-article">
                     <div className="img-edit">
                         <img src={profile} style={{width: "12em"}}/>
-                        <button type="button" id="btn-color" className="img-btn">사진 변경</button>
+                        <label id="btn-color" className="input-file img-btn" htmlFor="input-file">사진 업로드</label>
+                        <input type="file" id="input-file" style={{display: "none"}}
+                               accept="image/*"
+                               onChange={null}/>
                     </div>
                     {/*<hr style={{width: "800px", color: "inherit", opacity: "0.7"}}/>*/}
                     <form style={{width: "430px"}}>
