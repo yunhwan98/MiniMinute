@@ -46,5 +46,5 @@ urlpatterns = [
     path('rest-auth/password/change', PasswordChangeView.as_view(), name='rest_password_change'),
 
     # 회의록 관련
-    path('minute/', include('minute.urls'))
+    path('minutes/', include('minute.urls'))
 ]

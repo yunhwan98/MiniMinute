@@ -18,7 +18,7 @@ class Minutes(models.Model):
         on_delete=models.CASCADE,
         db_column="dr_id",
     )
-    mn_make_date = models.DateTimeField()
+    mn_make_date = models.DateTimeField(auto_now_add=True, editable=False)
     mn_title = models.CharField(max_length=50)
     mn_date = models.DateField(
         null=True,
@@ -56,9 +56,12 @@ class Speaker(models.Model):
         "Minutes",
         related_name="speaker",
         on_delete=models.CASCADE,
-        db_column="minutes_id",
+        db_column="mn_id",
     )
-    speaker_name : models.CharField(max_length=10)
+    speaker_name = models.CharField(
+        max_length=20,
+        null=True
+    )
 
 class Bookmark(models.Model):
     bm_seq = models.AutoField(
@@ -69,7 +72,7 @@ class Bookmark(models.Model):
         "Minutes",
         related_name="bookmark",
         on_delete=models.CASCADE,
-        db_column="minutes_id",
+        db_column="mn_id",
     )
     bm_start = models.CharField(max_length=10)
     bm_end = models.CharField(max_length=10)
