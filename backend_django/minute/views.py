@@ -103,3 +103,47 @@ def bookmark(request, mn_id, bm_seq):
     elif request.method == 'DELETE':
         obj.delete()
         return HttpResponse(status=204)
+
+# 화자 목록 조회
+@api_view(['GET', 'POST'])
+@permission_classes((IsAuthenticated,))
+@authentication_classes((JSONWebTokenAuthentication,))
+def speaker_list(request, mn_id):
+    if request.method == 'GET':
+        speaker = Speaker.objects.filter(mn_id = mn_id)
+        serializer = SpeakerSerializer(speaker, many=True)
+        return JsonResponse(serializer.data, safe=False)
+
+    # elif request.method == 'POST':
+    #     data = JSONParser().parse(request)
+    #     data["mn_id"] = mn_id
+    #     serializer = SpeakerSerializer(data=data)
+    #     if serializer.is_valid():
+    #         serializer.save()
+    #         return JsonResponse(serializer.data, status=201)
+    #     return JsonResponse(serializer.errors, status=400)
+
+# 화자 (조회, 수정, 삭제)
+@api_view(['GET', 'PUT', 'DELETE'])
+@permission_classes((IsAuthenticated,))
+@authentication_classes((JSONWebTokenAuthentication,))
+def speaker(request, mn_id, speaker_seq):
+    obj = Speaker.objects.get(mn_id=mn_id, speaker_seq=speaker_seq)
+
+    if request.method == 'GET':
+        serializer = SpeakerSerializer(obj)
+        return JsonResponse(serializer.data, safe=False)
+
+    elif request.method == 'PUT':
+        data = JSONParser().parse(request)
+        data["mn_id"] = mn_id
+        data["speaker_seq"] = speaker_seq
+        serializer = SpeakerSerializer(obj, data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse(serializer.data, status=200)
+        return JsonResponse(serializer.errors, status=400)
+
+    elif request.method == 'DELETE':
+        obj.delete()
+        return HttpResponse(status=204)
