@@ -92,6 +92,7 @@ def directory_list(request):
         return JsonResponse(serializer.errors, status=400)
 
 
+
 # 사용자별 디렉토리 개별 목록(조회, 수정, 삭제)
 @api_view(['GET', 'PUT', 'DELETE'])
 @permission_classes((IsAuthenticated,))
@@ -106,6 +107,7 @@ def directory(request, n):
 
     elif request.method == 'PUT':
         data = JSONParser().parse(request)
+
         data["user_id"] = str(request.user.id)
         serializer = DirectorySerializer(obj, data=data)
         if serializer.is_valid():
@@ -116,3 +118,4 @@ def directory(request, n):
     elif request.method == 'DELETE':
         obj.delete()
         return HttpResponse(status=204)
+

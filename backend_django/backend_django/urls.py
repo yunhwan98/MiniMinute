@@ -30,11 +30,14 @@ urlpatterns = [
 
     # 사용자별 디렉토리 정보 처리(user.directory_urls 참고)
     path('directorys/', include('user.directory_urls')),
+  
+    # 회의록 관련
+    path('minutes/', include('minute.urls')),
 
     # 토큰(발급, 인증, 갱신)
-    path('api/token/', obtain_jwt_token),
-    path('api/token/verify/', verify_jwt_token),
-    path('api/token/refresh/', refresh_jwt_token),
+    path('api/token', obtain_jwt_token),
+    path('api/token/verify', verify_jwt_token),
+    path('api/token/refresh', refresh_jwt_token),
 
     # rest-auth(로그인, 로그아웃, 회원가입, 패스워드 변경(구현 미정))
     path('home/', include('allauth.urls')),
@@ -42,9 +45,7 @@ urlpatterns = [
     path('rest-auth/', include('rest_auth.urls')),
     path('rest-auth/login', LoginView.as_view(), name='rest_login'),
     path('rest-auth/logout', LogoutView.as_view(), name='rest_logout'),
-    path('rest-auth/signup/', RegisterView.as_view(), name='rest_register'),
+    path('rest-auth/signup', RegisterView.as_view(), name='rest_register'),
     path('rest-auth/password/change', PasswordChangeView.as_view(), name='rest_password_change'),
-
-    # 회의록 관련
-    path('minutes/', include('minute.urls'))
+  
 ]
