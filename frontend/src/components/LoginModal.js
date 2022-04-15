@@ -10,9 +10,6 @@ import LogoutGoogle from './LogoutGoogle';
 import {gapi} from 'gapi-script';
 import { GoogleLogout } from 'react-google-login';
 
-const clientId = "1064677249953-799g6ker89ntqd3kfq2kpce60saut59u.apps.googleusercontent.com"
-
-
 //로그인 모달 창
 export default function LoginModal(props) {
   const [show, setShow] = useState(false);
@@ -51,6 +48,7 @@ export default function LoginModal(props) {
       .then((response) => {
         console.log(response);
         console.log(response.data.user);
+        console.log(response.data.token);
         props.userHasAuthenticated(true, response.data.user, response.data.token);  //인증확인, 토큰 발급
         handleClose();       
       })
@@ -59,6 +57,7 @@ export default function LoginModal(props) {
         setErrormsg("※ 이메일 또는 비밀번호를 확인하세요 ※"); //에러 메시지
       });
   }
+
 
 
   return (
@@ -85,6 +84,7 @@ export default function LoginModal(props) {
                 <div id="google-title">구글 아이디로 로그인</div>
                 <div className ="google-login">
                 <LoginGoogle setaccessToken={setaccessToken} handleClose={handleClose} />
+                <LogoutGoogle setaccessToken={setaccessToken} />
                 </div>
             </form>
         </div>

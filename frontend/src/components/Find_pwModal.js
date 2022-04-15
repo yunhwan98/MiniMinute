@@ -3,7 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import {Modal, Button} from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
-
+//비밀번호 찾기 모달 
 export default function Find_pwModal(props) {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -38,12 +38,9 @@ const onSubmit = (event) => {
           <Modal.Title>비밀번호 찾기</Modal.Title>
         </Modal.Header>          
             <form>
-            <div><label>이메일</label> <input name="email" type="email" placeholder="이메일" value={email} onChange={onEmailHandler} className="signup-text"/>
-            <button type="submit" onSubmit={onSubmit} className="submit-btn" id="email_check">전송</button></div>
-            <div><label>인증번호</label> <input name="validNum" type="text" placeholder="인증번호" value={validNum} onChange={onValidNumHandler} className="signup-text"/>
-            <button type="submit" onSubmit={onSubmit} className="submit-btn" id="email_check">확인</button></div>
-                <div className="findpw">회원님의 비밀번호 : </div>
-                          
+            <div><label>이메일</label> <input name="email" type="email" placeholder="이메일" value={email} onChange={onEmailHandler} className="signup-text"/></div>
+            <div><label>질문</label> <input name="validNum" type="text" placeholder="질문" value={validNum} onChange={onValidNumHandler} className="signup-text"/></div>
+            <button type="submit"  onSubmit={onSubmit} className="submit-btn" >비밀번호 재설정</button>
             </form>
           
         </div>
