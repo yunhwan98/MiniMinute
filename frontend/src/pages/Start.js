@@ -6,6 +6,7 @@ import LoginModal from '../components/LoginModal';
 import SignupModal from '../components/SignupModal';
 import miniminute_logo from '../images/logo.png';
 import axios from 'axios';
+import LogoutGoogle from '../components/LogoutGoogle';
 
 const Start_page = () => {
 
@@ -14,24 +15,23 @@ const Start_page = () => {
 
   //회원가입이나 로그인이 성공했을 때 토큰을 저장
   const userHasAuthenticated = (authenticated, username, token) => { 
-    setisAuthenticated(authenticated);
-    setUser(username);
     localStorage.setItem('token', token);
+    setisAuthenticated(authenticated); 
+    setUser(username);
+    
   }
 
   //로그아웃
   const userLogout = () => {
     setisAuthenticated(false);
     setUser([]);
-    localStorage.clear();
-
+    localStorage.clear(); 
   }
-  console.log(localStorage.getItem('token'));
-  console.log(user.username);
 
-    
     return (
+    
       <div className = "Start"> 
+  
         <Start_nav  isAuthenticated ={isAuthenticated} userHasAuthenticated={userHasAuthenticated} userLogout={userLogout}/>
         <div id="main">
           <div className="hero-header">
@@ -39,7 +39,7 @@ const Start_page = () => {
             <img src={miniminute_logo} style={{height: "200px"}} />
               <h1></h1>
                 <p>
-                  당신의 감정을 파악해주는 회의록
+                   당신의 감정을 파악해주는 회의록
                 </p>
             </div>
           </div>
@@ -51,7 +51,6 @@ const Start_page = () => {
       </div>
       
     );
-   
     
 };
 
