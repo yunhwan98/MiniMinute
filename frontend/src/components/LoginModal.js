@@ -9,6 +9,7 @@ import LoginGoogle from './LoginGoogle';
 import LogoutGoogle from './LogoutGoogle';
 import {gapi} from 'gapi-script';
 import { GoogleLogout } from 'react-google-login';
+import url from '../api/axios';
 
 //로그인 모달 창
 export default function LoginModal(props) {
@@ -39,8 +40,8 @@ export default function LoginModal(props) {
   //로그인 버튼 누를 때 서버에 정보 전달
   const onSubmit = (event) => {
     event.preventDefault();
-    axios.post(
-        "http://127.0.0.1:8000/rest-auth/login",{
+    url.post(
+        "/rest-auth/login",{
           "email" : email,
           "password" : password
         }

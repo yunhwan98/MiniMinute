@@ -7,8 +7,9 @@ import {Button} from 'react-bootstrap';
 
 const Start_nav = (props) => {
   const  navigate = useNavigate();
+  const username = props.user.username;
   const onClick = (event) => {  //홈으로 이동
-    navigate('/home');
+    navigate(`/home/${username}`);
   }
   const Logout = (e) => {   //로그아웃 실행
     console.log('로그아웃 실행')
