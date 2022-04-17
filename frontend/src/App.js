@@ -15,7 +15,7 @@ function App(){
             <div>
                 <Routes>
                     <Route path="/" element={<Start />} />    //초기화면 진입
-                    <Route path="/home/:username" element={<Home />} />
+                    <Route path="/home" element={<Home />} />
                     <Route path="/loglist" element={<Log_list />} />
                     <Route path="/search" element={<Search />} />
                     <Route path="/profile" element={<Profile />} />

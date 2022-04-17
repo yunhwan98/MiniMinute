@@ -4,7 +4,6 @@ import {Modal, Button} from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import LoginGoogle from './LoginGoogle';
-import url from '../api/axios';
 
 const clientId = "1064677249953-799g6ker89ntqd3kfq2kpce60saut59u.apps.googleusercontent.com"
 export default function SignupModal(props) {
@@ -36,8 +35,8 @@ export default function SignupModal(props) {
   const onSubmit = async(event) => {  
 
       event.preventDefault();
-      url.post(
-          "/rest-auth/signup",{
+      axios.post(     
+          "http://127.0.0.1:8000/rest-auth/signup",{
             "username" : name,
             "email" : email,
             "password1" : password,

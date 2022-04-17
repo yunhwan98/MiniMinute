@@ -1,15 +1,13 @@
-import React, {useState} from "react";
+import React from "react";
 import { Link } from 'react-router-dom';
 import logo from '../images/logo.png';
 
-const Header = (props) => {
-    const [username, setName] = useState(props.username);
-
+const Header = () => {
     return (
         <div className="header">
             <div className="header-content">
                 <div className="logo">
-                    <Link to={`/home/${username}`} className="header-link">
+                    <Link to="/home" className="header-link">
                         <img src={logo} style={{height: "70px"}}/>
                     </Link>
                 </div>

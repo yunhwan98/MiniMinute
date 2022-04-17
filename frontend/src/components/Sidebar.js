@@ -1,26 +1,16 @@
 import React, { useEffect, useState, useRef } from "react";
-import {Link, useNavigate} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import {Modal} from "react-bootstrap";
 import profile from '../images/profile2.png';
 import setting from '../images/setting.png';
 import NewLog_modal from "./NewLog_modal";
 
-function Sidebar(props) {
-    const  navigate = useNavigate();
-
-    const [username, setName] = useState(props.username);
+function Sidebar() {
     const dropDownRef = useRef(null);
     const [isOpen, setIsOpen] = useState(false);
 
     const [dirShow, setDirShow] = useState(false);
     const [logShow, setLogShow] = useState(false);
-
-    const Logout = (e) => {   //로그아웃 실행
-    console.log('로그아웃 실행');
-    setName([]);
-    localStorage.clear();
-    navigate("/");
-    }
 
     return (
         <div className="sidebar">
@@ -33,12 +23,12 @@ function Sidebar(props) {
                     ref={dropDownRef}
                     className={`menu ${isOpen ? 'active' : 'inactive'}`}>
                     <li><Link className="dropdown-item" to="/profile">프로필 수정</Link></li>
-                    <li className="dropdown-item cursor" onClick={Logout}>로그아웃</li>
+                    <li><Link className="dropdown-item" to="/">로그아웃</Link></li>
                 </ul>
             </div>
             <div className="profile">
                 <img src={profile} style={{height: "140px"}}/>
-                <h4>{username}</h4>
+                <h4>Username</h4>
                 <button type="button" id="btn-color" className="new-btn" onClick={() => setLogShow(true)}>새 회의록</button>
                 <Modal show={logShow} onHide={() => setLogShow(false)}>
                     <NewLog_modal />
