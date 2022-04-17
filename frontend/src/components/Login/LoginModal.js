@@ -2,13 +2,11 @@ import React, {useState, useEffect} from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Modal, Button} from 'react-bootstrap';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
-import Find_pwModal from './Find_pwModal';
+import Find_pwModal from '../Find_pwModal';
 import axios from 'axios';
-import GoogleLogin from 'react-google-login';
 import LoginGoogle from './LoginGoogle';
 import LogoutGoogle from './LogoutGoogle';
 import {gapi} from 'gapi-script';
-import { GoogleLogout } from 'react-google-login';
 
 //로그인 모달 창
 export default function LoginModal(props) {
@@ -47,8 +45,6 @@ export default function LoginModal(props) {
       )
       .then((response) => {
         console.log(response);
-        console.log(response.data.user);
-        console.log(response.data.token);
         props.userHasAuthenticated(true, response.data.user, response.data.token);  //인증확인, 토큰 발급
         handleClose();       
       })

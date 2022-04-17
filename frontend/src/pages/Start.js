@@ -2,11 +2,11 @@ import React, {useState, useEffect} from 'react';
 import Start_nav from "../components/Start_nav";
 import Start_footer from "../components/Start_footer";
 import { Link, useNavigate } from 'react-router-dom';
-import LoginModal from '../components/LoginModal';
-import SignupModal from '../components/SignupModal';
+import LoginModal from '../components/Login/LoginModal';
+import SignupModal from '../components/Signup/SignupModal';
 import miniminute_logo from '../images/logo.png';
 import axios from 'axios';
-import LogoutGoogle from '../components/LogoutGoogle';
+import LogoutGoogle from '../components/Login/LogoutGoogle';
 
 const Start_page = () => {
 
@@ -14,10 +14,11 @@ const Start_page = () => {
   const [isAuthenticated, setisAuthenticated] = useState(localStorage.getItem('token') ? true : false);//인증여부 확인
 
   //회원가입이나 로그인이 성공했을 때 토큰을 저장
-  const userHasAuthenticated = (authenticated, username, token) => { 
+  const userHasAuthenticated = (authenticated, userinfo, token) => { 
     localStorage.setItem('token', token);
+    localStorage.setItem('user',JSON.stringify(userinfo));
     setisAuthenticated(authenticated); 
-    setUser(username);
+    /*setUser(username);*/
     
   }
 
@@ -27,6 +28,7 @@ const Start_page = () => {
     setUser([]);
     localStorage.clear(); 
   }
+
 
     return (
     
