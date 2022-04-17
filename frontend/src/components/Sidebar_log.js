@@ -1,5 +1,5 @@
 import React, {useRef, useState} from "react";
-import { Link } from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import {Modal} from "react-bootstrap";
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import setting from "../images/setting.png";
@@ -20,8 +20,6 @@ function Sidebar_log() {
                 <ul
                     ref={dropDownRef}
                     className={`menu ${isOpen ? 'active' : 'inactive'}`}>
-                    <li><Link className="dropdown-item" to="/profile">프로필 수정</Link></li>
-                    <li><Link className="dropdown-item" to="/">로그아웃</Link></li>
                     <li><Link className="dropdown-item" to="">회의록 삭제</Link></li>
                     <li><Link className="dropdown-item" to="">회의록 수정</Link></li>
                 </ul>

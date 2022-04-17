@@ -25,6 +25,11 @@
   border: none;
 }
 
+/*마우스 포인터 변경*/
+.cursor{
+  cursor: pointer;
+}
+
 /*header*/
 .header {
   background-color: #ffffff;

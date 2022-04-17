@@ -1,15 +1,18 @@
-import React from "react";
-import { Link } from 'react-router-dom';
+import React, {useState} from "react";
+import {Link, useParams} from 'react-router-dom';
+import axios from "axios";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import Sidebar from "../components/Sidebar";
 
-const Home = () => {
+const Home = (props) => {
+   const {username} = useParams();
+
     return (
         <div>
-            <Header />
+            <Header username={username}/>
             <div className="main">
-                <Sidebar/>
+                <Sidebar username={username}/>
                 <div className="article">
                     <div className="log-list">
                         <div className="fav">
@@ -78,7 +81,7 @@ const Home = () => {
                         </div>
 
                     </div>
-                    <Footer />
+                    <Footer username={username}/>
                 </div>
             </div>
         </div>
