@@ -9,6 +9,7 @@ import axios from 'axios';
 import LogoutGoogle from '../components/LogoutGoogle';
 
 const Start_page = () => {
+
   const [user, setUser] = useState([]);  //유저 정보 저장
   const [isAuthenticated, setisAuthenticated] = useState(localStorage.getItem('token') ? true : false);//인증여부 확인
 
@@ -17,6 +18,7 @@ const Start_page = () => {
     localStorage.setItem('token', token);
     setisAuthenticated(authenticated); 
     setUser(username);
+    
   }
 
   //로그아웃
@@ -28,8 +30,9 @@ const Start_page = () => {
 
     return (
     
-      <div className = "Start">
-        <Start_nav  isAuthenticated ={isAuthenticated} userHasAuthenticated={userHasAuthenticated} userLogout={userLogout} user={user}/>
+      <div className = "Start"> 
+  
+        <Start_nav  isAuthenticated ={isAuthenticated} userHasAuthenticated={userHasAuthenticated} userLogout={userLogout}/>
         <div id="main">
           <div className="hero-header">
             <div className="info">
