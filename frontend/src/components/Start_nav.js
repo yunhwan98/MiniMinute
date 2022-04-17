@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, renderMatches, useNavigate } from 'react-router-dom';
-import LoginModal from './LoginModal';
-import SignupModal from './SignupModal';
+import LoginModal from './Login/LoginModal';
+import SignupModal from './Signup/SignupModal';
 import miniminute_logo from '../images/logo.png';
 import {Button} from 'react-bootstrap';
 

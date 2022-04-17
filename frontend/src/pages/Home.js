@@ -1,10 +1,15 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import { Link } from 'react-router-dom';
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import Sidebar from "../components/Sidebar";
 
 const Home = () => {
+    const [isAuthenticated, setisAuthenticated] = useState(localStorage.getItem('token') ? true : false);   //인증여부 확인
+    const [user, setUser] = useState(localStorage.getItem('token') ? JSON.parse( localStorage.getItem('user') ) : []); //유저 정보
+    
+    console.log(user.username);
+    if(isAuthenticated){ //권한이 있을 때만 표시
     return (
         <div>
             <Header />
@@ -83,6 +88,13 @@ const Home = () => {
             </div>
         </div>
     );
+    }
+    else{   //권한이 없을때
+        return( 
+            <div>권한이 없습니다!</div>
+        );
+    }
+    
 };
 
 export default Home;

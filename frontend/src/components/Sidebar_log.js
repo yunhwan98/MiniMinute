@@ -10,6 +10,14 @@ function Sidebar_log() {
 
     const [share, setShare] = useState(false);
 
+      //유저정보
+    const [user, setUser] = useState(localStorage.getItem('token') ? JSON.parse( localStorage.getItem('user') ) : []);
+    //유저 로그아웃
+    const userLogout =(e)=> {
+        localStorage.clear(); 
+    }
+
+
     return(
         <div className="sidebar">
             <div className="dropdown">
@@ -21,7 +29,7 @@ function Sidebar_log() {
                     ref={dropDownRef}
                     className={`menu ${isOpen ? 'active' : 'inactive'}`}>
                     <li><Link className="dropdown-item" to="/profile">프로필 수정</Link></li>
-                    <li><Link className="dropdown-item" to="/">로그아웃</Link></li>
+                    <li><Link className="dropdown-item" to="/" onClick={userLogout}>로그아웃</Link></li>
                     <li><Link className="dropdown-item" to="">회의록 삭제</Link></li>
                     <li><Link className="dropdown-item" to="">회의록 수정</Link></li>
                 </ul>
