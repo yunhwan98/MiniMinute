@@ -12,6 +12,13 @@ function Sidebar() {
     const [dirShow, setDirShow] = useState(false);
     const [logShow, setLogShow] = useState(false);
 
+    //유저정보
+    const [user, setUser] = useState(localStorage.getItem('token') ? JSON.parse( localStorage.getItem('user') ) : []);
+    //유저 로그아웃
+    const userLogout =(e)=> {
+        localStorage.clear(); 
+    }
+    console.log(user);
     return (
         <div className="sidebar">
             <div className="dropdown">
@@ -23,12 +30,12 @@ function Sidebar() {
                     ref={dropDownRef}
                     className={`menu ${isOpen ? 'active' : 'inactive'}`}>
                     <li><Link className="dropdown-item" to="/profile">프로필 수정</Link></li>
-                    <li><Link className="dropdown-item" to="/">로그아웃</Link></li>
+                    <li><Link className="dropdown-item" to="/" onClick={userLogout} >로그아웃</Link></li>
                 </ul>
             </div>
             <div className="profile">
                 <img src={profile} style={{height: "140px"}}/>
-                <h4>Username</h4>
+                <h4>{user.username}</h4>
                 <button type="button" id="btn-color" className="new-btn" onClick={() => setLogShow(true)}>새 회의록</button>
                 <Modal show={logShow} onHide={() => setLogShow(false)}>
                     <NewLog_modal />
