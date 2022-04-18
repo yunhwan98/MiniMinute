@@ -4,21 +4,47 @@ import {Modal} from "react-bootstrap";
 import profile from '../images/profile2.png';
 import setting from '../images/setting.png';
 import NewLog_modal from "./NewLog_modal";
+import url from '../api/axios';
 
 function Sidebar() {
+    console.log(localStorage);
+
     const dropDownRef = useRef(null);
     const [isOpen, setIsOpen] = useState(false);
 
     const [dirShow, setDirShow] = useState(false);
     const [logShow, setLogShow] = useState(false);
 
+    const [dirName, setDirName] = useState("");
+
     //유저정보
     const [user, setUser] = useState(localStorage.getItem('token') ? JSON.parse( localStorage.getItem('user') ) : []);
     //유저 로그아웃
     const userLogout =(e)=> {
-        localStorage.clear(); 
+        setUser([]);
+        localStorage.clear();
     }
-    console.log(user);
+
+    const onDirNameHandler = (e) => {
+        setDirName(e.currentTarget.value);
+    }
+
+    //디렉토리 추가
+    const addDirectory = (e) => {
+        e.preventDefault();
+        console.log(localStorage);
+        url.post(
+            "/directorys/lists",
+            {"dr_name": dirName},)
+            .then((response) => {
+                console.log(response);
+                alert("폴더가 추가되었습니다.");
+            })
+            .catch((error) => {
+                console.log("폴더추가실패"+error);
+            });
+    };
+
     return (
         <div className="sidebar">
             <div className="dropdown">
@@ -107,10 +133,10 @@ function Sidebar() {
                             </Modal.Header>
                             <Modal.Body>
                                 <h6>폴더 이름</h6>
-                                <input type="text" className="form-control" id="directory-name" />
+                                <input type="text" className="form-control" id="directory-name" value={dirName} onChange={onDirNameHandler} />
                             </Modal.Body>
                             <Modal.Footer>
-                                <button type="button" id="btn-color" className="modal-btn" onClick={() => setDirShow(false)}>
+                                <button type="submit" id="btn-color" className="modal-btn" onClick={addDirectory}>
                                     추가
                                 </button>
                             </Modal.Footer>

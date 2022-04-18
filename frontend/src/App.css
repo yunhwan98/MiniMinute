@@ -25,6 +25,15 @@
   border: none;
 }
 
+.none-link {
+  text-decoration: none;
+  color: #ffffff;
+}
+
+.none-link:hover{
+  color: #212529;
+}
+
 /*header*/
 .header {
   background-color: #ffffff;

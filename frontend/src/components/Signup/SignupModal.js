@@ -4,16 +4,17 @@ import {Modal, Button} from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import LoginGoogle from '../Login/LoginGoogle';
+import url from '../../api/axios';
 
 const clientId = "1064677249953-799g6ker89ntqd3kfq2kpce60saut59u.apps.googleusercontent.com"
 export default function SignupModal(props) {
   const [show, setShow] = useState(false);
   const [errormsg, setErrormsg] = useState("");
-  const [name, setname] = useState("")
+  const [name, setname] = useState("");
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("")
-  const [color, setColor] = useState("red")
-  const [confirmPassword, setConfirmPassword] = useState("")
+  const [password, setPassword] = useState("");
+  const [color, setColor] = useState("red");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [accessToken,setaccessToken] = useState('');
   const handleClose = () => {setShow(false); setErrormsg(''); setname(''); setEmail(''); setPassword(''); setConfirmPassword('');}
   const handleShow = () => setShow(true);
@@ -35,8 +36,8 @@ export default function SignupModal(props) {
   const onSubmit = async(event) => {  
 
       event.preventDefault();
-      axios.post(     
-          "http://127.0.0.1:8000/rest-auth/signup",{
+      url.post(
+          "/rest-auth/signup",{
             "username" : name,
             "email" : email,
             "password1" : password,
@@ -46,7 +47,7 @@ export default function SignupModal(props) {
         .then((response) => {
           console.log(response);
           handleClose();
-          alert('회원가입이 되었습니다.')
+          alert('회원가입이 완료되었습니다.')
         })
         .catch((error) => { //오류메시지 보이게 함
           setColor("red");
@@ -69,8 +70,8 @@ export default function SignupModal(props) {
   const checkEmail = async(event) => {  
 
     event.preventDefault();
-    axios.post(     
-        "http://127.0.0.1:8000/rest-auth/signup",{
+    url.post(
+        "/rest-auth/signup",{
           "email" : email
         }
       )
@@ -94,7 +95,6 @@ export default function SignupModal(props) {
       });
   
 }
-
 
 
   const {title} = props; 
