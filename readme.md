@@ -78,3 +78,38 @@
 |/<int : 디렉토리 번호>|GET|{}|{dr_id, de_name,<br>dr_pid, user_id}|200 성공<br>401 실패(토큰 인증 실패)<br>500 실패(존재하지 않는 디렉토리)|디렉토리 개별 조회|
 |/<int : 디렉토리 번호>|PUT|{dr_name}|{dr_id, de_name,<br>dr_pid, user_id}|200 성공<br>400 실패(요구되지 않는 필드값)<br>401 실패(토큰 인증 실패)|디렉토리 이름 수정|
 |/<int : 디렉토리 번호>|DELETE|{}|{}|204 성공<br>401 실패(토큰 인증 실패)|디렉토리 삭제|
+
+### /minutes
+
+> 회의록 관련 주소
+
+| Path          | Method | request  | response | code     | 설명        |
+|---------------|--------|----------|-------|----------|-----------|
+| /lists        | GET    | {}| {mn_id,<br>mn_make_date,<br>mn_title,<br>mn_date,<br>mn_place,<br>mn_explanation,<br>mn_memo,<br>mn_share_link,<br>user_id,<br>dr_id,<br>speaker_seq} | 200 성공<br>401 실패(토큰 인증 실패)                    | 회의록 목록 조회 |
+| /lists        | POST   | {mn_title,dr_id}<br>선택:<br>{mn_date,<br>mn_place,<br>mn_explanation,<br>mn_memo,<br>speaker_seq} | {mn_id,<br>mn_make_date,<br>mn_title,<br>mn_date,<br>mn_place,<br>mn_explanation,<br>mn_memo,<br>mn_share_link,<br>user_id,<br>dr_id,<br>speaker_seq} | 201 성공<br>400 실패(요구되지 않는 필드값)<br>401 실패(토큰 인증 실패) | 회의록 생성    |
+| /<int:mn_id > | GET    |{}| {mn_id,<br>mn_make_date,<br>mn_title,<br>mn_date,<br>mn_place,<br>mn_explanation,<br>mn_memo,<br>mn_share_link,<br>user_id,<br>dr_id,<br>speaker_seq} | 200 성공<br>401 실패(토큰 인증 실패)<br>500 실패(존재하지 않는 회의록) | 회의록 조회    |
+| /<int:mn_id >/   |PUT|선택:<br>{mn_title,<br>dr_id,<br>mn_date,<br>mn_place,<br>mn_explanation,<br>mn_memo,<br>speaker_seq}| {mn_id,<br>mn_make_date,<br>mn_title,<br>mn_date,<br>mn_place,<br>mn_explanation,<br>mn_memo,<br>mn_share_link,<br>user_id,<br>dr_id,<br>speaker_seq} | 200 성공<br>400 실패(요구되지 않는 필드값)<br>401 실패(토큰 인증 실패) | 회의록 수정    |
+| /<int:mn_id >/   |DELETE|{}|   |204 성공<br>401 실패(토큰 인증 실패)| 회의록 삭제    |
+
+### /minutes/<int:mn_id >/bookmark
+> 북마크 관련 주소
+
+| Path            | Method | request                  | response                               | code                                              | 설명  |
+|-----------------|--------|--------------------------|----------------------------------------|---------------------------------------------------|-----|
+| /lists          | GET    | {}                       | {bm_seq,bm_start,<br>bm_end,bm_name,mn_id} | 200 성공<br>401 실패(토큰 인증 실패)                        | 북마크 목록 조회 |
+| /lists          | POST   |{bm_start,bm_end,bm_name} | {bm_seq,bm_start,<br>bm_end,bm_name,mn_id} | 201 성공<br>400 실패(요구되지 않는 필드값)<br>401 실패(토큰 인증 실패) | 북마크 생성 |
+| /<int:bm_seq >/ | GET    |{}| {bm_seq,bm_start,<br>bm_end,bm_name,mn_id} | 200 성공<br>401 실패(토큰 인증 실패)<br>500 실패(존재하지 않는 북마크) | 북마크 조회 |
+| /<int:bm_seq >/ | PUT    |선택:{bm_start,bm_end,bm_name}| {bm_seq,bm_start,<br>bm_end,bm_name,mn_id} |200 성공<br>400 실패(요구되지 않는 필드값)<br>401 실패(토큰 인증 실패)| 북마크 수정 |
+| /<int:bm_seq >/ | DELETE |{}|                                       |204 성공<br>401 실패(토큰 인증 실패)| 북마크 삭제 |
+
+### /minutes/<int:mn_id >/speakers
+> 화자 관련 주소
+
+| Path                | Method | request                  | response                                         |code| 설명  |
+|---------------------|--------|--------------------------|--------------------------------------------------|----|-----|
+| /lists              | GET    |{}|{speaker_seq,speaker_name,mn_id}| 200 성공<br>401 실패(토큰 인증 실패)                       | 화자 목록 조회 |
+| /<int:speaker_seq > | GET    |{}|{speaker_seq,speaker_name,mn_id}| 200 성공<br>401 실패(토큰 인증 실패)<br>500 실패(존재하지 않는 화자) | 화자 조회  |
+| /<int:speaker_seq > | PUT    |{speaker_name}| {speaker_seq,speaker_name,mn_id} | 200 성공<br>400 실패(요구되지 않는 필드값)<br>401 실패(토큰 인증 실패) | 화자 수정 |
+| /<int:speaker_seq > | DELETE |{}|                                                  |204 성공<br>401 실패(토큰 인증 실패)| 화자 삭제 |
+
+

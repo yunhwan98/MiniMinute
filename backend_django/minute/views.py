@@ -44,6 +44,10 @@ def minute(request, mn_id):
     elif request.method == 'PUT':
         data = JSONParser().parse(request)
         data["user_id"] = str(request.user.id)
+        if data.get("mn_title") == None:
+            data["mn_title"] = obj.mn_title
+        if data.get("dr_id") == None:
+            data["dr_id"] = obj.dr_id.dr_id
         serializer = MinutesSerializer(obj, data=data)
         if serializer.is_valid():
             serializer.save()
@@ -90,6 +94,8 @@ def bookmark(request, mn_id, bm_seq):
         data["user_id"] = str(request.user.id)
         data["mn_id"] = mn_id
         data["bm_seq"] = bm_seq
+        if data.get("bm_name") == None:
+            data["bm_name"] = obj.bm_name
         if data.get("bm_start") == None:
             data["bm_start"] = obj.bm_start
         if data.get("bm_end") == None:
