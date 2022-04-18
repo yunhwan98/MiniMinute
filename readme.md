@@ -86,7 +86,7 @@
 | Path          | Method | request  | response | code     | 설명        |
 |---------------|--------|----------|-------|----------|-----------|
 | /lists        | GET    | {}| {mn_id,<br>mn_make_date,<br>mn_title,<br>mn_date,<br>mn_place,<br>mn_explanation,<br>mn_memo,<br>mn_share_link,<br>user_id,<br>dr_id,<br>speaker_seq} | 200 성공<br>401 실패(토큰 인증 실패)                    | 회의록 목록 조회 |
-| /lists        | POST   | {mn_title,dr_id}<br>선택:<br>{mn_date,<br>mn_place,<br>mn_explanation,<br>mn_memo,<br>speaker_seq} | {mn_id,<br>mn_make_date,<br>mn_title,<br>mn_date,<br>mn_place,<br>mn_explanation,<br>mn_memo,<br>mn_share_link,<br>user_id,<br>dr_id,<br>speaker_seq} | 201 성공<br>400 실패(요구되지 않는 필드값)<br>401 실패(토큰 인증 실패) | 회의록 생성    |
+| /lists/        | POST   | {mn_title,dr_id}<br>선택:<br>{mn_date,<br>mn_place,<br>mn_explanation,<br>mn_memo,<br>speaker_seq} | {mn_id,<br>mn_make_date,<br>mn_title,<br>mn_date,<br>mn_place,<br>mn_explanation,<br>mn_memo,<br>mn_share_link,<br>user_id,<br>dr_id,<br>speaker_seq} | 201 성공<br>400 실패(요구되지 않는 필드값)<br>401 실패(토큰 인증 실패) | 회의록 생성    |
 | /<int:mn_id > | GET    |{}| {mn_id,<br>mn_make_date,<br>mn_title,<br>mn_date,<br>mn_place,<br>mn_explanation,<br>mn_memo,<br>mn_share_link,<br>user_id,<br>dr_id,<br>speaker_seq} | 200 성공<br>401 실패(토큰 인증 실패)<br>500 실패(존재하지 않는 회의록) | 회의록 조회    |
 | /<int:mn_id >/   |PUT|선택:<br>{mn_title,<br>dr_id,<br>mn_date,<br>mn_place,<br>mn_explanation,<br>mn_memo,<br>speaker_seq}| {mn_id,<br>mn_make_date,<br>mn_title,<br>mn_date,<br>mn_place,<br>mn_explanation,<br>mn_memo,<br>mn_share_link,<br>user_id,<br>dr_id,<br>speaker_seq} | 200 성공<br>400 실패(요구되지 않는 필드값)<br>401 실패(토큰 인증 실패) | 회의록 수정    |
 | /<int:mn_id >/   |DELETE|{}|   |204 성공<br>401 실패(토큰 인증 실패)| 회의록 삭제    |
