@@ -8,7 +8,6 @@ import Search from './pages/Search';
 import Profile from './pages/Profile';
 import NewLog from './pages/New_log';
 
-
 function App(){
     return (
         <BrowserRouter>

@@ -3,8 +3,12 @@ import { Link } from 'react-router-dom';
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import Sidebar from "../components/Sidebar";
+import {alignPropType} from "react-bootstrap/types";
+import button from "bootstrap/js/src/button";
+import NotFound from "./NotFound";
 
 const Home = () => {
+    console.log(localStorage);
     const [isAuthenticated, setisAuthenticated] = useState(localStorage.getItem('token') ? true : false);   //인증여부 확인
     const [user, setUser] = useState(localStorage.getItem('token') ? JSON.parse( localStorage.getItem('user') ) : []); //유저 정보
     
@@ -14,7 +18,7 @@ const Home = () => {
         <div>
             <Header />
             <div className="main">
-                <Sidebar/>
+                <Sidebar />
                 <div className="article">
                     <div className="log-list">
                         <div className="fav">
@@ -90,8 +94,10 @@ const Home = () => {
     );
     }
     else{   //권한이 없을때
-        return( 
-            <div>권한이 없습니다!</div>
+        return(
+            <div>
+                <NotFound />
+            </div>
         );
     }
     
