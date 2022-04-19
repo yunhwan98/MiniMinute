@@ -7,7 +7,7 @@ import NewLog_modal from "./NewLog_modal";
 import url from '../api/axios';
 
 function Sidebar() {
-    console.log(localStorage);
+    //console.log(localStorage);
 
     const dropDownRef = useRef(null);
     const [isOpen, setIsOpen] = useState(false);
@@ -29,6 +29,7 @@ function Sidebar() {
         setDirName(e.currentTarget.value);
     }
 
+
     //디렉토리 추가
     const addDirectory = (e) => {
         e.preventDefault();
@@ -44,6 +45,7 @@ function Sidebar() {
                 console.log("폴더추가실패"+error);
             });
     };
+
 
     return (
         <div className="sidebar">
@@ -64,7 +66,7 @@ function Sidebar() {
                 <h4>{user.username}</h4>
                 <button type="button" id="btn-color" className="new-btn" onClick={() => setLogShow(true)}>새 회의록</button>
                 <Modal show={logShow} onHide={() => setLogShow(false)}>
-                    <NewLog_modal />
+                    <NewLog_modal setLogShow={setLogShow}/*NewLog_modal에 setLogShow 전달하고 props로 바뀐 값 받아야 '생성'시 모달 사라짐  *//> 
                 </Modal>
             </div>
             <ul className="directory">

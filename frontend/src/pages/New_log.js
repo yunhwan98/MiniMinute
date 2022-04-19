@@ -33,7 +33,7 @@ function New_log(){
                         </div>
                     </div>
                     <div className="voice-play">
-                        <label id="btn-color" className="voice-btn" for="input-file">음성 파일 업로드</label>
+                        <label id="btn-color" className="voice-btn" htmlFor="input-file">음성 파일 업로드</label>
                         <input type="file" id="input-file" style={{display:"none"}}
                                accept="audio/*"
                                onChange={null}/>
