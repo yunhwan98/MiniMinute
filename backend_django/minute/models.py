@@ -46,6 +46,8 @@ class Minutes(models.Model):
         db_column="speaker_seq",
         null=True,
     )
+    class Meta:
+        db_table = 'minutes'
 
 class Speaker(models.Model):
     speaker_seq = models.AutoField(
@@ -62,6 +64,8 @@ class Speaker(models.Model):
         max_length=20,
         null=True
     )
+    class Meta:
+        db_table = 'speaker'
 
 class Bookmark(models.Model):
     bm_seq = models.AutoField(
@@ -77,3 +81,5 @@ class Bookmark(models.Model):
     bm_start = models.CharField(max_length=10)
     bm_end = models.CharField(max_length=10)
     bm_name = models.CharField(max_length=20)
+    class Meta:
+        db_table = 'bookmark'
