@@ -55,7 +55,6 @@ export default function SignupModal(props) {
           console.log(error.response.data.email);
           if(error.response.data.email == 'A user is already registered with this e-mail address.'){
             setErrormsg("※ 중복된 이메일 입니다 ※");
-      
           }
           else if(password !== confirmPassword) {
             setErrormsg("※ 비밀번호를 확인해주세요 ※");
@@ -64,11 +63,9 @@ export default function SignupModal(props) {
             setErrormsg("※ 특수문자를 포함한 8자 이상의 비밀번호를 입력해주세요 ※");
           }
         });
-    
   }
   //중복확인 버튼 누르면 중복이메일인지 체크
   const checkEmail = async(event) => {  
-
     event.preventDefault();
     url.post(
         "/rest-auth/signup",{

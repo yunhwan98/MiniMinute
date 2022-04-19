@@ -1,13 +1,29 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import { Link } from 'react-router-dom';
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import Sidebar from "../components/Sidebar";
 import NewLog_modal from "../components/NewLog_modal";
 import {Modal} from "react-bootstrap";
+import axios from 'axios';
+import url from '../api/axios';
 
 function Log_list() {
     const [logShow, setLogShow] = useState(false);
+
+    useEffect(() => { // 처음에만 정보 받아옴
+        url.get(     
+            "/minutes/lists/"
+            )
+            .then((response) => {
+            console.log(response.data);
+            alert('회의록을 불러왔습니다.')
+            })
+            .catch((error) => { //오류메시지 보이게 함
+            console.log(error.response);
+            });       
+      }, []);
+
 
     return (
         <div>
@@ -39,7 +55,7 @@ function Log_list() {
                                     </div>
                                 </button>
                                 <Modal show={logShow} onHide={() => setLogShow(false)}>
-                                    <NewLog_modal />
+                                    <NewLog_modal setLogShow={setLogShow}/>
                                 </Modal>
                             </div>
                             <div id="card-override" className="card" style={{width: "18rem"}}>

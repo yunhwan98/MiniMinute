@@ -8,11 +8,11 @@ import button from "bootstrap/js/src/button";
 import NotFound from "./NotFound";
 
 const Home = () => {
-    console.log(localStorage);
+ 
     const [isAuthenticated, setisAuthenticated] = useState(localStorage.getItem('token') ? true : false);   //인증여부 확인
     const [user, setUser] = useState(localStorage.getItem('token') ? JSON.parse( localStorage.getItem('user') ) : []); //유저 정보
     
-    console.log(user.username);
+
     if(isAuthenticated){ //권한이 있을 때만 표시
     return (
         <div>
