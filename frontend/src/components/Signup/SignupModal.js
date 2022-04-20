@@ -91,6 +91,34 @@ export default function SignupModal(props) {
         }
       });
   
+  }
+ //중복확인 버튼 누르면 중복이메일인지 체크
+ const checkNickname = async(event) => {  
+  event.preventDefault();
+  url.post(
+      "/rest-auth/signup",{
+        "username" : name
+      }
+    )
+    .then((response) => {
+      
+    })
+    .catch((error) => { //오류메시지 보이게 함
+      console.log(error.response);
+      console.log(error.response.data.username);
+      setColor("red");
+      if(!error.response.data.username){
+        setColor("rgb(65, 187, 81)");
+        setErrormsg("사용가능한 닉네임 입니다!");
+      }
+      else if(error.response.data.username == 'User의 username은/는 이미 존재합니다.'){
+        setErrormsg("※ 중복된 닉네임 입니다 ※");
+      }
+      else{
+        setErrormsg("※ 유효하지 않은 닉네임 입니다 ※");
+      }
+    });
+
 }
 
 
@@ -111,7 +139,8 @@ export default function SignupModal(props) {
               <div className="Errormsg" style={{backgroundColor : color}}>{errormsg} </div>
               <div><label>이메일</label> <input name="email" type="email" placeholder="이메일" value={email} onChange={onEmailHandler} className="signup-text"/>
               <button type="button" onClick={checkEmail} className="submit-btn" id="email_check">중복 확인</button></div>
-              <div><label>닉네임</label> <input name="name" type="text" placeholder="닉네임" value={name} onChange={onNameHandler} className="signup-text"/></div>                    
+              <div><label>닉네임</label> <input name="name" type="text" placeholder="닉네임" value={name} onChange={onNameHandler} className="signup-text"/>
+              <button type="button" onClick={checkNickname} className="submit-btn" id="nickname_check">중복 확인</button></div>                 
               <div><label>비밀번호</label> <input name="password" type="password" placeholder="비밀번호" value={password} onChange={onPasswordHandler} className="signup-text"/></div>
               <div><label>비밀번호 확인</label> <input name="confirmPassword" type="password" placeholder="비밀번호 확인" value={confirmPassword} onChange={onConfirmPasswordHandler} className="signup-text"/></div>
               <div><button type="submit" onSubmit={onSubmit} className="submit-btn">회원가입</button></div>
