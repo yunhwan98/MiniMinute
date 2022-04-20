@@ -4,12 +4,16 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import Sidebar from "../components/Sidebar";
 import NewLog_modal from "../components/NewLog_modal";
+import Log_card from "../components/Log_card";
 import {Modal} from "react-bootstrap";
 import axios from 'axios';
 import url from '../api/axios';
 
-function Log_list() {
+function Log_list(props) {
     const [logShow, setLogShow] = useState(false);
+    const [minutes,setMinutes] = useState([]);
+    const [dr_name, setDr_Name] =useState("");
+
 
     useEffect(() => { // 처음에만 정보 받아옴
         url.get(     
@@ -17,6 +21,7 @@ function Log_list() {
             )
             .then((response) => {
             console.log(response.data);
+            setMinutes(response.data);
             alert('회의록을 불러왔습니다.')
             })
             .catch((error) => { //오류메시지 보이게 함
@@ -57,57 +62,12 @@ function Log_list() {
                                 <Modal show={logShow} onHide={() => setLogShow(false)}>
                                     <NewLog_modal setLogShow={setLogShow}/>
                                 </Modal>
+                            </div>                          
+                            {minutes.map(minute => //일단 회의참가자 말고 메모 보이게 만듦
+                                <Log_card mn_title={minute.mn_title} mn_date={minute.mn_date} mn_explanation={minute.mn_explanation}/>                 
+                            )}
                             </div>
-                            <div id="card-override" className="card" style={{width: "18rem"}}>
-                                <Link to="" className="card-link">
-                                    <div className="card-body">
-                                        <h5 className="card-title">회의주제</h5>
-                                        <p className="card-text">Some quick example text</p>
-                                        <h5 className="card-title">회의시간</h5>
-                                        <p className="card-text">Some quick example text</p>
-                                        <h5 className="card-title">참여자</h5>
-                                        <p className="card-text">Some, quick, example, text</p>
-                                    </div>
-                                </Link>
-                            </div>
-                            <div id="card-override" className="card" style={{width: "18rem"}}>
-                                <Link to="" className="card-link">
-                                    <div className="card-body">
-                                        <h5 className="card-title">회의주제</h5>
-                                        <p className="card-text">Some quick example text</p>
-                                        <h5 className="card-title">회의시간</h5>
-                                        <p className="card-text">Some quick example text</p>
-                                        <h5 className="card-title">참여자</h5>
-                                        <p className="card-text">Some, quick, example, text</p>
-                                    </div>
-                                </Link>
-                            </div>
-                            <div id="card-override" className="card" style={{width: "18rem"}}>
-                                <Link to="" className="card-link">
-                                    <div className="card-body">
-                                        <h5 className="card-title">회의주제</h5>
-                                        <p className="card-text">Some quick example text</p>
-                                        <h5 className="card-title">회의시간</h5>
-                                        <p className="card-text">Some quick example text</p>
-                                        <h5 className="card-title">참여자</h5>
-                                        <p className="card-text">Some, quick, example, text</p>
-                                    </div>
-                                </Link>
-                            </div>
-                            <div id="card-override" className="card" style={{width: "18rem"}}>
-                                <Link to="" className="card-link">
-                                    <div className="card-body">
-                                        <h5 className="card-title">회의주제</h5>
-                                        <p className="card-text">Some quick example text</p>
-                                        <h5 className="card-title">회의시간</h5>
-                                        <p className="card-text">Some quick example text</p>
-                                        <h5 className="card-title">참여자</h5>
-                                        <p className="card-text">Some, quick, example, text</p>
-                                    </div>
-                                </Link>
-                            </div>
-                        </div>
-                    </div>
+                        </div>  
                     <Footer />
                 </div>
             </div>

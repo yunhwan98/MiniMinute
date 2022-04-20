@@ -684,7 +684,7 @@ label{
 }
 
 
-#email_check {
+#email_check, #nickname_check {
 
   width:15%;
   margin-left:10px;
