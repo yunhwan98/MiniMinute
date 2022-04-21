@@ -10,7 +10,7 @@ import NotFound from "./NotFound";
 import url from '../api/axios';
 
 const Home = () => {
- 
+
     const [isAuthenticated, setisAuthenticated] = useState(localStorage.getItem('token') ? true : false);   //인증여부 확인
     const [user, setUser] = useState(localStorage.getItem('token') ? JSON.parse( localStorage.getItem('user') ) : []); //유저 정보
     const [minutes,setMinutes] = useState([]);
@@ -22,7 +22,7 @@ const Home = () => {
             .then((response) => {
             console.log(response.data);
             setMinutes(response.data);
-            alert('회의록을 불러왔습니다.')
+            console.log('회의록을 불러왔습니다.');
             })
             .catch((error) => { //오류메시지 보이게 함
             console.log(error.response);

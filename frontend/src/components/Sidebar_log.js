@@ -4,7 +4,11 @@ import {Modal} from "react-bootstrap";
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import setting from "../images/setting.png";
 
-function Sidebar_log() {
+function Sidebar_log(props) {
+    const drId = props.dr_id;
+    const drName = props.dr_name;
+    const toList = drName ? `${drId}/${drName}/loglist` : "/home";  //home에서 회의록 만들면 '목록으로' 클릭 시 home으로
+
     const dropDownRef = useRef(null);
     const [isOpen, setIsOpen] = useState(false);
 
@@ -39,7 +43,7 @@ function Sidebar_log() {
                 <ul>
                     <li><Link to="/newlog">회의록 열람</Link></li>
                     <li><Link to="">감정분석</Link></li>
-                    <li><Link to="/loglist">목록으로</Link></li>
+                    <li><Link to={toList}>목록으로</Link></li>
                 </ul>
             </div>
 
