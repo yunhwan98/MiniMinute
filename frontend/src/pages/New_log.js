@@ -1,13 +1,19 @@
 import React from "react";
 import Header from "../components/Header";
 import SidebarLog from "../components/Sidebar_log";
+import {useLocation} from "react-router-dom";
 
-function New_log(){
+function New_log(/*{location}*/){
+    //newlog_modal->new_log로 데이터가 안옴
+    // console.log(location.props+"!");
+    // const drId = location.state.dr_id;
+    // const drName = location.state.dr_name;
+
     return (
         <div>
             <Header/>
             <div className="main">
-                <SidebarLog/>
+                <SidebarLog /*dr_name={drName} dr_id={drId}*/ />
                 <div className="article">
                     <div style={{display: "flex"}}>
                         <div>

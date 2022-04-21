@@ -8,11 +8,14 @@ import axios from 'axios';
 import url from '../api/axios';
 
 function NewLog_modal(props) {
+    const drId=props.dr_id ? props.dr_id : 1;   //home.js에서 만들면 1
+    const drName = props.dr_name ? props.dr_name : "";
+
     //const [logShow, setLogShow] = useState(false);
     const [title, setTitle] = useState("");
     const [startDate, setStartDate] = useState(new Date()); //DB에 저장 형식 다름
     const [memo, setMemo] = useState("");
-    const [dr_id,setDr_id] = useState(1);   //디렉토리 지정 필요
+    const [dr_id,setDr_id] = useState("");   //디렉토리 지정 필요
     const [share_link , setShare_link] =useState("");
     const [errormsg, setErrormsg] = useState("");
     const navigate = useNavigate();
@@ -34,12 +37,16 @@ function NewLog_modal(props) {
                 "mn_explanation"  : memo,       //회의록 설명
                 "mn_date"  : mn_date,           //회의 시간
                 "mn_sharelink" : share_link,    //공유 링크
-                "dr_id"    : dr_id              //디렉토리 id
+                "dr_id"    : drId              //디렉토리 id
             })
             .then((response) => {
             console.log(response);
             props.setLogShow(false); 
-            alert('회의록을 만들었습니다.') //추후 삭제
+            alert('회의록을 만들었습니다.'); //추후 삭제
+                // props.history.push({
+                //     pathname: "/newlog",
+                //     props: {dr_info: [{dr_id: drId, dr_name: drName}]}
+                // })
             navigate('/NewLog');/*클릭시 빈회의록 페이지 이동*/
             })
             .catch((error) => { //오류메시지 보이게 함

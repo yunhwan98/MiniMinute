@@ -112,6 +112,25 @@
   color: #E0BFE6;
 }
 
+.dr-menu {
+  display: none;
+  width: 150px;
+  padding: 0;
+}
+
+.myDir-li:hover .dr-menu{
+  display: block;
+}
+
+.dr-li {
+  float: left;
+}
+
+.dr-item {
+  color: #B96BC6;
+  font-weight: lighter;
+}
+
 .body-form {
   padding: 0 0 10px 0;
 }
@@ -218,6 +237,12 @@
   list-style: none;
   line-height: 30px;
   font-size: 17px;
+  max-height: 200px;
+  overflow: scroll;
+}
+
+::-webkit-scrollbar { /*scrollbar 안보이게*/
+  display: none;
 }
 
 .main {

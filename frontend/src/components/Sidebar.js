@@ -7,15 +7,17 @@ import NewLog_modal from "./NewLog_modal";
 import url from '../api/axios';
 
 function Sidebar() {
-    //console.log(localStorage);
-
     const dropDownRef = useRef(null);
     const [isOpen, setIsOpen] = useState(false);
 
     const [dirShow, setDirShow] = useState(false);
     const [logShow, setLogShow] = useState(false);
 
-    const [dirName, setDirName] = useState("");
+    const [dr_info, setDrInfo] = useState([]);
+    const [drName, setDrName] = useState("");
+    const [newDrName, setNewDrName] = useState("");
+    const [editDr, setEditDr] = useState(false);
+    const [delDr, setDelDr] = useState(false);
 
     //유저정보
     const [user, setUser] = useState(localStorage.getItem('token') ? JSON.parse( localStorage.getItem('user') ) : []);
@@ -26,9 +28,24 @@ function Sidebar() {
     }
 
     const onDirNameHandler = (e) => {
-        setDirName(e.currentTarget.value);
+        setDrName(e.currentTarget.value);
+    }
+    const onNewDirNameHandler = (e) => {
+        setNewDrName(e.currentTarget.value);
     }
 
+    //디렉토리 목록 조회(처음, 디렉토리 변경될 때마다)
+    useEffect(() => {
+        url.get(
+            "/directorys/lists")
+            .then((response) => {
+                console.log("dr_info: " + response.data + "\nsuccess!");
+                setDrInfo(response.data);
+            })
+            .catch((error) => {
+                console.log("디렉토리 목록 불러오기 실패 " + error);
+            })
+    }, [dirShow, editDr, delDr]);
 
     //디렉토리 추가
     const addDirectory = (e) => {
@@ -36,16 +53,50 @@ function Sidebar() {
         console.log(localStorage);
         url.post(
             "/directorys/lists",
-            {"dr_name": dirName},)
+            {"dr_name": drName},)
             .then((response) => {
-                console.log(response);
-                alert("폴더가 추가되었습니다.");
+                console.log("디렉토리 추가 성공");
+                setDrName("");
+                setDirShow(false);
             })
             .catch((error) => {
-                console.log("폴더추가실패"+error);
+                console.log("디렉토리 추가 실패 "+error);
             });
     };
 
+    //수정
+    const editDirectory = (e, id) => {
+        e.preventDefault();
+
+        url.put(
+            "/directorys/"+id,
+            {"dr_name": newDrName},)
+            .then((response) => {
+                console.log(response);
+                alert("디렉토리 이름이 변경되었습니다.");
+                setNewDrName("");
+                setEditDr(false);
+            })
+            .catch((error) => {
+                console.log("디렉토리 이름 변경 실패 "+error);
+            });
+    }
+
+    //삭제
+    const delDirectory = (e, id) => {
+        e.preventDefault();
+
+        url.delete(
+            "/directorys/"+id)
+            .then((response) => {
+                console.log("디렉토리 삭제 성공");
+                alert("디렉토리가 삭제되었습니다.");
+                setDelDr(true);
+            })
+            .catch((error) => {
+                console.log("디렉토리 삭제 실패 "+error);
+            });
+    }
 
     return (
         <div className="sidebar">
@@ -103,22 +154,41 @@ function Sidebar() {
                     <Link to ="" className="directory-link">내 회의록</Link>
                 </li>
                 <ul className="myDirectory">
-                    <li>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor"
-                             className="bi bi-folder2" viewBox="0 2 18 18">
-                            <path
-                                d="M1 3.5A1.5 1.5 0 0 1 2.5 2h2.764c.958 0 1.76.56 2.311 1.184C7.985 3.648 8.48 4 9 4h4.5A1.5 1.5 0 0 1 15 5.5v7a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 1 12.5v-9zM2.5 3a.5.5 0 0 0-.5.5V6h12v-.5a.5.5 0 0 0-.5-.5H9c-.964 0-1.71-.629-2.174-1.154C6.374 3.334 5.82 3 5.264 3H2.5zM14 7H2v5.5a.5.5 0 0 0 .5.5h11a.5.5 0 0 0 .5-.5V7z"/>
-                        </svg>
-                        <Link to ="/loglist" className="directory-link">회사</Link>
-                    </li>
-                    <li>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor"
-                             className="bi bi-folder2" viewBox="0 2 18 18">
-                            <path
-                                d="M1 3.5A1.5 1.5 0 0 1 2.5 2h2.764c.958 0 1.76.56 2.311 1.184C7.985 3.648 8.48 4 9 4h4.5A1.5 1.5 0 0 1 15 5.5v7a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 1 12.5v-9zM2.5 3a.5.5 0 0 0-.5.5V6h12v-.5a.5.5 0 0 0-.5-.5H9c-.964 0-1.71-.629-2.174-1.154C6.374 3.334 5.82 3 5.264 3H2.5zM14 7H2v5.5a.5.5 0 0 0 .5.5h11a.5.5 0 0 0 .5-.5V7z"/>
-                        </svg>
-                        <Link to ="" className="directory-link">학교</Link>
-                    </li>
+                    {dr_info.map(dr_info =>
+                        <li className="myDir-li" key={dr_info.dr_id}>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor"
+                                 className="bi bi-folder2" viewBox="0 2 18 18">
+                                <path
+                                    d="M1 3.5A1.5 1.5 0 0 1 2.5 2h2.764c.958 0 1.76.56 2.311 1.184C7.985 3.648 8.48 4 9 4h4.5A1.5 1.5 0 0 1 15 5.5v7a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 1 12.5v-9zM2.5 3a.5.5 0 0 0-.5.5V6h12v-.5a.5.5 0 0 0-.5-.5H9c-.964 0-1.71-.629-2.174-1.154C6.374 3.334 5.82 3 5.264 3H2.5zM14 7H2v5.5a.5.5 0 0 0 .5.5h11a.5.5 0 0 0 .5-.5V7z"/>
+                            </svg>
+                            <Link to = {`/${dr_info.dr_id}/${dr_info.dr_name}/loglist`} className="directory-link">{dr_info.dr_name}</Link>
+
+                            <ul className="dr-menu">
+                                <li className="dr-li"><button type="button" className="none-btn dr-item" onClick={() => setEditDr(true)}>수정</button></li>
+                                <Modal show={editDr} onHide={() => setEditDr(false)}>
+                                    <Modal.Header closeButton>
+                                        <Modal.Title>폴더 수정</Modal.Title>
+                                    </Modal.Header>
+                                    <Modal.Body>
+                                        <h6>폴더 이름</h6>
+                                        <input type="text" className="form-control" id="directory-name" value={newDrName} onChange={onNewDirNameHandler} />
+                                    </Modal.Body>
+                                    <Modal.Footer>
+                                        <button type="submit" id="btn-color" className="modal-btn"
+                                        onClick={(e) => {editDirectory(e, dr_info.dr_id);}}
+                                        >수정
+                                        </button>
+                                    </Modal.Footer>
+                                </Modal>
+
+                                <li className="dr-li"><button type="button" className="none-btn dr-item"
+                                onClick={(e) => {delDirectory(e, dr_info.dr_id);}}
+                                >삭제</button></li>
+                            </ul>
+                        </li>
+                    )}
+
+                    {/* add directory btn*/}
                     <li>
                         <button type="button" className="none-btn" onClick={() => setDirShow(true)}>
                             <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor"
@@ -135,7 +205,7 @@ function Sidebar() {
                             </Modal.Header>
                             <Modal.Body>
                                 <h6>폴더 이름</h6>
-                                <input type="text" className="form-control" id="directory-name" value={dirName} onChange={onDirNameHandler} />
+                                <input type="text" className="form-control" id="directory-name" value={drName} onChange={onDirNameHandler} />
                             </Modal.Body>
                             <Modal.Footer>
                                 <button type="submit" id="btn-color" className="modal-btn" onClick={addDirectory}>
