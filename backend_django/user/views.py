@@ -98,8 +98,7 @@ def directory_list(request):
 @permission_classes((IsAuthenticated,))
 @authentication_classes((JSONWebTokenAuthentication,))
 def directory(request, n):
-    user_dir = Directory.objects.filter(user_id=request.user.id)
-    obj = user_dir[n - 1]
+    obj = Directory.objects.filter(user_id=request.user.id, dr_id=n)
 
     if request.method == 'GET':
         serializer = DirectorySerializer(obj)
