@@ -3,16 +3,32 @@ import { Link } from 'react-router-dom';
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import Sidebar from "../components/Sidebar";
+import Log_card from "../components/Log_card";
 import {alignPropType} from "react-bootstrap/types";
 import button from "bootstrap/js/src/button";
 import NotFound from "./NotFound";
+import url from '../api/axios';
 
 const Home = () => {
  
     const [isAuthenticated, setisAuthenticated] = useState(localStorage.getItem('token') ? true : false);   //인증여부 확인
     const [user, setUser] = useState(localStorage.getItem('token') ? JSON.parse( localStorage.getItem('user') ) : []); //유저 정보
-    
+    const [minutes,setMinutes] = useState([]);
 
+    useEffect(() => { // 처음에만 정보 받아옴
+        url.get(     
+            "/minutes/lists/"
+            )
+            .then((response) => {
+            console.log(response.data);
+            setMinutes(response.data);
+            alert('회의록을 불러왔습니다.')
+            })
+            .catch((error) => { //오류메시지 보이게 함
+            console.log(error.response);
+            });       
+      }, []);
+      
     if(isAuthenticated){ //권한이 있을 때만 표시
     return (
         <div>
@@ -56,18 +72,9 @@ const Home = () => {
                                 <p>최근 회의록</p>
                             </div>
                             <div className="log-card">
-                                <div id="card-override" className="card" style={{width: "18rem"}}>
-                                    <Link to="" className="card-link">
-                                        <div className="card-body">
-                                            <h5 className="card-title">회의주제</h5>
-                                            <p className="card-text">Some quick example text</p>
-                                            <h5 className="card-title">회의시간</h5>
-                                            <p className="card-text">Some quick example text</p>
-                                            <h5 className="card-title">참여자</h5>
-                                            <p className="card-text">Some, quick, example, text</p>
-                                        </div>
-                                    </Link>
-                                </div>
+                                {minutes.map(minute => //일단 회의참가자 말고 메모 보이게 만듦
+                                    <Log_card mn_title={minute.mn_title} mn_date={minute.mn_date} mn_explanation={minute.mn_explanation}/>                 
+                                )}
                             </div>
                         </div>
 
