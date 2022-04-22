@@ -1,19 +1,20 @@
 import React from "react";
 import Header from "../components/Header";
 import SidebarLog from "../components/Sidebar_log";
-import {useLocation} from "react-router-dom";
+import {useParams} from "react-router-dom";
 
-function New_log(/*{location}*/){
-    //newlog_modal->new_log로 데이터가 안옴
-    // console.log(location.props+"!");
-    // const drId = location.state.dr_id;
-    // const drName = location.state.dr_name;
+function Log(){
+    let params = useParams();  //url로 정보받아오기
+    console.log(params);
+    const dr_id = params.dr_id;
+    const dr_name = params.dr_name;
+    const mn_id = params.mn_id;
 
     return (
         <div>
             <Header/>
             <div className="main">
-                <SidebarLog /*dr_name={drName} dr_id={drId}*/ />
+                <SidebarLog dr_name={dr_name} dr_id={dr_id} mn_id={mn_id}/>
                 <div className="article">
                     <div style={{display: "flex"}}>
                         <div>
@@ -50,4 +51,4 @@ function New_log(/*{location}*/){
     );
 }
 
-export default New_log;
+export default Log;

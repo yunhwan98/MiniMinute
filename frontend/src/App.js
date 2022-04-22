@@ -6,7 +6,7 @@ import Start from './pages/Start';
 import Log_list from './pages/Log_list';
 import Search from './pages/Search';
 import Profile from './pages/Profile';
-import NewLog from './pages/New_log';
+import Log from './pages/Log';
 
 function App(){
     return (
@@ -18,7 +18,7 @@ function App(){
                     <Route path="/:dr_id/:dr_name/loglist" element={<Log_list />} />   {/*디렉토리별 회의록 목록*/}
                     <Route path="/search" element={<Search />} />
                     <Route path="/profile" element={<Profile />} />
-                    <Route path="/newlog" element={<NewLog />} />
+                    <Route path="/:dr_id/:dr_name/:mn_id/log" element={<Log />} />
                 </Routes>
             </div>
         </BrowserRouter>

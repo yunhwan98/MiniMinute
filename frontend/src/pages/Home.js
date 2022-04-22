@@ -14,6 +14,7 @@ const Home = () => {
     const [isAuthenticated, setisAuthenticated] = useState(localStorage.getItem('token') ? true : false);   //인증여부 확인
     const [user, setUser] = useState(localStorage.getItem('token') ? JSON.parse( localStorage.getItem('user') ) : []); //유저 정보
     const [minutes,setMinutes] = useState([]);
+    const [dr_info, setDr_info] = useState([]);
 
     useEffect(() => { // 처음에만 정보 받아옴
         url.get(     
@@ -73,7 +74,7 @@ const Home = () => {
                             </div>
                             <div className="log-card">
                                 {minutes.map(minute => //일단 회의참가자 말고 메모 보이게 만듦
-                                    <Log_card mn_title={minute.mn_title} mn_date={minute.mn_date} mn_explanation={minute.mn_explanation}/>                 
+                                    <Log_card dr_id={minute.dr_id} mn_id={minute.mn_id} mn_title={minute.mn_title} mn_date={minute.mn_date} mn_explanation={minute.mn_explanation}/>
                                 )}
                             </div>
                         </div>

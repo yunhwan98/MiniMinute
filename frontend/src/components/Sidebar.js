@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Link } from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import {Modal} from "react-bootstrap";
 import profile from '../images/profile2.png';
 import setting from '../images/setting.png';
@@ -7,6 +7,7 @@ import NewLog_modal from "./NewLog_modal";
 import url from '../api/axios';
 
 function Sidebar() {
+    const navigate = useNavigate();
     const dropDownRef = useRef(null);
     const [isOpen, setIsOpen] = useState(false);
 
@@ -27,10 +28,10 @@ function Sidebar() {
         localStorage.clear();
     }
 
-    const onDirNameHandler = (e) => {
+    const onDirNameHandler = (e) => {   //디렉토리 추가
         setDrName(e.currentTarget.value);
     }
-    const onNewDirNameHandler = (e) => {
+    const onNewDirNameHandler = (e) => {    //디렉토리 수정
         setNewDrName(e.currentTarget.value);
     }
 
@@ -39,7 +40,7 @@ function Sidebar() {
         url.get(
             "/directorys/lists")
             .then((response) => {
-                console.log("dr_info: " + response.data + "\nsuccess!");
+                console.log(response.data);
                 setDrInfo(response.data);
             })
             .catch((error) => {
@@ -92,6 +93,7 @@ function Sidebar() {
                 console.log("디렉토리 삭제 성공");
                 alert("디렉토리가 삭제되었습니다.");
                 setDelDr(true);
+                navigate("/home");
             })
             .catch((error) => {
                 console.log("디렉토리 삭제 실패 "+error);

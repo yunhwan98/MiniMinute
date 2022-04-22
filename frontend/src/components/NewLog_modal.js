@@ -8,8 +8,9 @@ import axios from 'axios';
 import url from '../api/axios';
 
 function NewLog_modal(props) {
-    const drId=props.dr_id ? props.dr_id : 1;   //home.js에서 만들면 1
-    const drName = props.dr_name ? props.dr_name : "";
+    const drId = props.dr_id ? props.dr_id : 1;   //home.js에서 만들면 1
+    const drName = props.dr_name ? props.dr_name : "home";
+    const mn_id = props.mn_id;
 
     //const [logShow, setLogShow] = useState(false);
     const [title, setTitle] = useState("");
@@ -43,11 +44,7 @@ function NewLog_modal(props) {
             console.log(response);
             props.setLogShow(false); 
             alert('회의록을 만들었습니다.'); //추후 삭제
-                // props.history.push({
-                //     pathname: "/newlog",
-                //     props: {dr_info: [{dr_id: drId, dr_name: drName}]}
-                // })
-            navigate('/NewLog');/*클릭시 빈회의록 페이지 이동*/
+            navigate(`/${drId}/${drName}/${mn_id}/log`);/*클릭시 빈회의록 페이지 이동*/
             })
             .catch((error) => { //오류메시지 보이게 함
             console.log(error.response);
