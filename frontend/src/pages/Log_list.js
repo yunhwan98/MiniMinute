@@ -17,10 +17,11 @@ function Log_list(props) {
 
     const [logShow, setLogShow] = useState(false);
     const [minutes,setMinutes] = useState([]);
-
+   
+   
     // const [dr_name, setDr_Name] =useState("");
 
-
+    
     useEffect(() => { // 처음에만 정보 받아옴
         url.get(     
             "/minutes/lists/"
@@ -35,6 +36,7 @@ function Log_list(props) {
             });       
       }, []);
 
+    const result = minutes.filter(minute => dr_id === `${minute.dr_id}`); //디렉토리 번호와 일치하는 회의록만 filter
 
     return (
         <div>
@@ -69,7 +71,7 @@ function Log_list(props) {
                                     <NewLog_modal dr_id = {dr_id} dr_name = {dr_name} mn_id={minutes.mn_id} setLogShow={setLogShow}/>
                                 </Modal>
                             </div>                          
-                            {minutes.map(minute => //일단 회의참가자 말고 메모 보이게 만듦
+                            {result.map(minute => //일단 회의참가자 말고 메모 보이게 만듦
                                 <Log_card dr_id={dr_id} dr_name={dr_name} mn_id={minute.mn_id} mn_title={minute.mn_title} mn_date={minute.mn_date} mn_explanation={minute.mn_explanation}/>
                             )}
                             </div>
