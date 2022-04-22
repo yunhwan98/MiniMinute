@@ -1,18 +1,23 @@
-import React, {useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import { Link } from 'react-router-dom';
 import {Modal} from "react-bootstrap";
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import setting from "../images/setting.png";
+import url from '../api/axios';
 
 function Sidebar_log(props) {
     const drId = props.dr_id;
     const drName = props.dr_name;
-    const toList = drName ? `${drId}/${drName}/loglist` : "/home";  //home에서 회의록 만들면 '목록으로' 클릭 시 home으로
+    const mnId = props.mn_id;
+    let toList = `${drId}/${drName}/loglist`;
+    if (drName === 'home') toList = "home";    //home에서 회의록 만들면 '목록으로' 클릭 시 home으로
 
     const dropDownRef = useRef(null);
     const [isOpen, setIsOpen] = useState(false);
 
     const [share, setShare] = useState(false);
+
+    const [mn_info, setMn_info] = useState([]);
 
       //유저정보
     const [user, setUser] = useState(localStorage.getItem('token') ? JSON.parse( localStorage.getItem('user') ) : []);
@@ -21,6 +26,18 @@ function Sidebar_log(props) {
         localStorage.clear(); 
     }
 
+    //개별 회의록 조회
+    useEffect(() => {
+        url.get(
+            `minutes/${mnId}`)
+            .then((response)=>{
+                console.log(response.data);
+                setMn_info(response.data);
+            })
+            .catch((error) => {
+                console.log("회의록 정보 불러오기 실패 "+error);
+            })
+    }, [])
 
     return(
         <div className="sidebar">
@@ -43,7 +60,7 @@ function Sidebar_log(props) {
                 <ul>
                     <li><Link to="/newlog">회의록 열람</Link></li>
                     <li><Link to="">감정분석</Link></li>
-                    <li><Link to={toList}>목록으로</Link></li>
+                    <li><Link to={`/${toList}`}>목록으로</Link></li>
                 </ul>
             </div>
 
@@ -74,10 +91,10 @@ function Sidebar_log(props) {
                         </Modal>
                 <div>
                     <ul>
-                        <li className="info-topic">회의 주제</li>
-                        <li className="info-date">2022/04/13</li>
+                        <li className="info-topic">{mn_info.mn_title}</li>
+                        <li className="info-date">{mn_info.mn_date}</li>
                         <li className="info-participant">참석자</li>
-                        <li className="info-memo">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam eget nisi eu justo</li>
+                        <li className="info-memo">{mn_info.mn_explanation}</li>
                     </ul>
                 </div>
             </div>

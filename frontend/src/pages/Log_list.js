@@ -66,11 +66,11 @@ function Log_list(props) {
                                     </div>
                                 </button>
                                 <Modal show={logShow} onHide={() => setLogShow(false)}>
-                                    <NewLog_modal dr_id = {dr_id} dr_name = {dr_name} setLogShow={setLogShow}/>
+                                    <NewLog_modal dr_id = {dr_id} dr_name = {dr_name} mn_id={minutes.mn_id} setLogShow={setLogShow}/>
                                 </Modal>
                             </div>                          
                             {minutes.map(minute => //일단 회의참가자 말고 메모 보이게 만듦
-                                <Log_card mn_title={minute.mn_title} mn_date={minute.mn_date} mn_explanation={minute.mn_explanation}/>                 
+                                <Log_card dr_id={dr_id} dr_name={dr_name} mn_id={minute.mn_id} mn_title={minute.mn_title} mn_date={minute.mn_date} mn_explanation={minute.mn_explanation}/>
                             )}
                             </div>
                         </div>  
