@@ -17,8 +17,8 @@ function Log_list(props) {
 
     const [logShow, setLogShow] = useState(false);
     const [minutes,setMinutes] = useState([]);
-   
-   
+    const [search, setSearch] = useState("");
+    let searchResult=[];
     // const [dr_name, setDr_Name] =useState("");
 
     
@@ -37,10 +37,15 @@ function Log_list(props) {
       }, []);
 
     const result = minutes.filter(minute => dr_id === `${minute.dr_id}`); //디렉토리 번호와 일치하는 회의록만 filter
+  
+    searchResult = result.filter(minute =>( //search 검색어가 포함되는 회의록만 filter(공백시에는 전부 보임)
+            `${minute.mn_title}`.toLowerCase().includes(search) || `${minute.mn_date}`.toLowerCase().includes(search)
+            || `${minute.mn_explanation}`.toLowerCase().includes(search)
+    ))
 
     return (
         <div>
-            <Header />
+            <Header setSearch={setSearch}/>
             <div className="main">
                 <Sidebar/>
                 <div className="article">
@@ -71,7 +76,7 @@ function Log_list(props) {
                                     <NewLog_modal dr_id = {dr_id} dr_name = {dr_name} mn_id={minutes.mn_id} setLogShow={setLogShow}/>
                                 </Modal>
                             </div>                          
-                            {result.map(minute => //일단 회의참가자 말고 메모 보이게 만듦
+                            {searchResult.map(minute => //일단 회의참가자 말고 메모 보이게 만듦
                                 <Log_card dr_id={dr_id} dr_name={dr_name} mn_id={minute.mn_id} mn_title={minute.mn_title} mn_date={minute.mn_date} mn_explanation={minute.mn_explanation}/>
                             )}
                             </div>
