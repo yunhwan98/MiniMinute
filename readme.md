@@ -102,7 +102,7 @@
 | /<int:bm_seq > | PUT    |선택:{bm_start,bm_end,bm_name}| {bm_seq,bm_start,<br>bm_end,bm_name,mn_id} |200 성공<br>400 실패(요구되지 않는 필드값)<br>401 실패(토큰 인증 실패)| 북마크 수정 |
 | /<int:bm_seq > | DELETE |{}|                                       |204 성공<br>401 실패(토큰 인증 실패)| 북마크 삭제 |
 
-### /minutes/<int:mn_id >/speakers
+### /minutes/<int:mn_id >/speaker
 > 화자 관련 주소
 
 | Path                | Method | request                  | response                                         |code| 설명  |
