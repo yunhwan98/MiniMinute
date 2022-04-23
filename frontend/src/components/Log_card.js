@@ -7,6 +7,7 @@ import url from '../api/axios';
 export default function Log_card({dr_id, dr_name, mn_id, mn_title, mn_date, mn_explanation}) {
     const drId = dr_id ? dr_id : "1";
     const drName = dr_name ? dr_name : "home";
+
     return (
         <div>
             <div id="card-override" className="card" style={{width: "18rem"}}>
