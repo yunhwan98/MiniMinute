@@ -46,8 +46,26 @@ class Minutes(models.Model):
         db_column="speaker_seq",
         null=True,
     )
+    file_id=models.ForeignKey(
+        "File",
+        related_name="minutes",
+        on_delete=models.SET_NULL,
+        db_column="file_id",
+        null=True,
+    )
     class Meta:
         db_table = 'minutes'
+
+class File(models.Model):
+    file_id = models.AutoField(
+        verbose_name="file ID",
+        primary_key=True,
+    )
+    file_name = models.CharField(max_length=20)
+    file_extension = models.CharField(max_length=5)
+    file_path = models.CharField(max_length=512)
+    class Meta:
+        db_table = 'file'
 
 class Speaker(models.Model):
     speaker_seq = models.AutoField(
@@ -83,3 +101,4 @@ class Bookmark(models.Model):
     bm_name = models.CharField(max_length=20)
     class Meta:
         db_table = 'bookmark'
+

@@ -1,5 +1,11 @@
 from rest_framework import serializers
-from .models import Minutes, Speaker, Bookmark
+from .models import Minutes, Speaker, Bookmark, File
+
+class FileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = File
+        #fields = ['file_id','file_name','file_extension','file_path']
+        fields = '__all__'
 
 class SpeakerSerializer(serializers.ModelSerializer):
     class Meta:

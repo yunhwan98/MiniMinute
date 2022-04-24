@@ -32,7 +32,10 @@ urlpatterns = [
     path('directorys/', include('user.directory_urls')),
   
     # 회의록 관련
-    path('minutes/', include('minute.urls')),
+    path('minutes/', include('minute.minutes_urls')),
+
+    # 파일 관련
+    path('files/', include('minute.file_urls')),
 
     # 토큰(발급, 인증, 갱신)
     path('api/token', obtain_jwt_token),

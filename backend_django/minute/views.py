@@ -5,8 +5,8 @@ from rest_framework.parsers import JSONParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
-from .models import Minutes, Speaker, Bookmark
-from .serializers import MinutesSerializer, SpeakerSerializer, BookmarkSerializer
+from .models import Minutes, Speaker, Bookmark, File
+from .serializers import MinutesSerializer, SpeakerSerializer, BookmarkSerializer, FileSerializer
 
 def index(request):
     return HttpResponse("회의록 테스트")
@@ -153,3 +153,70 @@ def speaker(request, mn_id, speaker_seq):
     elif request.method == 'DELETE':
         obj.delete()
         return HttpResponse(status=204)
+
+# 파일 전체 목록 조회
+# 관리자 계정만 가능
+@api_view(['GET'])
+@permission_classes((IsAuthenticated,))
+@authentication_classes((JSONWebTokenAuthentication,))
+def file_list(request):
+    if request.user.is_admin:
+        query_set = File.objects.all()
+        serializer = FileSerializer(query_set, many=True)
+        return JsonResponse(serializer.data, safe=False)
+    return HttpResponse("관리자가 아닙니다.", status=400)
+
+# 파일 (조회, 수정, 삭제)
+@api_view(['GET', 'PUT', 'DELETE'])
+@permission_classes((IsAuthenticated,))
+@authentication_classes((JSONWebTokenAuthentication,))
+def file(request, file_id):
+    obj = File.objects.get(file_id=file_id)
+
+    if request.method == 'GET':
+        serializer = FileSerializer(obj)
+        return JsonResponse(serializer.data, safe=False)
+
+    elif request.method == 'PUT':
+        data = JSONParser().parse(request)
+        data["file_id"] = file_id
+        if data.get("file_name") == None:
+            data["file_name"] = obj.file_name
+        if data.get("file_extension") == None:
+            data["file_extension"] = obj.file_extension
+        if data.get("file_path") == None:
+            data["file_path"] = obj.file_path
+        serializer = FileSerializer(obj, data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse(serializer.data, status=200)
+        return JsonResponse(serializer.errors, status=400)
+
+    elif request.method == 'DELETE':
+        obj.delete()
+        return HttpResponse(status=204)
+
+# 파일 업로드
+@api_view(['POST'])
+@permission_classes((IsAuthenticated,))
+@authentication_classes((JSONWebTokenAuthentication,))
+def file_upload(request, mn_id):
+    minutes = Minutes.objects.get(mn_id=mn_id)
+
+    if request.method == 'POST':
+        file_data = JSONParser().parse(request)
+        file_serializer = FileSerializer(data=file_data)
+        if file_serializer.is_valid():
+            file_serializer.save()
+
+            # 회의록 정보 수정
+            minutes_data = {'mn_id':mn_id, 'file_id':file_serializer.data.get("file_id"),'user_id':str(request.user.id),'mn_title':minutes.mn_title,'dr_id':minutes.dr_id.dr_id}
+            minutes_serializer = MinutesSerializer(minutes, data=minutes_data)
+            if minutes_serializer.is_valid():
+                minutes_serializer.save()
+            else :
+                return JsonResponse(minutes_serializer.errors, status=400)
+            data = {'file':file_serializer.data,'minutes':minutes_serializer.data}
+            return JsonResponse(data, status=201)
+        return JsonResponse(file_serializer.errors, status=400)
+
