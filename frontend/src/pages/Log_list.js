@@ -29,7 +29,7 @@ function Log_list(props) {
             .then((response) => {
             console.log(response.data);
             setMinutes(response.data);
-            alert('회의록을 불러왔습니다.')
+            console.log('회의록을 불러왔습니다.');
             })
             .catch((error) => { //오류메시지 보이게 함
             console.log(error.response);
@@ -73,7 +73,7 @@ function Log_list(props) {
                                     </div>
                                 </button>
                                 <Modal show={logShow} onHide={() => setLogShow(false)}>
-                                    <NewLog_modal dr_id = {dr_id} dr_name = {dr_name} mn_id={minutes.mn_id} setLogShow={setLogShow}/>
+                                    <NewLog_modal dr_id={dr_id} dr_name={dr_name} setLogShow={setLogShow}/>
                                 </Modal>
                             </div>                          
                             {searchResult.map(minute => //일단 회의참가자 말고 메모 보이게 만듦

@@ -10,7 +10,8 @@ function Log(){
     const dr_id = params.dr_id;
     const dr_name = params.dr_name;
     const mn_id = params.mn_id;
-    const [memo,setMemo] = useState('');    //메모
+    const [memo,setMemo] = useState("");    //메모
+
     const onMemodHandler = (event) => {
         setMemo(event.currentTarget.value);
     }
@@ -45,9 +46,6 @@ function Log(){
             console.log(error.response);
             });       
       }, []);
-
-    
-
 
     return (
         <div>
