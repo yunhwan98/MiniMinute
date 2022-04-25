@@ -1,18 +1,23 @@
 import React, {useState, useEffect} from "react";
+import axios from "axios";
+import {useParams} from "react-router-dom";
+import AudioPlayer from 'react-h5-audio-player';
+import 'react-h5-audio-player/lib/styles.css';
+import {google} from "@google-cloud/speech/build/protos/protos";
 import Header from "../components/Header";
 import SidebarLog from "../components/Sidebar_log";
-import {useParams} from "react-router-dom";
 import url from '../api/axios';
 
 function Log(){
-    let params = useParams();  //url로 정보받아오기  
-    console.log(params);
+    let params = useParams();  //url로 정보받아오기
     const dr_id = params.dr_id;
-    const dr_name = params.dr_name;
     const mn_id = params.mn_id;
     const [memo,setMemo] = useState("");    //메모
+    const [isUpload, setIsUpload] = useState(false);
+    const [audio, setAudio] = useState(""); //파일 url
+    const [dialogue, setDialogue] = useState("");   //대화
 
-    const onMemodHandler = (event) => {
+    const onMemoHandler = (event) => {
         setMemo(event.currentTarget.value);
     }
     const onClick =(event) => {
@@ -38,20 +43,66 @@ function Log(){
             `/minutes/${mn_id}`
             )
             .then((response) => {
+            console.log('회의록 정보 불러오기');
             console.log(response.data.mn_memo);
             setMemo(response.data.mn_memo);
-            alert('회의록 정보 불러오기');
             })
             .catch((error) => { //오류메시지 보이게 함
             console.log(error.response);
             });       
       }, []);
 
+    const onAudioHandler = (e) => {
+        const file = e.target.files[0];
+        let type = file.name.slice(file.name.indexOf('.'), undefined);
+        console.log(type);
+        setIsUpload(true);
+        setAudio("https://docs.google.com/uc?export=open&id=1glavx1db3_NMDUQgzmvPdP57UdaFXfVH");
+
+        //파일 전송
+        const formData = new FormData();
+        formData.append("file", file);
+
+        // url.post(`/minutes/${mn_id}/file/upload`, formData)
+        //     .then((response) => {
+        //         console.log(response.data);
+        //         console.log(response.data.location);
+        //         setAudio(response.data.location);
+        //         console.log("업로드 성공");
+        //     })
+        //     .catch((error) => {
+        //         console.log("업로드 실패 "+ error);
+        //     });
+
+    }
+
+    //stt api 호출
+    // useEffect(() => {
+    //     axios.get("https://speech.googleapis.com/v1p1beta1/speech:recognize", {
+    //         "audio": {
+    //             "content": audio
+    //         },
+    //         "config": {
+    //             "enableAutomaticPunctuation": false,
+    //             "encoding": "LINEAR16",
+    //             "languageCode": "ko-KR",
+    //             "model": "default"
+    //         }
+    //     })
+    //         .then((response) => {
+    //             console.log(response.data);
+    //             setDialogue(response.data);
+    //         })
+    //         .catch((error) => {
+    //             console.log("api 호출 실패 "+error);
+    //         })
+    // }, [isUpload])
+
     return (
         <div>
             <Header/>
             <div className="main">
-                <SidebarLog dr_name={dr_name} dr_id={dr_id} mn_id={mn_id}/>
+                <SidebarLog dr_id={dr_id} mn_id={mn_id}/>
                 <div className="article">
                     <div style={{display: "flex"}}>
                         <div>
@@ -72,20 +123,24 @@ function Log(){
                             <div className="memo">
                                 <h5>메모</h5>
                                 <hr id="log-hr" />
-                                <textarea placeholder="여기에 메모하세요" cols="35" rows="10" value={memo} onChange={onMemodHandler}></textarea>
+                                <textarea placeholder="여기에 메모하세요" cols="35" rows="10" value={memo} onChange={onMemoHandler}></textarea>
                             </div>
                             
                         </div>
                         <div><button type="submit"  onClick={onClick} className="submit-btn" /*저장버튼*/>저장</button></div>   
                         
                     </div>
-                    <div className="voice-play">
+                    {!isUpload && <div className="voice-play">
                         <label id="btn-color" className="voice-btn" htmlFor="input-file">음성 파일 업로드</label>
-                        <input type="file" id="input-file" style={{display:"none"}}
+                        <input type="file" id="input-file" style={{display: "none"}}
                                accept="audio/*"
-                               onChange={null}/>
-                    </div>
-                    
+                               onChange={onAudioHandler}/>
+                    </div>}
+                    {isUpload && <AudioPlayer
+                        src={audio}   //test audio
+                        style={{marginBottom: "40px", width: "74%", border:"1px solid #E0BFE6", boxShadow: "none", borderRadius:"0"}}
+                        customAdditionalControls={[]}
+                    />}
                 </div>
             </div>
         </div>

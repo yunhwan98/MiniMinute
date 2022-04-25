@@ -32,7 +32,7 @@ function NewLog_modal(props) {
         console.log("실행");
         event.preventDefault();
         url.post(     
-            "/minutes/lists/",{    //현재 넣을 수 있는 정보만 넣음
+            "/minutes/lists",{    //현재 넣을 수 있는 정보만 넣음
                 "mn_title" : title,             //회의록 제목
                 "mn_explanation"  : memo,       //회의록 설명
                 "mn_date"  : mn_date,           //회의 시간
@@ -43,7 +43,7 @@ function NewLog_modal(props) {
             console.log(response);
             props.setLogShow(false); 
             alert('회의록을 만들었습니다.'); //추후 삭제
-            navigate(`/${drId}/${drName}/${response.data.mn_id}/log`);/*클릭시 빈 회의록 페이지 이동*/
+            navigate(`/${drId}/${response.data.mn_id}/log`);/*클릭시 빈 회의록 페이지 이동*/
             })
             .catch((error) => { //오류메시지 보이게 함
             console.log(error.response);
@@ -90,7 +90,7 @@ function NewLog_modal(props) {
                     <h6 style={{fontWeight: "bold"}}>공유 코드</h6>
                     <input type="text" className="form-control" id="memo" value={share_link} onChange={(e)=>setShare_link(e.target.value)}/>
                 </div>
-                <button type="button" id="btn-color" className="btn-override modal-btn" onClick={onSubmit} >         
+                <button type="button" id="btn-color" className="btn-override modal-btn" onClick={onSubmit} >
                     생성
                 </button>
                 

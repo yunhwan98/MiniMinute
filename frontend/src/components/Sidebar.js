@@ -74,7 +74,7 @@ function Sidebar() {
             {"dr_name": newDrName},)
             .then((response) => {
                 console.log(response);
-                alert("디렉토리 이름이 변경되었습니다.");
+                alert("디렉토리 이름이 변경되었습니다!");
                 setNewDrName("");
                 setEditDr(false);
             })
@@ -91,7 +91,7 @@ function Sidebar() {
             "/directorys/"+id)
             .then((response) => {
                 console.log("디렉토리 삭제 성공");
-                alert("디렉토리가 삭제되었습니다.");
+                alert("디렉토리가 삭제되었습니다!");
                 setDelDr(true);
                 navigate("/home");
             })
@@ -163,7 +163,7 @@ function Sidebar() {
                                 <path
                                     d="M1 3.5A1.5 1.5 0 0 1 2.5 2h2.764c.958 0 1.76.56 2.311 1.184C7.985 3.648 8.48 4 9 4h4.5A1.5 1.5 0 0 1 15 5.5v7a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 1 12.5v-9zM2.5 3a.5.5 0 0 0-.5.5V6h12v-.5a.5.5 0 0 0-.5-.5H9c-.964 0-1.71-.629-2.174-1.154C6.374 3.334 5.82 3 5.264 3H2.5zM14 7H2v5.5a.5.5 0 0 0 .5.5h11a.5.5 0 0 0 .5-.5V7z"/>
                             </svg>
-                            <Link to = {`/${dr_info.dr_id}/${dr_info.dr_name}/loglist`} className="directory-link">{dr_info.dr_name}</Link>
+                            <Link to = {`/${dr_info.dr_id}/loglist`} className="directory-link">{dr_info.dr_name}</Link>
 
                             <ul className="dr-menu">
                                 <li className="dr-li"><button type="button" className="none-btn dr-item" onClick={() => setEditDr(true)}>수정</button></li>

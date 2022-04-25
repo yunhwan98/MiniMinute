@@ -7,11 +7,9 @@ import url from '../api/axios';
 
 function Sidebar_log(props) {
     const navigate = useNavigate();
-    let drId = props.dr_id;
-    let drName = props.dr_name;
+    const drId = props.dr_id;
     const mnId = props.mn_id;
-    let toList = `${drId}/${drName}/loglist`;
-    if (drName === 'home') toList = "home";    //home에서 회의록 만들면 '목록으로' 클릭 시 home으로
+    let toList = `${drId}/loglist`;
 
     const dropDownRef = useRef(null);
     const [isOpen, setIsOpen] = useState(false);
@@ -22,7 +20,6 @@ function Sidebar_log(props) {
 
     const [mn_info, setMn_info] = useState([]);
     const [dr_info, setDr_info] = useState([]);
-    const [each_dr, setEach_dr] = useState([]);
 
       //유저정보
     const [user, setUser] = useState(localStorage.getItem('token') ? JSON.parse( localStorage.getItem('user') ) : []);
@@ -53,7 +50,7 @@ function Sidebar_log(props) {
                 setDr_info(response.data);
             })
             .catch((error) => {
-                console.log("디렉토리 정보 불러오기 실패 "+error)
+                console.log("디렉토리 목록 불러오기 실패 "+error)
             })
     },[move])
 
@@ -61,19 +58,6 @@ function Sidebar_log(props) {
         console.log(e.target.value);
         setChecked(e.target.value);
     }
-
-    useEffect(() => {
-        url.get(
-            `/directorys/${checked}`)
-            .then((response) => {
-                console.log(response.data);
-                setEach_dr(response.data);
-                console.log("디렉토리 개별 정보 불러오기");
-            })
-            .catch((error) => {
-                console.log("디렉토리 개별 정보 불러오기 실패 "+error)
-            })
-    },[checked])
 
     //회의록 이동
     const moveDr = () => {
@@ -83,8 +67,8 @@ function Sidebar_log(props) {
             {"dr_id": checked})
             .then((response) =>{
                 console.log(response);
-                alert("회의록이 이동되었습니다.");
-                navigate(`/${checked}/${each_dr.dr_name}/${mnId}/log`);
+                alert("회의록이 이동되었습니다!");
+                navigate(`/${checked}/${mnId}/log`);
                 setMove(false);
             })
     }
@@ -97,7 +81,7 @@ function Sidebar_log(props) {
             `/minutes/${mnId}`)
             .then((response) => {
                 console.log("회의록 삭제 성공");
-                alert("회의록이 삭제되었습니다.");
+                alert("회의록이 삭제되었습니다!");
                 navigate("/home");
             })
             .catch((error) => {
@@ -124,7 +108,7 @@ function Sidebar_log(props) {
 
             <div className="sidebar-list">
                 <ul>
-                    <li><Link to="/newlog">회의록 열람</Link></li>
+                    <li><Link to={`/${drId}/${mnId}/log`}>회의록 열람</Link></li>
                     <li><Link to="">감정분석</Link></li>
                     <li><Link to={`/${toList}`}>목록으로</Link></li>
                 </ul>
@@ -164,15 +148,14 @@ function Sidebar_log(props) {
                               d="M1 11.5a.5.5 0 0 0 .5.5h11.793l-3.147 3.146a.5.5 0 0 0 .708.708l4-4a.5.5 0 0 0 0-.708l-4-4a.5.5 0 0 0-.708.708L13.293 11H1.5a.5.5 0 0 0-.5.5zm14-7a.5.5 0 0 1-.5.5H2.707l3.147 3.146a.5.5 0 1 1-.708.708l-4-4a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 4H14.5a.5.5 0 0 1 .5.5z"/>
                     </svg>
                 </button>
-
-                    <Modal show={move} onHide={() => setMove(false)}>
-                        <Modal.Header closeButton>
-                            <Modal.Title>회의록 이동하기</Modal.Title>
-                        </Modal.Header>
-                        <Modal.Body>
-                            <h5>디렉토리 목록</h5>
-                            <div className="radio-dr">
-                                {dr_info.map(dr_info =>
+                <Modal show={move} onHide={() => setMove(false)}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>회의록 이동하기</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <h5>디렉토리 목록</h5>
+                        <div className="radio-dr">
+                            {dr_info.map(dr_info =>
                                 <label className="radio-label" key={dr_info.dr_id}>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="currentColor"
                                          className="bi bi-folder2-open" viewBox="0 -2 16 17">
@@ -185,16 +168,16 @@ function Sidebar_log(props) {
                                            onChange={handleChecked}
                                     />
                                     {dr_info.dr_name}</label>
-                                )}
-                            </div>
-                        </Modal.Body>
-                        <Modal.Footer>
-                            <button type="button" id="btn-color" className="modal-btn"
-                                    onClick={moveDr}>
-                                이동
-                            </button>
-                        </Modal.Footer>
-                    </Modal>
+                            )}
+                        </div>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <button type="button" id="btn-color" className="modal-btn"
+                                onClick={moveDr}>
+                            이동
+                        </button>
+                    </Modal.Footer>
+                </Modal>
 
                 <div>
                     <ul>

@@ -6,25 +6,29 @@ import Sidebar from "../components/Sidebar";
 import NewLog_modal from "../components/NewLog_modal";
 import Log_card from "../components/Log_card";
 import {Modal} from "react-bootstrap";
-import axios from 'axios';
 import url from '../api/axios';
 
 function Log_list(props) {
     let params = useParams();  //url로 정보받아오기
-    console.log(params);
-    const dr_name = params.dr_name;
     const dr_id = params.dr_id;
 
     const [logShow, setLogShow] = useState(false);
     const [minutes,setMinutes] = useState([]);
     const [search, setSearch] = useState("");
     let searchResult=[];
-    // const [dr_name, setDr_Name] =useState("");
+    const [dr_name, setDr_Name] =useState("");
+
+    const result = minutes.filter(minute => dr_id === `${minute.dr_id}`); //디렉토리 번호와 일치하는 회의록만 filter
+
+    searchResult = result.filter(minute =>( //search 검색어가 포함되는 회의록만 filter(공백시에는 전부 보임)
+            `${minute.mn_title}`.toLowerCase().includes(search) || `${minute.mn_date}`.toLowerCase().includes(search)
+            || `${minute.mn_explanation}`.toLowerCase().includes(search)
+    ))
 
     
     useEffect(() => { // 처음에만 정보 받아옴
         url.get(     
-            "/minutes/lists/"
+            "/minutes/lists"
             )
             .then((response) => {
             console.log(response.data);
@@ -36,12 +40,19 @@ function Log_list(props) {
             });       
       }, []);
 
-    const result = minutes.filter(minute => dr_id === `${minute.dr_id}`); //디렉토리 번호와 일치하는 회의록만 filter
-  
-    searchResult = result.filter(minute =>( //search 검색어가 포함되는 회의록만 filter(공백시에는 전부 보임)
-            `${minute.mn_title}`.toLowerCase().includes(search) || `${minute.mn_date}`.toLowerCase().includes(search)
-            || `${minute.mn_explanation}`.toLowerCase().includes(search)
-    ))
+    useEffect(() => { //디렉토리 이름 가져오기
+        url.get(
+            `/directorys/${dr_id}`
+            )
+            .then((response) => {
+            console.log(response.data);
+            setDr_Name(response.data.dr_name);
+            console.log('디렉토리 정보 조회');
+            })
+            .catch((error) => {
+            console.log('디렉토리 정보 조회 실패 ' + error);
+            });
+      }, [result]);
 
     return (
         <div>
@@ -62,7 +73,7 @@ function Log_list(props) {
                         <div className="log-card">
                             <div id="card-override" className="card" style={{width: "18rem"}}>
                                 <button type="button" className="new-log-btn" onClick={() => setLogShow(true)}>
-                                    <div className="card-body">
+                                    <div className="card-body" style={{width: "100%"}}>
                                         <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60"
                                              fill="currentColor" className="bi bi-plus-circle" viewBox="0 0 16 16">
                                             <path
@@ -73,11 +84,11 @@ function Log_list(props) {
                                     </div>
                                 </button>
                                 <Modal show={logShow} onHide={() => setLogShow(false)}>
-                                    <NewLog_modal dr_id={dr_id} dr_name={dr_name} setLogShow={setLogShow}/>
+                                    <NewLog_modal dr_id={dr_id} setLogShow={setLogShow}/>
                                 </Modal>
                             </div>                          
                             {searchResult.map(minute => //일단 회의참가자 말고 메모 보이게 만듦
-                                <Log_card dr_id={dr_id} dr_name={dr_name} mn_id={minute.mn_id} mn_title={minute.mn_title} mn_date={minute.mn_date} mn_explanation={minute.mn_explanation}/>
+                                <Log_card key={minute.mn_id} dr_id={dr_id} mn_id={minute.mn_id} mn_title={minute.mn_title} mn_date={minute.mn_date} mn_explanation={minute.mn_explanation}/>
                             )}
                             </div>
                         </div>  

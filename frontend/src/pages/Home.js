@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react";
-import { Link } from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import Sidebar from "../components/Sidebar";
@@ -10,7 +10,7 @@ import NotFound from "./NotFound";
 import url from '../api/axios';
 
 const Home = () => {
-
+    const navigate = useNavigate();
     const [isAuthenticated, setisAuthenticated] = useState(localStorage.getItem('token') ? true : false);   //인증여부 확인
     const [user, setUser] = useState(localStorage.getItem('token') ? JSON.parse( localStorage.getItem('user') ) : []); //유저 정보
     const [minutes,setMinutes] = useState([]);
@@ -20,7 +20,7 @@ const Home = () => {
 
     useEffect(() => { // 처음에만 정보 받아옴
         url.get(     
-            "/minutes/lists/"
+            "/minutes/lists"
             )
             .then((response) => {
             console.log(response.data);
@@ -30,6 +30,20 @@ const Home = () => {
             .catch((error) => { //오류메시지 보이게 함
             console.log(error.response);
             });       
+      }, []);
+
+    useEffect(() => { // 처음에만 정보 받아옴
+        url.get(
+            "/directorys/lists"
+            )
+            .then((response) => {
+            console.log(response.data);
+            setDr_info(response.data);
+            console.log('디렉토리 목록 조회');
+            })
+            .catch((error) => {
+            console.log('디렉토리 목록 조회 실패 '+error);
+            });
       }, []);
     
     searchResult = minutes.filter(minute => ( //search 검색어가 포함되는 회의록만 filter(search가 공백시에는 전부 보임)
@@ -81,7 +95,7 @@ const Home = () => {
                             </div>
                             <div className="log-card">
                                 {searchResult.map(minute => //일단 회의참가자 말고 메모 보이게 만듦
-                                    <Log_card dr_id={minute.dr_id} mn_id={minute.mn_id} mn_title={minute.mn_title} mn_date={minute.mn_date} mn_explanation={minute.mn_explanation}/>
+                                    <Log_card key={minute.mn_id} dr_id={minute.dr_id} mn_id={minute.mn_id} mn_title={minute.mn_title} mn_date={minute.mn_date} mn_explanation={minute.mn_explanation}/>
                                 )}
                             </div>
                         </div>
@@ -96,8 +110,11 @@ const Home = () => {
                                 <p>내 회의록</p>
                             </div>
                             <div>
-                                <button type="button" id="btn-color" className="my-list">회사</button>
-                                <button type="button" id="btn-color" className="my-list">학교</button>
+                                {dr_info.map(dr_info =>
+                                    <button key={dr_info.dr_id} type="button" id="btn-color" className="my-list" onClick={() => {
+                                        navigate(`/${dr_info.dr_id}/loglist`)}}>
+                                        {dr_info.dr_name}</button>
+                                )}
                             </div>
                         </div>
 
