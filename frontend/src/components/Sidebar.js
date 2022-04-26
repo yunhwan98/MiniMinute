@@ -19,7 +19,7 @@ function Sidebar() {
     const [newDrName, setNewDrName] = useState("");
     const [editDr, setEditDr] = useState(false);
     const [delDr, setDelDr] = useState(false);
-
+    const [preview,setPreview] = useState(localStorage.getItem('profile_img')? localStorage.getItem('profile_img') : profile);//미리보기 파일 
     //유저정보
     const [user, setUser] = useState(localStorage.getItem('token') ? JSON.parse( localStorage.getItem('user') ) : []);
     //유저 로그아웃
@@ -115,7 +115,11 @@ function Sidebar() {
                 </ul>
             </div>
             <div className="profile">
-                <img src={profile} style={{height: "140px"}}/>
+                <div className="profile-box" style={{height: "140px" ,width:"140px"}}>
+                    <img className="profile-image" src={preview} />
+                </div>
+                
+                {/* <img src={preview} style={{height: "140px"}}/> */}
                 <h4>{user.username}</h4>
                 <button type="button" id="btn-color" className="new-btn" onClick={() => setLogShow(true)}>새 회의록</button>
                 <Modal show={logShow} onHide={() => setLogShow(false)}>

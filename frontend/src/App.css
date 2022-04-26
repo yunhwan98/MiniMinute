@@ -413,12 +413,29 @@
   padding-bottom: 70px;
 }
 
+.profile-box{
+    width: 250px;
+    height: 250px; 
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.profile-image{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+
+}
+
 .img-btn {
   width: 188px;
   height: 38px;
-  margin-top: 15px;
+  margin-right: auto;
+  margin-left: auto;
+  margin-top: 20px;
   font-size: 16px;
   padding: 5px 47px;
+
 }
 
 #prof-hr {
