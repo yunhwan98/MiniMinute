@@ -9,13 +9,53 @@ import {useNavigate } from 'react-router-dom';
 
 function Profile() {
     const [quit, setQuit] = useState(false);
-    const [showemail, setShowEmail] = useState(false);      //모달 표시용
+
     const [newname, setNewname] = useState("");             //새로운 닉네임
     const [newemail, setNewemail] = useState("");           //새로운 
     const [newpassword1,setNewpassword1] = useState("");    //새로운 비밀번호
     const [newpassword2,setNewpassword2] = useState("");    //새로운 비밀번호 확인
+
+    const [imagefile,setImagefile] = useState("");     //이미지 파일 폼
+    const [preview,setPreview] = useState(localStorage.getItem('profile_img')? localStorage.getItem('profile_img') : profile);  //미리보기 파일 
     const navigate = useNavigate();
 
+    const loadImage= (e) => {    //프로필 이미지 선택 시 화면 변경
+        setImagefile(e.target.files);    
+        const reader = new FileReader();
+        reader.readAsDataURL(e.target.files[0]);
+        reader.onloadend = () => {
+            setPreview(reader.result);
+        }
+    }
+
+    const submitFileImage= () => {    //프로필 이미지 전송 (REST API 필요)
+        const formdata =new FormData();
+        
+        formdata.append('user_profile',imagefile[0]);
+        for (let key of formdata.keys()) {
+            console.log(key);
+          }
+        // url.put(     
+        //     "/users/name/change", formdata)
+        //     .then((response) => {
+        //     localStorage.setItem('user',JSON.stringify(response.data)); //유저 정보 변경
+        //     alert('변경했습니다'); //추후 삭제
+        //     })
+        //     .catch((error) => { //오류메시지 보이게 함
+        //     console.log(error.response);
+        //     alert("실패!")
+        //     });
+            localStorage.setItem('profile_img', preview);
+            formdata.delete('user_profile');     
+    }
+
+    const deleteFileImage = () =>{  //프로필 이미지 삭제
+        localStorage.setItem('profile_img', "");
+        setImagefile("");
+        setPreview(profile);
+        
+    };
+    console.log('프리뷰 : '+preview);
 
     const changeName = async(event) => {    //이름변경
         console.log("실행");
@@ -98,12 +138,26 @@ function Profile() {
             <div className="main">
                 <div className="prof-article">
                     <div className="img-edit">
-                        <img src={profile} style={{width: "12em"}}/>
+                        <div className="profile-box">
+                            <img className="profile-image" src={preview} />
+                        </div>
+                        {/* <img className="profile-image" src={preview} /> */}
                         <label id="btn-color" className="input-file img-btn" htmlFor="input-file">사진 업로드</label>
-                        <input type="file" id="input-file" style={{display: "none"}}
-                               accept="image/*"
-                               onChange={null}/>
+                        <input type="file" id="input-file" style={{ display: "none" }}
+                            accept="image/*"
+                            onChange={loadImage} />
+                        <div style={{ margin: "auto"}} >
+
+                                <button id="btn-color" className="change-btn" style={{ width: "70px", height: "30px", cursor: "pointer", margin: "10px"}} onClick={() =>  submitFileImage()}> 저장 </button>
+            
+                                <button id="btn-color" className="change-btn" style={{ width: "70px", height: "30px", cursor: "pointer", margin: "10px"}} onClick={() => deleteFileImage()} > 삭제 </button> 
+
+                        </div>
                     </div>
+
+                
+        
+
                     {/*<hr style={{width: "800px", color: "inherit", opacity: "0.7"}}/>*/}
                     <form style={{width: "430px"}}>
                         <div className="nickname">
@@ -118,23 +172,7 @@ function Profile() {
                             <hr id="prof-hr"/>
                             <input type="email" className="form-control prof-input" id="new-email" value={newemail} onChange={(e)=>setNewemail(e.target.value)}/>
                             <button type="button" id="btn-color" className="change-btn" onClick={changeEmail}>변경</button>
-                            {/* <button type="button" id="btn-color" className="change-btn" onClick={() => setShowEmail(true)}>변경</button>
-                            <Modal show={showemail} onHide={() => setShowEmail(false)}>
-                            <Modal.Header closeButton>
-                                <Modal.Title>이메일 변경</Modal.Title>
-                            </Modal.Header>
-                            <Modal.Body>
-                                <h6>새 이메일 입력</h6>
-                                <input type="text" className="form-control" id="new-email" />
-                                <h6 style={{paddingTop: "15px"}}>비밀번호 입력</h6>
-                                <input type="text" className="form-control" id="pwd" />
-                            </Modal.Body>
-                            <Modal.Footer>
-                                <button type="button" id="btn-color" className="modal-btn" onClick={() => setShowEmail(false)}>
-                                    변경
-                                </button>
-                            </Modal.Footer>
-                        </Modal> */}
+
                         </div>
 
                         <div className="password">

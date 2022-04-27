@@ -15,10 +15,10 @@ function App(){
                 <Routes>
                     <Route path="/" element={<Start />} />    //초기화면 진입
                     <Route path="/home" element={<Home />} />
-                    <Route path="/:dr_id/:dr_name/loglist" element={<Log_list />} />   {/*디렉토리별 회의록 목록*/}
+                    <Route path="/:dr_id/loglist" element={<Log_list />} />   {/*디렉토리별 회의록 목록*/}
                     <Route path="/search" element={<Search />} />
                     <Route path="/profile" element={<Profile />} />
-                    <Route path="/:dr_id/:dr_name/:mn_id/log" element={<Log />} />
+                    <Route path="/:dr_id/:mn_id/log" element={<Log />} />
                 </Routes>
             </div>
         </BrowserRouter>
