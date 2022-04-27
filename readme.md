@@ -66,7 +66,8 @@
 |/name/change|PUT|{username}|{id, email, user_profile,<br>password, username,<br>user_sign_up_date,<br>user_access_date}|200 성공<br>400 실패(이름 중복)<br>401 실패(토큰 인증 실패)|회원 이름 변경|
 |/email/change|PUT|{email}|{id, email, user_profile,<br>password, username,<br>user_sign_up_date,<br>user_access_date}|200 성공<br>401 실패(토큰 인증 실패)|회원 이메일 변경|
 |/withdraw|DELETE|{}|{}|204 성공<br>401 실패(토큰 인증 실패)|회원 탈퇴|
-
+|/profile/upload|POST|{}|{id, email, user_profile,<br>password, username,<br>user_sign_up_date,<br>user_access_date}|200 성공<br>401 실패(토큰 인증 실패)|프로필 업로드 및 수정|
+|/profile/<파일이름>|GET|{}|프로필 사진|200 성공<br>404 실패(존재하지 않는 파일)|프로필 불러오기|
 ### /directorys
 
 > 디렉토리 정보 관련 주소
