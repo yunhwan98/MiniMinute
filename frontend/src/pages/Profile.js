@@ -9,10 +9,12 @@ import {useNavigate } from 'react-router-dom';
 
 function Profile() {
     const [quit, setQuit] = useState(false);
+
     const [newname, setNewname] = useState("");             //새로운 닉네임
     const [newemail, setNewemail] = useState("");           //새로운 
     const [newpassword1,setNewpassword1] = useState("");    //새로운 비밀번호
     const [newpassword2,setNewpassword2] = useState("");    //새로운 비밀번호 확인
+
     const [imagefile,setImagefile] = useState("");     //이미지 파일 폼
     const [preview,setPreview] = useState(localStorage.getItem('profile_img')? localStorage.getItem('profile_img') : profile);  //미리보기 파일 
     const navigate = useNavigate();
@@ -54,6 +56,7 @@ function Profile() {
         
     };
     console.log('프리뷰 : '+preview);
+
     const changeName = async(event) => {    //이름변경
         console.log("실행");
         event.preventDefault();
@@ -127,7 +130,7 @@ function Profile() {
             alert("탈퇴실패!")
             });       
     }
-  
+
 
     return (
         <div>
@@ -153,8 +156,7 @@ function Profile() {
                     </div>
 
                 
-                
-
+        
 
                     {/*<hr style={{width: "800px", color: "inherit", opacity: "0.7"}}/>*/}
                     <form style={{width: "430px"}}>
@@ -170,6 +172,7 @@ function Profile() {
                             <hr id="prof-hr"/>
                             <input type="email" className="form-control prof-input" id="new-email" value={newemail} onChange={(e)=>setNewemail(e.target.value)}/>
                             <button type="button" id="btn-color" className="change-btn" onClick={changeEmail}>변경</button>
+
                         </div>
 
                         <div className="password">

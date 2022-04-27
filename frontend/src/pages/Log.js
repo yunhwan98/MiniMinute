@@ -7,6 +7,8 @@ import {google} from "@google-cloud/speech/build/protos/protos";
 import Header from "../components/Header";
 import SidebarLog from "../components/Sidebar_log";
 import url from '../api/axios';
+import Table from 'react-bootstrap/Table'
+import Bookmark from "../components/bookmark";
 
 function Log(){
     let params = useParams();  //url로 정보받아오기
@@ -16,11 +18,14 @@ function Log(){
     const [isUpload, setIsUpload] = useState(false);
     const [audio, setAudio] = useState(""); //파일 url
     const [dialogue, setDialogue] = useState("");   //대화
+    const [bookmark, setBookmark] = useState([]);
+    
+
 
     const onMemoHandler = (event) => {
         setMemo(event.currentTarget.value);
     }
-    const onClick =(event) => {
+    const onEditLogHandler =(event) => {
         event.preventDefault();
         url.put(
             `/minutes/${mn_id}`,{
@@ -51,6 +56,21 @@ function Log(){
             console.log(error.response);
             });       
       }, []);
+
+    useEffect(() => {
+        url.get(
+            `/minutes/${mn_id}/bookmark/lists`)
+            .then((response) => {
+                console.log(response.data);
+                setBookmark(response.data);
+            })
+            .catch((error) => {
+                console.log("북마크 목록 불러오기 실패 "+error)
+            })
+    },[])
+    
+    let bookmarkList =[]; 
+   //let bookmarkList = bookmark.map((bookmark) => (<li key={bookmark.bm_seq}>{bookmark.mn_id}</li>));
 
     const onAudioHandler = (e) => {
         const file = e.target.files[0];
@@ -102,7 +122,7 @@ function Log(){
         <div>
             <Header/>
             <div className="main">
-                <SidebarLog dr_id={dr_id} mn_id={mn_id}/>
+                <SidebarLog dr_id={dr_id} mn_id={mn_id} memo={memo}/>
                 <div className="article">
                     <div style={{display: "flex"}}>
                         <div>
@@ -115,6 +135,10 @@ function Log(){
                             <div className="bookmark">
                                 <h5>북마크</h5>
                                 <hr id="log-hr" />
+                                {bookmarkList= bookmark.map((bookmark) =>
+
+                                            <Bookmark key={bookmark.bm_seq} bm_seq={bookmark.bm_seq} bm_name={bookmark.bm_name} bm_start={bookmark.bm_start} bm_end={bookmark.bm_end} mn_id={bookmark.mn_id} />                                                   
+                                )}
                             </div>
                             <div className="keyword">
                                 <h5>주요 키워드</h5>
@@ -123,11 +147,11 @@ function Log(){
                             <div className="memo">
                                 <h5>메모</h5>
                                 <hr id="log-hr" />
-                                <textarea placeholder="여기에 메모하세요" cols="35" rows="10" value={memo} onChange={onMemoHandler}></textarea>
+                                <textarea placeholder="여기에 메모하세요" cols="35" rows="10" value={memo ? memo : ""} onChange={onMemoHandler}></textarea>
                             </div>
                             
                         </div>
-                        <div><button type="submit"  onClick={onClick} className="submit-btn" /*저장버튼*/>저장</button></div>   
+                        <div><button type="submit"  onClick={onEditLogHandler} className="submit-btn" /*저장버튼*/>저장</button></div>   
                         
                     </div>
                     {!isUpload && <div className="voice-play">

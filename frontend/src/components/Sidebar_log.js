@@ -21,6 +21,10 @@ function Sidebar_log(props) {
     const [mn_info, setMn_info] = useState([]);
     const [dr_info, setDr_info] = useState([]);
 
+    
+
+
+
       //유저정보
     const [user, setUser] = useState(localStorage.getItem('token') ? JSON.parse( localStorage.getItem('user') ) : []);
     //유저 로그아웃
@@ -53,6 +57,8 @@ function Sidebar_log(props) {
                 console.log("디렉토리 목록 불러오기 실패 "+error)
             })
     },[move])
+
+    
 
     const handleChecked = (e) => {
         console.log(e.target.value);
@@ -89,6 +95,25 @@ function Sidebar_log(props) {
             })
     }
 
+    const onEditLogHandler =(event) => { //회의록수정
+        event.preventDefault();
+        url.put(
+            `/minutes/${mnId}`,{
+                "mn_memo" : props.memo        //우선 메모만 추가
+            }
+        )
+            .then((response) => {
+                console.log(response);
+                alert('저장!');
+            })
+            .catch((error) => {
+                console.log(error.response);
+                alert('실패!'); 
+            });
+
+    }
+
+
     return(
         <div className="sidebar">
             <div className="dropdown">
@@ -102,7 +127,7 @@ function Sidebar_log(props) {
                     <li><Link className="dropdown-item" to="/profile">프로필 수정</Link></li>
                     <li><Link className="dropdown-item" to="/" onClick={userLogout}>로그아웃</Link></li>
                     <li><button className="dropdown-item none-btn" onClick={delMinute}>회의록 삭제</button></li>
-                    <li><Link className="dropdown-item" to="">회의록 수정</Link></li>
+                    <li><Link className="dropdown-item" to="" onClick={onEditLogHandler}>회의록 수정</Link></li>
                 </ul>
             </div>
 
