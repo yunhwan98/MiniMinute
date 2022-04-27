@@ -35,9 +35,9 @@ class User(AbstractBaseUser):
     )
     user_profile = models.ImageField(
         verbose_name="user's profile path",
-        null=True,
+        default="default.jpg",
         blank=True,
-        upload_to='image/profile/'
+        upload_to=""
     )
     username = models.CharField(
         verbose_name="user's name",

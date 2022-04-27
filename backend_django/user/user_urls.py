@@ -6,6 +6,8 @@ urlpatterns = [
     path('lists', views.user_list),
 
     # 사용자 정보 수정
+    path('profile/upload', views.user_profile),
+    path('profile/load', views.user_profile),
     path('name/change', views.user_name_modify),
     path('email/change', views.user_email_modify),
 

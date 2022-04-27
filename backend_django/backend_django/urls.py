@@ -19,6 +19,9 @@ from rest_auth.registration.views import RegisterView
 from rest_auth.views import LoginView, LogoutView, PasswordChangeView
 from rest_framework_jwt.views import obtain_jwt_token, verify_jwt_token, refresh_jwt_token
 
+from django.conf.urls.static import static
+from django.conf import settings
+
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
@@ -51,4 +54,4 @@ urlpatterns = [
     path('rest-auth/signup', RegisterView.as_view(), name='rest_register'),
     path('rest-auth/password/change', PasswordChangeView.as_view(), name='rest_password_change'),
   
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
