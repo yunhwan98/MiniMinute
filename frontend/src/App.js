@@ -5,6 +5,7 @@ import Home from './pages/Home';
 import Start from './pages/Start';
 import Log_list from './pages/Log_list';
 import Search from './pages/Search';
+import Recent from "./pages/Recent";
 import Profile from './pages/Profile';
 import Log from './pages/Log';
 
@@ -17,6 +18,7 @@ function App(){
                     <Route path="/home" element={<Home />} />
                     <Route path="/:dr_id/loglist" element={<Log_list />} />   {/*디렉토리별 회의록 목록*/}
                     <Route path="/search" element={<Search />} />
+                    <Route path="/recent" element={<Recent />} />
                     <Route path="/profile" element={<Profile />} />
                     <Route path="/:dr_id/:mn_id/log" element={<Log />} />
                 </Routes>

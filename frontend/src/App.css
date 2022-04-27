@@ -533,13 +533,30 @@ label input[type=radio]:checked{ /*안먹음*/
 }
 
 /*회의록*/
-.dialogue{
+#nav-log {
   margin-top: 15px;
+  border: none;
+}
+
+#nav-link {
+  color: #B96BC6;
+  border-radius: 0;
+  border-bottom: 1px solid #E0BFE6;
+}
+
+#nav-link:focus {
   border: 1px solid #E0BFE6;
+  border-bottom: none;
+}
+
+.dialogue{
+  border: 1px solid #E0BFE6;
+  border-top: none;
   border-radius: 0;
   background-color: white;
   width: 560px;
   height: 575px;
+  margin-bottom: 15px;
 }
 
 .side-func {
