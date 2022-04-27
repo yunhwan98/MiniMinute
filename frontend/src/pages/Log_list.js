@@ -58,7 +58,7 @@ function Log_list(props) {
         <div>
             <Header setSearch={setSearch}/>
             <div className="main">
-                <Sidebar/>
+                <Sidebar dr_id={dr_id}/>
                 <div className="article">
                     <div className="log-list">
                         <div className="directory-name">
@@ -71,6 +71,7 @@ function Log_list(props) {
                         </div>
 
                         <div className="log-card">
+                            {/*회의록 추가 카드*/}
                             <div id="card-override" className="card" style={{width: "18rem"}}>
                                 <button type="button" className="new-log-btn" onClick={() => setLogShow(true)}>
                                     <div className="card-body" style={{width: "100%"}}>
@@ -86,7 +87,7 @@ function Log_list(props) {
                                 <Modal show={logShow} onHide={() => setLogShow(false)}>
                                     <NewLog_modal dr_id={dr_id} setLogShow={setLogShow}/>
                                 </Modal>
-                            </div>                          
+                            </div>
                             {searchResult.map(minute => //일단 회의참가자 말고 메모 보이게 만듦
                                 <Log_card key={minute.mn_id} dr_id={dr_id} mn_id={minute.mn_id} mn_title={minute.mn_title} mn_date={minute.mn_date} mn_explanation={minute.mn_explanation}/>
                             )}

@@ -56,7 +56,7 @@ const Home = () => {
         <div>
             <Header setSearch={setSearch}/>
             <div className="main">
-                <Sidebar />
+                <Sidebar dr_id={1}/>
                 <div className="article">
                     <div className="log-list">
                         <div className="fav">

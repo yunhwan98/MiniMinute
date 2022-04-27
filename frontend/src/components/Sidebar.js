@@ -1,12 +1,14 @@
 import React, { useEffect, useState, useRef } from "react";
-import {Link, useNavigate} from 'react-router-dom';
+import {Link, useNavigate, useParams} from 'react-router-dom';
 import {Modal} from "react-bootstrap";
 import profile from '../images/profile2.png';
 import setting from '../images/setting.png';
 import NewLog_modal from "./NewLog_modal";
 import url from '../api/axios';
 
-function Sidebar() {
+function Sidebar(props) {
+    let params = useParams();  //url로 정보받아오기
+    const dr_id = params.dr_id;
     const navigate = useNavigate();
     const dropDownRef = useRef(null);
     const [isOpen, setIsOpen] = useState(false);
@@ -62,6 +64,7 @@ function Sidebar() {
             })
             .catch((error) => {
                 console.log("디렉토리 추가 실패 "+error);
+                alert("이름을 입력해주세요!");
             });
     };
 
@@ -123,7 +126,7 @@ function Sidebar() {
                 <h4>{user.username}</h4>
                 <button type="button" id="btn-color" className="new-btn" onClick={() => setLogShow(true)}>새 회의록</button>
                 <Modal show={logShow} onHide={() => setLogShow(false)}>
-                    <NewLog_modal setLogShow={setLogShow}/*NewLog_modal에 setLogShow 전달하고 props로 바뀐 값 받아야 '생성'시 모달 사라짐  *//> 
+                    <NewLog_modal dr_id={dr_id} setLogShow={setLogShow}/*NewLog_modal에 setLogShow 전달하고 props로 바뀐 값 받아야 '생성'시 모달 사라짐  *//>
                 </Modal>
             </div>
             <ul className="directory">
@@ -149,7 +152,7 @@ function Sidebar() {
                         <path
                             d="M1 3.5A1.5 1.5 0 0 1 2.5 2h2.764c.958 0 1.76.56 2.311 1.184C7.985 3.648 8.48 4 9 4h4.5A1.5 1.5 0 0 1 15 5.5v7a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 1 12.5v-9zM2.5 3a.5.5 0 0 0-.5.5V6h12v-.5a.5.5 0 0 0-.5-.5H9c-.964 0-1.71-.629-2.174-1.154C6.374 3.334 5.82 3 5.264 3H2.5zM14 7H2v5.5a.5.5 0 0 0 .5.5h11a.5.5 0 0 0 .5-.5V7z"/>
                     </svg>
-                    <Link to ="" className="directory-link">최근 회의록</Link>
+                    <Link to ="/recent" className="directory-link">최근 회의록</Link>
                 </li>
                 <li>
                     <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor"

@@ -9,6 +9,7 @@ import SidebarLog from "../components/Sidebar_log";
 import url from '../api/axios';
 import Table from 'react-bootstrap/Table'
 import Bookmark from "../components/bookmark";
+import {Nav} from "react-bootstrap";
 
 function Log(){
     let params = useParams();  //url로 정보받아오기
@@ -127,6 +128,20 @@ function Log(){
                     <div style={{display: "flex"}}>
                         <div>
                             <h5>회의 전문</h5>
+                            <Nav justify id="nav-log" variant="tabs" defaultActiveKey="/home">
+                                <Nav.Item>
+                                    <Nav.Link id="nav-link" eventKey="link-1">전체</Nav.Link>
+                                </Nav.Item>
+                                <Nav.Item>
+                                    <Nav.Link id="nav-link" eventKey="link-2">행복</Nav.Link>
+                                </Nav.Item>
+                                <Nav.Item>
+                                    <Nav.Link id="nav-link" eventKey="link-3">슬픔</Nav.Link>
+                                </Nav.Item>
+                                <Nav.Item>
+                                    <Nav.Link id="nav-link" eventKey="link-4">분노</Nav.Link>
+                                </Nav.Item>
+                            </Nav>
                             <div className="dialogue">
 
                             </div>
