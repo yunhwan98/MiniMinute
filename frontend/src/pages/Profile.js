@@ -16,7 +16,7 @@ function Profile() {
     const [newpassword2,setNewpassword2] = useState("");    //새로운 비밀번호 확인
 
     const [imagefile,setImagefile] = useState("");     //이미지 파일 폼
-    const [preview,setPreview] = useState(localStorage.getItem('profile_img')? localStorage.getItem('profile_img') : profile);  //미리보기 파일 
+    const [preview,setPreview] = useState(localStorage.getItem('img'));  //미리보기 파일 
     const navigate = useNavigate();
 
     const loadImage= (e) => {    //프로필 이미지 선택 시 화면 변경
@@ -27,35 +27,36 @@ function Profile() {
             setPreview(reader.result);
         }
     }
-
-    const submitFileImage= () => {    //프로필 이미지 전송 (REST API 필요)
+    
+    const submitFileImage= () => {     //프로필 이미지 서버 전송
         const formdata =new FormData();
         
         formdata.append('user_profile',imagefile[0]);
         for (let key of formdata.keys()) {
             console.log(key);
           }
-        // url.put(     
-        //     "/users/name/change", formdata)
-        //     .then((response) => {
-        //     localStorage.setItem('user',JSON.stringify(response.data)); //유저 정보 변경
-        //     alert('변경했습니다'); //추후 삭제
-        //     })
-        //     .catch((error) => { //오류메시지 보이게 함
-        //     console.log(error.response);
-        //     alert("실패!")
-        //     });
-            localStorage.setItem('profile_img', preview);
+        url.post(     
+            "/users/profile/upload", formdata)
+            .then((response) => {
+            localStorage.setItem('user',JSON.stringify(response.data)); //유저 정보 변경
+            console.log(response.data.user_profile);
+            alert('변경했습니다'); //추후 삭제
+            })
+            .catch((error) => { //오류메시지 보이게 함
+            console.log(error.response);
+            alert("실패!")
+            });
+            //localStorage.setItem('profile_img', preview);
             formdata.delete('user_profile');     
     }
 
-    const deleteFileImage = () =>{  //프로필 이미지 삭제
-        localStorage.setItem('profile_img', "");
-        setImagefile("");
-        setPreview(profile);
+    // const deleteFileImage = () =>{  //프로필 이미지 삭제
+    //     localStorage.setItem('profile_img', "");
+    //     setImagefile("");
+    //     setPreview(profile);
         
-    };
-    console.log('프리뷰 : '+preview);
+    // };
+
 
     const changeName = async(event) => {    //이름변경
         console.log("실행");
@@ -150,7 +151,7 @@ function Profile() {
 
                                 <button id="btn-color" className="change-btn" style={{ width: "70px", height: "30px", cursor: "pointer", margin: "10px"}} onClick={() =>  submitFileImage()}> 저장 </button>
             
-                                <button id="btn-color" className="change-btn" style={{ width: "70px", height: "30px", cursor: "pointer", margin: "10px"}} onClick={() => deleteFileImage()} > 삭제 </button> 
+                                {/* <button id="btn-color" className="change-btn" style={{ width: "70px", height: "30px", cursor: "pointer", margin: "10px"}} onClick={() => deleteFileImage()} > 삭제 </button>  */}
 
                         </div>
                     </div>

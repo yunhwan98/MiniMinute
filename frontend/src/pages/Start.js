@@ -7,6 +7,7 @@ import SignupModal from '../components/Signup/SignupModal';
 import miniminute_logo from '../images/logo.png';
 import axios from 'axios';
 import LogoutGoogle from '../components/Login/LogoutGoogle';
+import url from '../api/axios';
 
 const Start_page = () => {
     const [user, setUser] = useState([]);  //유저 정보 저장
@@ -14,12 +15,14 @@ const Start_page = () => {
 
     //회원가입이나 로그인이 성공했을 때 토큰을 저장
     const userHasAuthenticated = (authenticated, userinfo, token) => {
-        localStorage.setItem('token', token);
+        localStorage.setItem('token',  token);
         localStorage.setItem('user',JSON.stringify(userinfo));
         setisAuthenticated(authenticated);
+        window.location.reload();   //새로고침
+       
+        
         /*setUser(username);*/
     }
-
     //로그아웃
     const userLogout = () => {
         setisAuthenticated(false);
@@ -27,10 +30,26 @@ const Start_page = () => {
         localStorage.clear();
     }
 
+    useEffect(() => { // 유저 정보 받아옴
+        url.get(     
+            "/users/profile"
+            )
+            .then((response) => {
+            localStorage.setItem('user',JSON.stringify(response.data));
+            setUser(response.data)
+            console.log(response.data.user_profile)
+            })
+            .catch((error) => { //오류메시지 보이게 함
+                console.log(error.response)
+            });       
+      },[isAuthenticated]);
+      
+      
+
+
     return (
-
         <div className = "Start">
-
+           
             <Start_nav  isAuthenticated ={isAuthenticated} userHasAuthenticated={userHasAuthenticated} userLogout={userLogout}/>
             <div id="main">
                 <div className="hero-header">
