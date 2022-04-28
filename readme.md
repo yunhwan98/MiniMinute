@@ -63,6 +63,7 @@
 | Path                          | Method | request | response          | Code | 설명              |
 | ----------------------------- | ------ | ------- | ------------------| ---- | ----------------- |
 |/lists|GET|{email, password|{token, user{<br>pk, username, email,<br>first_name, last_name}}|200 성공<br>400 실패(관리자 계정 아님)<br>401 실패(토큰 인증 실패)|회원 목록 전체 조회<br>(관리자 계정 전용)|
+|/profile|GET|{}|{id, email, user_profile,<br>password, username,<br>user_sign_up_date,<br>user_access_date}|200 성공<br>401 실패(토큰 인증 실패)|회원 조회|
 |/name/change|PUT|{username}|{id, email, user_profile,<br>password, username,<br>user_sign_up_date,<br>user_access_date}|200 성공<br>400 실패(이름 중복)<br>401 실패(토큰 인증 실패)|회원 이름 변경|
 |/email/change|PUT|{email}|{id, email, user_profile,<br>password, username,<br>user_sign_up_date,<br>user_access_date}|200 성공<br>401 실패(토큰 인증 실패)|회원 이메일 변경|
 |/withdraw|DELETE|{}|{}|204 성공<br>401 실패(토큰 인증 실패)|회원 탈퇴|
