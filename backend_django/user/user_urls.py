@@ -4,6 +4,7 @@ from . import views
 urlpatterns = [
     # 사용자 목록 전체 조회(관리자 계정만 이용 가능)
     path('lists', views.user_list),
+    path('profile', views.user),
 
     # 사용자 정보 수정
     path('profile/upload', views.user_profile),
