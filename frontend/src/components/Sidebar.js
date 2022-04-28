@@ -5,6 +5,7 @@ import profile from '../images/profile2.png';
 import setting from '../images/setting.png';
 import NewLog_modal from "./NewLog_modal";
 import url from '../api/axios';
+import axios from "axios";
 
 function Sidebar(props) {
     let params = useParams();  //url로 정보받아오기
@@ -24,6 +25,9 @@ function Sidebar(props) {
     const [preview,setPreview] = useState(localStorage.getItem('profile_img')? localStorage.getItem('profile_img') : profile);//미리보기 파일 
     //유저정보
     const [user, setUser] = useState(localStorage.getItem('token') ? JSON.parse( localStorage.getItem('user') ) : []);
+    const [img, setImg] = useState('');
+    
+    
     //유저 로그아웃
     const userLogout =(e)=> {
         setUser([]);
@@ -36,6 +40,27 @@ function Sidebar(props) {
     const onNewDirNameHandler = (e) => {    //디렉토리 수정
         setNewDrName(e.currentTarget.value);
     }
+
+    
+    useEffect(() => { // 파일정보를 blob으로 받아옴
+        axios({
+            method:'GET',
+            url: `http://127.0.0.1:8000${user.user_profile}`,
+            responseType:'blob',
+            headers: {
+                'Authorization': `jwt ${localStorage.getItem('token')}`
+            },
+        })
+        .then((res) => {
+            setImg( window.URL.createObjectURL(new Blob([res.data], { type: res.headers['content-type'] } )));
+            localStorage.setItem('img', window.URL.createObjectURL(new Blob([res.data], { type: res.headers['content-type'] } )));
+            console.log('성공!!!!')
+        })
+        .catch(e => {
+            console.log(`error === ${e}`)
+        })     
+      },[user]);
+
 
     //디렉토리 목록 조회(처음, 디렉토리 변경될 때마다)
     useEffect(() => {
@@ -119,9 +144,9 @@ function Sidebar(props) {
             </div>
             <div className="profile">
                 <div className="profile-box" style={{height: "140px" ,width:"140px"}}>
-                    <img className="profile-image" src={preview} />
+                    <img className="profile-image" src={img} />
                 </div>
-                
+
                 {/* <img src={preview} style={{height: "140px"}}/> */}
                 <h4>{user.username}</h4>
                 <button type="button" id="btn-color" className="new-btn" onClick={() => setLogShow(true)}>새 회의록</button>
