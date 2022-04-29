@@ -107,6 +107,7 @@ function Sidebar(props) {
                 setEditDr(false);
             })
             .catch((error) => {
+                alert("이름을 입력해주세요!")
                 console.log("디렉토리 이름 변경 실패 "+error);
             });
     }

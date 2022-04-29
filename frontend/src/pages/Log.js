@@ -1,15 +1,15 @@
 import React, {useState, useEffect} from "react";
-import axios from "axios";
+import Bookmark from "../components/bookmark";
+import Header_log from "../components/Header_log";
+import SidebarLog from "../components/Sidebar_log";
 import {useParams} from "react-router-dom";
 import AudioPlayer from 'react-h5-audio-player';
 import 'react-h5-audio-player/lib/styles.css';
 import {google} from "@google-cloud/speech/build/protos/protos";
-import Header from "../components/Header";
-import SidebarLog from "../components/Sidebar_log";
 import url from '../api/axios';
+import axios from "axios";
 import Table from 'react-bootstrap/Table'
-import Bookmark from "../components/bookmark";
-import {Nav} from "react-bootstrap";
+import {Modal, Nav} from "react-bootstrap";
 
 function Log(){
     let params = useParams();  //url로 정보받아오기
@@ -20,7 +20,8 @@ function Log(){
     const [audio, setAudio] = useState(""); //파일 url
     const [dialogue, setDialogue] = useState("");   //대화
     const [bookmark, setBookmark] = useState([]);
-    
+    const [participant, setParticipant] = useState(false);  //참가자 모달
+    const [pNum, setPNum] = useState("");   //참가자 수
 
 
     const onMemoHandler = (event) => {
@@ -79,6 +80,7 @@ function Log(){
         console.log(type);
         setIsUpload(true);
         setAudio("https://docs.google.com/uc?export=open&id=1glavx1db3_NMDUQgzmvPdP57UdaFXfVH");
+        setParticipant(false);
 
         //파일 전송
         const formData = new FormData();
@@ -121,7 +123,7 @@ function Log(){
 
     return (
         <div>
-            <Header/>
+            <Header_log/>
             <div className="main">
                 <SidebarLog dr_id={dr_id} mn_id={mn_id} memo={memo}/>
                 <div className="article">
@@ -170,10 +172,24 @@ function Log(){
                         
                     </div>
                     {!isUpload && <div className="voice-play">
-                        <label id="btn-color" className="voice-btn" htmlFor="input-file">음성 파일 업로드</label>
-                        <input type="file" id="input-file" style={{display: "none"}}
-                               accept="audio/*"
-                               onChange={onAudioHandler}/>
+                        <button type="button" id="btn-color" className="participant-btn" onClick={() => setParticipant(true)}>
+                            음성 파일 업로드
+                        </button>
+                        <Modal show={participant} onHide={() => setParticipant(false)}>
+                            <Modal.Header closeButton>
+                                <Modal.Title>참가자 수를 입력해주세요</Modal.Title>
+                            </Modal.Header>
+                            <Modal.Body>
+                                <h6>참가자 수</h6>
+                                <input type="number" className="form-control" id="directory-name" value={pNum} onChange={(e) => setPNum(e.target.value)} />
+                            </Modal.Body>
+                            <Modal.Footer>
+                                <label id="btn-color" className="voice-btn" htmlFor="input-file">파일 업로드</label>
+                                <input type="file" id="input-file" style={{display: "none"}}
+                                       accept="audio/*"
+                                       onChange={onAudioHandler}/>
+                            </Modal.Footer>
+                        </Modal>
                     </div>}
                     {isUpload && <AudioPlayer
                         src={audio}   //test audio

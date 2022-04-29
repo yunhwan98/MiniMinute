@@ -14,8 +14,8 @@ function NewLog_modal(props) {
     //const [logShow, setLogShow] = useState(false);
     const [title, setTitle] = useState("");
     const [startDate, setStartDate] = useState(new Date()); //DB에 저장 형식 다름
-    const [speaker, setSpeaker] = useState("");
     const [memo, setMemo] = useState("");
+    const [place, setPlace] = useState("");
     const [dr_id,setDr_id] = useState("");   //디렉토리 지정 필요
     const [share_link , setShare_link] =useState("");
     const [errormsg, setErrormsg] = useState("");
@@ -36,8 +36,8 @@ function NewLog_modal(props) {
             "/minutes/lists",{    //현재 넣을 수 있는 정보만 넣음
                 "mn_title" : title,             //회의록 제목
                 "mn_explanation"  : memo,       //회의록 설명
+                "mn_place"  : place,            //회의 장소
                 "mn_date"  : mn_date,           //회의 시간
-                //"speaker_seq": speaker,         //참가자 수
                 "mn_sharelink" : share_link,    //공유 링크
                 "dr_id"    : drId              //디렉토리 id
             })
@@ -76,8 +76,8 @@ function NewLog_modal(props) {
                     />
                 </div>
                 <div className="body-form">
-                    <h6 style={{fontWeight: "bold"}}>참석자 수</h6>
-                    <input type="number" className="part-input" id="speaker" value={speaker} onChange={(e)=>setSpeaker(e.target.value)}/>
+                    <h6 style={{fontWeight: "bold"}}>장소</h6>
+                    <input type="text" className="form-control" id="speaker" value={place} onChange={(e)=>setPlace(e.target.value)}/>
                 </div>
                 <div className="body-form">
                     <h6 style={{fontWeight: "bold"}}>메모</h6>
