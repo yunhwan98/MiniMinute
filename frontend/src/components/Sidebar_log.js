@@ -21,10 +21,6 @@ function Sidebar_log(props) {
     const [mn_info, setMn_info] = useState([]);
     const [dr_info, setDr_info] = useState([]);
 
-    
-
-
-
       //유저정보
     const [user, setUser] = useState(localStorage.getItem('token') ? JSON.parse( localStorage.getItem('user') ) : []);
     //유저 로그아웃
@@ -95,7 +91,8 @@ function Sidebar_log(props) {
             })
     }
 
-    const onEditLogHandler =(event) => { //회의록수정
+    //회의록수정
+    const onEditLogHandler =(event) => {
         event.preventDefault();
         url.put(
             `/minutes/${mnId}`,{
@@ -208,7 +205,7 @@ function Sidebar_log(props) {
                     <ul>
                         <li className="info-topic">{mn_info.mn_title}</li>
                         <li className="info-date">{mn_info.mn_date}</li>
-                        <li className="info-participant">참석자</li>
+                        <li className="info-participant">{mn_info.mn_place}</li>
                         <li className="info-memo">{mn_info.mn_explanation}</li>
                     </ul>
                 </div>
