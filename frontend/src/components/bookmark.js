@@ -32,6 +32,7 @@ export default function InteractiveList({bm_seq, mn_id, bm_name, bm_start, bm_en
             .then((response) => {
                 console.log("북마크 삭제 성공");
                 alert("북마크가 삭제되었습니다!");
+                window.location.reload();   //새로고침
             })
             .catch((error) => {
                 console.log("북마크 삭제 실패 "+ error);

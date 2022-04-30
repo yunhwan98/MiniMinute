@@ -2,14 +2,15 @@ import React, {useState, useEffect} from "react";
 import Bookmark from "../components/bookmark";
 import Header_log from "../components/Header_log";
 import SidebarLog from "../components/Sidebar_log";
+import NewBm from "../components/New_Bookmark";
 import {useParams} from "react-router-dom";
 import AudioPlayer from 'react-h5-audio-player';
 import 'react-h5-audio-player/lib/styles.css';
 import {google} from "@google-cloud/speech/build/protos/protos";
 import url from '../api/axios';
 import axios from "axios";
-import Table from 'react-bootstrap/Table'
 import {Modal, Nav} from "react-bootstrap";
+import Add_bm from '../images/Add_bm2.png';
 
 function Log(){
     let params = useParams();  //url로 정보받아오기
@@ -19,7 +20,8 @@ function Log(){
     const [isUpload, setIsUpload] = useState(false);
     const [audio, setAudio] = useState(""); //파일 url
     const [dialogue, setDialogue] = useState("");   //대화
-    const [bookmark, setBookmark] = useState([]);
+    const [bookmark, setBookmark] = useState([]);   //북마크 리스트
+    const [showBm, setShowBm] = useState(false);    //북마크모달
     const [participant, setParticipant] = useState(false);  //참가자 모달
     const [pNum, setPNum] = useState("");   //참가자 수
 
@@ -27,6 +29,9 @@ function Log(){
     const onMemoHandler = (event) => {
         setMemo(event.currentTarget.value);
     }
+
+
+
     const onEditLogHandler =(event) => {
         event.preventDefault();
         url.put(
@@ -69,7 +74,7 @@ function Log(){
             .catch((error) => {
                 console.log("북마크 목록 불러오기 실패 "+error)
             })
-    },[])
+    },[showBm])
     
     let bookmarkList =[]; 
    //let bookmarkList = bookmark.map((bookmark) => (<li key={bookmark.bm_seq}>{bookmark.mn_id}</li>));
@@ -150,8 +155,15 @@ function Log(){
                         </div>
                         <div className="side-func">
                             <div className="bookmark">
-                                <h5>북마크</h5>
+                                <div style={{ display: "flex"}}>
+                                <h5 style={{ flexGrow: 1}}>북마크</h5>
+                                <button type="button" className="none-btn" style={{marginBottom:"8px", color:"#B96BC6"} } onClick={()=>setShowBm(true)} >
+                                    <img src={Add_bm} style={{width : "20px" , height : "20px" }} />
+                                </button>
+                                <NewBm showBm={showBm} setShowBm = {setShowBm} mn_id={mn_id}/>
+                                </div>
                                 <hr id="log-hr" />
+                               
                                 {bookmarkList= bookmark.map((bookmark) =>
 
                                             <Bookmark key={bookmark.bm_seq} bm_seq={bookmark.bm_seq} bm_name={bookmark.bm_name} bm_start={bookmark.bm_start} bm_end={bookmark.bm_end} mn_id={bookmark.mn_id} />                                                   
@@ -168,7 +180,7 @@ function Log(){
                             </div>
                             
                         </div>
-                        <div><button type="submit"  onClick={onEditLogHandler} className="submit-btn" /*저장버튼*/>저장</button></div>   
+                        {/* <div><button type="submit"  onClick={onEditLogHandler} className="submit-btn" >저장</button></div>    */}
                         
                     </div>
                     {!isUpload && <div className="voice-play">
