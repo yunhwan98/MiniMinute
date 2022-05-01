@@ -137,6 +137,8 @@ function Sidebar_log(props) {
             </div>
 
             <div className="log-info">
+                <div style={{ display: "flex"}}>
+                               
                 <button type="button" className="none-btn" style={{marginBottom:"8px", color:"#B96BC6"}}
                         onClick={() => setShare(true)}>
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
@@ -200,7 +202,11 @@ function Sidebar_log(props) {
                         </button>
                     </Modal.Footer>
                 </Modal>
-
+                <button type="button" className="none-btn" style={{marginBottom:"8px", color:"#B96BC6",marginLeft: 'auto' } }
+                >
+                        수정
+                </button>
+                </div>
                 <div>
                     <ul>
                         <li className="info-topic">{mn_info.mn_title}</li>

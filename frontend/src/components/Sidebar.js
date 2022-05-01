@@ -22,7 +22,6 @@ function Sidebar(props) {
     const [newDrName, setNewDrName] = useState("");
     const [editDr, setEditDr] = useState(false);
     const [delDr, setDelDr] = useState(false);
-    const [preview,setPreview] = useState(localStorage.getItem('profile_img')? localStorage.getItem('profile_img') : profile);//미리보기 파일 
     //유저정보
     const [user, setUser] = useState(localStorage.getItem('token') ? JSON.parse( localStorage.getItem('user') ) : []);
     const [img, setImg] = useState('');
