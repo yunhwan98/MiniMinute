@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Modal, Button} from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
@@ -6,7 +6,6 @@ import axios from 'axios';
 import LoginGoogle from '../Login/LoginGoogle';
 import url from '../../api/axios';
 
-const clientId = "1064677249953-799g6ker89ntqd3kfq2kpce60saut59u.apps.googleusercontent.com"
 export default function SignupModal(props) {
   const [show, setShow] = useState(false);
   const [errormsg, setErrormsg] = useState("");
@@ -45,7 +44,8 @@ export default function SignupModal(props) {
           }
         )
         .then((response) => {
-          console.log(response);
+          console.log('회원가입' + response.data);
+          setaccessToken(response.data.token);
           handleClose();
           alert('회원가입이 완료되었습니다.')
         })
@@ -120,7 +120,20 @@ export default function SignupModal(props) {
     });
 
 }
-
+      useEffect(() => { //회원가입 시 자동으로 home 디렉토리 생성
+        axios.post('http://127.0.0.1:8000/directorys/lists',{"dr_name": 'home'}, {
+          headers: {
+            "Authorization": `jwt ${accessToken}`
+          },})
+          .then((response) => {
+              console.log("디렉토리 추가 성공");
+              alert("디렉토리 추가 성공");
+          })
+          .catch((error) => {
+              console.log("디렉토리 추가 실패 "+error);
+              alert("디렉토리 추가 실패");
+          });
+      }, [accessToken])
 
   const {title} = props; 
   
