@@ -30,8 +30,6 @@ function Log(){
         setMemo(event.currentTarget.value);
     }
 
-
-
     const onEditLogHandler =(event) => {
         event.preventDefault();
         url.put(
@@ -104,35 +102,13 @@ function Log(){
 
     }
 
-    //stt api 호출
-    // useEffect(() => {
-    //     axios.get("https://speech.googleapis.com/v1p1beta1/speech:recognize", {
-    //         "audio": {
-    //             "content": audio
-    //         },
-    //         "config": {
-    //             "enableAutomaticPunctuation": false,
-    //             "encoding": "LINEAR16",
-    //             "languageCode": "ko-KR",
-    //             "model": "default"
-    //         }
-    //     })
-    //         .then((response) => {
-    //             console.log(response.data);
-    //             setDialogue(response.data);
-    //         })
-    //         .catch((error) => {
-    //             console.log("api 호출 실패 "+error);
-    //         })
-    // }, [isUpload])
-
     return (
         <div>
             <Header_log/>
             <div className="main">
                 <SidebarLog dr_id={dr_id} mn_id={mn_id} memo={memo}/>
                 <div className="article">
-                    <div style={{display: "flex"}}>
+                    <div style={{display: "flex"}} className="fade-in">
                         <div>
                             <h5>회의 전문</h5>
                             <Nav justify id="nav-log" variant="tabs" defaultActiveKey="/home">

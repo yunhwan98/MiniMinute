@@ -9,7 +9,9 @@ function Sidebar_log(props) {
     const navigate = useNavigate();
     const drId = props.dr_id;
     const mnId = props.mn_id;
+    console.log(drId);
     let toList = `${drId}/loglist`;
+    if (drId === "1") toList="home";
 
     const dropDownRef = useRef(null);
     const [isOpen, setIsOpen] = useState(false);

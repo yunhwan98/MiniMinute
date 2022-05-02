@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link } from 'react-router-dom';
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import profile from '../images/profile2.png';
+import profile from '../images/profile.png';
 import {Modal} from "react-bootstrap";
 import url from '../api/axios';
 import {useNavigate } from 'react-router-dom';
