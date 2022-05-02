@@ -2,6 +2,7 @@ import React, {useEffect, useRef, useState} from "react";
 import {Link, useNavigate} from 'react-router-dom';
 import {Modal} from "react-bootstrap";
 import {CopyToClipboard} from 'react-copy-to-clipboard';
+import EditLog_modal from "./EditLog_modal";
 import setting from "../images/setting.png";
 import url from '../api/axios';
 
@@ -23,6 +24,7 @@ function Sidebar_log(props) {
     const [mn_info, setMn_info] = useState([]);
     const [dr_info, setDr_info] = useState([]);
 
+    const [logShow, setLogShow] = useState(false);
       //유저정보
     const [user, setUser] = useState(localStorage.getItem('token') ? JSON.parse( localStorage.getItem('user') ) : []);
     //유저 로그아웃
@@ -41,7 +43,7 @@ function Sidebar_log(props) {
             .catch((error) => {
                 console.log("회의록 정보 불러오기 실패 "+error);
             })
-    }, [])
+    }, [logShow])
 
     //디렉토리 목록 조회(디렉토리 이동 모달)
     useEffect(() => {
@@ -204,10 +206,13 @@ function Sidebar_log(props) {
                         </button>
                     </Modal.Footer>
                 </Modal>
-                <button type="button" className="none-btn" style={{marginBottom:"8px", color:"#B96BC6",marginLeft: 'auto' } }
-                >
+                <button type="button" className="none-btn" style={{marginBottom:"8px", color:"#B96BC6",marginLeft: 'auto' } }  onClick={() => setLogShow(true)}>
                         수정
                 </button>
+                <Modal show={logShow} onHide={() => setLogShow(false)} >
+                    <EditLog_modal dr_id={drId} mn_id={mnId} setLogShow={setLogShow} title={mn_info.mn_title} date={mn_info.mn_date} place={mn_info.mn_place} explanation={mn_info.mn_explanation}/*NewLog_modal에 setLogShow 전달하고 props로 바뀐 값 받아야 '생성'시 모달 사라짐  *//>
+                </Modal>
+
                 </div>
                 <div>
                     <ul>

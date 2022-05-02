@@ -127,11 +127,11 @@ export default function SignupModal(props) {
           },})
           .then((response) => {
               console.log("디렉토리 추가 성공");
-              alert("디렉토리 추가 성공");
+              //alert("디렉토리 추가 성공");
           })
           .catch((error) => {
               console.log("디렉토리 추가 실패 "+error);
-              alert("디렉토리 추가 실패");
+              //alert("디렉토리 추가 실패");
           });
       }, [accessToken])
 
@@ -157,11 +157,11 @@ export default function SignupModal(props) {
               <div><label>비밀번호</label> <input name="password" type="password" placeholder="비밀번호" value={password} onChange={onPasswordHandler} className="signup-text"/></div>
               <div><label>비밀번호 확인</label> <input name="confirmPassword" type="password" placeholder="비밀번호 확인" value={confirmPassword} onChange={onConfirmPasswordHandler} className="signup-text"/></div>
               <div><button type="submit" onSubmit={onSubmit} className="submit-btn">회원가입</button></div>
-              <hr className="signup-hr"/>
+              {/* <hr className="signup-hr"/>
               <div id="google-title">구글 아이디로 회원가입</div>
               <div className ="google-login">
                 <LoginGoogle setaccessToken={setaccessToken} handleClose={handleClose} />
-                </div>
+                </div> */}
             </form> 
         </div>
       </Modal>

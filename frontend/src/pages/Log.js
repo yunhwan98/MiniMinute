@@ -12,6 +12,8 @@ import axios from "axios";
 import {Modal, Nav} from "react-bootstrap";
 import Add_bm from '../images/Add_bm2.png';
 
+
+
 function Log(){
     let params = useParams();  //url로 정보받아오기
     const dr_id = params.dr_id;
@@ -24,7 +26,7 @@ function Log(){
     const [showBm, setShowBm] = useState(false);    //북마크모달
     const [participant, setParticipant] = useState(false);  //참가자 모달
     const [pNum, setPNum] = useState("");   //참가자 수
-
+    const [keyword, setKeyword] = useState([]);   //키워드 리스트
 
     const onMemoHandler = (event) => {
         setMemo(event.currentTarget.value);
@@ -76,6 +78,7 @@ function Log(){
     
     let bookmarkList =[]; 
    //let bookmarkList = bookmark.map((bookmark) => (<li key={bookmark.bm_seq}>{bookmark.mn_id}</li>));
+    let keywordList = [];
 
     const onAudioHandler = (e) => {
         const file = e.target.files[0];
@@ -139,7 +142,7 @@ function Log(){
                                 <NewBm showBm={showBm} setShowBm = {setShowBm} mn_id={mn_id}/>
                                 </div>
                                 <hr id="log-hr" />
-                               
+                              
                                 {bookmarkList= bookmark.map((bookmark) =>
 
                                             <Bookmark key={bookmark.bm_seq} bm_seq={bookmark.bm_seq} bm_name={bookmark.bm_name} bm_start={bookmark.bm_start} bm_end={bookmark.bm_end} mn_id={bookmark.mn_id} />                                                   
@@ -148,6 +151,20 @@ function Log(){
                             <div className="keyword">
                                 <h5>주요 키워드</h5>
                                 <hr id="log-hr" />
+                                <div style={{width:'300px' , height: '205px'}}>
+                                {keywordList= keyword.map((keyword) =>            
+                                       <span className="keyword-list" style={{minWidth : "40px" , height : "25px", display: 'inline-block', backgroundColor: '#B96BC6' ,color:'white',margin: '5px', textAlign: 'center'}}>{keyword}</span>                                   
+                                )}
+                                <button type="button" className="none-btn" style={{marginBottom:"8px", color:"#B96BC6"} } >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                             fill="currentColor" className="bi bi-plus-circle" viewBox="0 0 16 16">
+                                            <path
+                                                d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                            <path
+                                                d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                                        </svg>
+                                </button>
+                                </div>
                             </div>
                             <div className="memo">
                                 <h5>메모</h5>
