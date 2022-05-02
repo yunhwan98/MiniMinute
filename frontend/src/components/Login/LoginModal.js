@@ -79,12 +79,12 @@ export default function LoginModal(props) {
                         <div className="links">
                             <Find_pwModal name="비밀번호를 잊으셨나요?" />
                         </div>
-                        <hr className="login-hr"/>
+                        {/* <hr className="login-hr"/>
                         <div id="google-title">구글 아이디로 로그인</div>
                         <div className ="google-login">
                             <LoginGoogle setaccessToken={setaccessToken} handleClose={handleClose} />
                             <LogoutGoogle setaccessToken={setaccessToken} />
-                        </div>
+                        </div> */}
                     </form>
                 </div>
             </Modal>
