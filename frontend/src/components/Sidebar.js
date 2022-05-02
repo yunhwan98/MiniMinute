@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import {Link, useNavigate, useParams} from 'react-router-dom';
 import {Modal} from "react-bootstrap";
-import profile from '../images/profile2.png';
+import profile from '../images/profile.png';
 import setting from '../images/setting.png';
 import NewLog_modal from "./NewLog_modal";
 import url from '../api/axios';
@@ -17,7 +17,7 @@ function Sidebar(props) {
     const [dirShow, setDirShow] = useState(false);
     const [logShow, setLogShow] = useState(false);
 
-    const [dr_info, setDrInfo] = useState([]);
+    const [dr_info, setDr_info] = useState([]);
     const [drName, setDrName] = useState("");
     const [newDrName, setNewDrName] = useState("");
     const [editDr, setEditDr] = useState(false);
@@ -25,7 +25,6 @@ function Sidebar(props) {
     //유저정보
     const [user, setUser] = useState(localStorage.getItem('token') ? JSON.parse( localStorage.getItem('user') ) : []);
     const [img, setImg] = useState('');
-    
     
     //유저 로그아웃
     const userLogout =(e)=> {
@@ -67,7 +66,7 @@ function Sidebar(props) {
             "/directorys/lists")
             .then((response) => {
                 console.log(response.data);
-                setDrInfo(response.data);
+                setDr_info(response.data);
             })
             .catch((error) => {
                 console.log("디렉토리 목록 불러오기 실패 " + error);
@@ -127,6 +126,8 @@ function Sidebar(props) {
                 console.log("디렉토리 삭제 실패 "+error);
             });
     }
+
+    const defaultDir = dr_info.filter(dr_info => `${dr_info.dr_id}` > 1); //디렉토리 번호 1 이상(기본 디렉토리 제외)
 
     return (
         <div className="sidebar">
@@ -188,14 +189,14 @@ function Sidebar(props) {
                     <Link to ="" className="directory-link">내 회의록</Link>
                 </li>
                 <ul className="myDirectory">
-                    {dr_info.map(dr_info =>
-                        <li className="myDir-li" key={dr_info.dr_id}>
+                    {defaultDir.map(defaultDir =>
+                        <li className="myDir-li" key={defaultDir.dr_id}>
                             <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor"
                                  className="bi bi-folder2" viewBox="0 2 18 18">
                                 <path
                                     d="M1 3.5A1.5 1.5 0 0 1 2.5 2h2.764c.958 0 1.76.56 2.311 1.184C7.985 3.648 8.48 4 9 4h4.5A1.5 1.5 0 0 1 15 5.5v7a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 1 12.5v-9zM2.5 3a.5.5 0 0 0-.5.5V6h12v-.5a.5.5 0 0 0-.5-.5H9c-.964 0-1.71-.629-2.174-1.154C6.374 3.334 5.82 3 5.264 3H2.5zM14 7H2v5.5a.5.5 0 0 0 .5.5h11a.5.5 0 0 0 .5-.5V7z"/>
                             </svg>
-                            <Link to = {`/${dr_info.dr_id}/loglist`} className="directory-link">{dr_info.dr_name}</Link>
+                            <Link to = {`/${defaultDir.dr_id}/loglist`} className="directory-link">{defaultDir.dr_name}</Link>
 
                             <ul className="dr-menu">
                                 <li className="dr-li"><button type="button" className="none-btn dr-item" onClick={() => setEditDr(true)}>수정</button></li>

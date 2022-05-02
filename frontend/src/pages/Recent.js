@@ -41,7 +41,7 @@ function Recent () {
             <div className="main">
                 <Sidebar/>
                 <div className="article">
-                    <div className="log-list">
+                    <div className="log-list fade-in">
                         <div className="directory-name">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
                                  className="bi bi-star-fill" viewBox="0 -3 16 19">

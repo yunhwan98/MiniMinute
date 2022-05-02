@@ -53,7 +53,7 @@ const Start_page = () => {
             <Start_nav  isAuthenticated ={isAuthenticated} userHasAuthenticated={userHasAuthenticated} userLogout={userLogout}/>
             <div id="main">
                 <div className="hero-header">
-                    <div className="info">
+                    <div className="info fade-in">
                         <img src={miniminute_logo} style={{height: "200px"}} />
                         <h1></h1>
                         <p>
