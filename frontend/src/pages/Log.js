@@ -10,9 +10,9 @@ import {google} from "@google-cloud/speech/build/protos/protos";
 import url from '../api/axios';
 import axios from "axios";
 import {Modal, Nav} from "react-bootstrap";
+import chatProfile from '../images/profile.png';
 import Add_bm from '../images/Add_bm2.png';
-
-
+import happy from '../images/happy.png';
 
 function Log(){
     let params = useParams();  //url로 정보받아오기
@@ -27,6 +27,8 @@ function Log(){
     const [participant, setParticipant] = useState(false);  //참가자 모달
     const [pNum, setPNum] = useState("");   //참가자 수
     const [keyword, setKeyword] = useState([]);   //키워드 리스트
+    const [chat, setChat] = useState([]);   //키워드 리스트
+
 
     const onMemoHandler = (event) => {
         setMemo(event.currentTarget.value);
@@ -128,9 +130,53 @@ function Log(){
                                     <Nav.Link id="nav-link" eventKey="link-4">분노</Nav.Link>
                                 </Nav.Item>
                             </Nav>
-                            <div className="dialogue">
+                            <div className="dialogue"/*채팅 대화 구현*/>
+                            <div className='chat-wrapper'>
+                                <div className='display-container'>
+                                    <ul className='chatting-list'>
+                                        <li className="chat-mine">
+                                            <span className='chat-profile'>
+                                                <span className='chat-user'>참가자1</span>
+                                                <img src={chatProfile} alt='any' />
+                                            </span>
+                                            <span className='chat-msg'>안녕하십니까</span>
+                                            <span className='chat-time'>03:10</span>
+                                            <img src={happy} alt='any' className='chat-emo'/>
+                                        </li>
+                                        <li className="chat-other">
+                                            <span className='chat-profile'>
+                                                <span className='chat-user' >참가자2</span>
+                                                <img src={chatProfile} alt='any' />
+                                            </span>
+                                            <span className='chat-msg' >안녕</span>
+                                            <span className='chat-time'>03:10</span>
+                                            <img src={happy} alt='any' className='chat-emo'/>
 
+                                        </li>
+                                        <li className="chat-other">
+                                            <span className='chat-profile'>
+                                                <span className='chat-user' >참가자3</span>
+                                                <img src={chatProfile} alt='any' />
+                                            </span>
+                                            <span className='chat-msg' >안녕</span>
+                                            <span className='chat-time'>03:10</span>
+                                            <img src={happy} alt='any' className='chat-emo'/>
+                                        </li>
+                                        <li className="chat-other">
+                                            <span className='chat-profile'>
+                                                <span className='chat-user' >참가자4</span>
+                                                <img src={chatProfile} alt='any' />
+                                            </span>
+                                            <span className='chat-msg' >안녕</span>
+                                            <span className='chat-time'>03:10</span>
+                                            <img src={happy} alt='any' className='chat-emo'/>
+
+                                        </li>      
+                                                                        
+                                    </ul>                     
+                                </div>
                             </div>
+                        </div>
                         </div>
                         <div className="side-func">
                             <div className="bookmark">

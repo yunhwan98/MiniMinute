@@ -7,6 +7,7 @@ import SignupModal from '../components/Signup/SignupModal';
 import miniminute_logo from '../images/logo.png';
 import axios from 'axios';
 import LogoutGoogle from '../components/Login/LogoutGoogle';
+import Carousel from 'react-bootstrap/Carousel'
 import url from '../api/axios';
 
 const Start_page = () => {
@@ -51,17 +52,42 @@ const Start_page = () => {
         <div className = "Start">
            
             <Start_nav  isAuthenticated ={isAuthenticated} userHasAuthenticated={userHasAuthenticated} userLogout={userLogout}/>
-            <div id="main">
-                <div className="hero-header">
-                    <div className="info fade-in">
-                        <img src={miniminute_logo} style={{height: "200px"}} />
-                        <h1></h1>
-                        <p>
-                            당신의 감정을 파악해주는 회의록
-                        </p>
-                    </div>
-                </div>
-            </div>
+            <Carousel variant="dark">
+                <Carousel.Item>
+                    <div
+                    style={{height: "400px"}}
+                    className="d-block w-100"
+                    alt="First slide"
+                    />
+                    <Carousel.Caption>
+                    <img src={miniminute_logo} style={{height: "200px", padding: "40px"}} />
+                    <h5 style={{ marginBottom: "20px"}}>당신의 감정을 파악해주는 회의록</h5>
+                    {/* <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p> */}
+                    </Carousel.Caption>
+                </Carousel.Item>
+                <Carousel.Item>
+                    <div
+                    style={{height: "400px"}}
+                    className="d-block w-100"
+                    alt="Second slide"
+                    />
+                    <Carousel.Caption>
+                    <h5>Second slide label</h5>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    </Carousel.Caption>
+                </Carousel.Item>
+                <Carousel.Item>
+                    <div
+                    style={{height: "400px"}}
+                    className="d-block w-100"
+                    alt="Third slide"
+                    />
+                    <Carousel.Caption>
+                    <h5>Third slide label</h5>
+                    <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>
+                    </Carousel.Caption>
+                </Carousel.Item>
+            </Carousel>
             <div className = "bottom">
 
             </div>
