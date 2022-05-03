@@ -258,9 +258,8 @@
   max-height: 200px;
   overflow: scroll;
 }
-
-::-webkit-scrollbar { /*scrollbar 안보이게*/
-  display: none;
+ ::-webkit-scrollbar { /*scrollbar 안보이게*/
+   display: none; 
 }
 
 .main {
@@ -865,6 +864,87 @@ label{
 }
 
 /*Find_pwMdoal.css */
+
+
+
+/*Log.js 채팅 부분*/
+.chat-wrapper ::-webkit-scrollbar {
+   display: visible;
+}
+
+.chat-wrapper{
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background-color: rgba(213, 219, 219, 0.46);
+  overflow-y: scroll;
+}
+.display-container {
+   
+}
+.chatting-list li{
+  width: 90%;
+  padding : 0.3rem;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-end;
+  margin-top: 0.5rem;
+}
+.chat-profile{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.chat-profile img{
+  border-radius: 50%;
+  object-fit: cover;
+  width: 30px;
+  height: 30px;
+
+}
+.chat-profile .chat-user{
+  font-size: 10px;
+  margin-bottom: 0.3rem;
+}
+
+.chat-msg{
+  border-radius: 5px;
+  padding: 0.5rem;
+  font-size: 12px;
+  margin: 0 5px;
+  box-shadow: 1px 1px 0 rgba(0,0,0,0.3);
+  font-weight:bold;
+
+
+}
+.chat-time{
+  font-size:10px;
+  margin: 0 5px;
+}
+
+.chat-other .chat-msg{
+  background-color: yellow;
+}
+
+.chat-mine .chat-msg{
+  background-color: white;
+}
+
+.chat-mine {
+  flex-direction: row-reverse;
+  float: right;
+}
+.chat-emo{
+  border-radius: 50%;
+  object-fit: cover;
+  width: 15px;
+  height: 15px;
+}
+/*Log.js 채팅 부분*/
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;
