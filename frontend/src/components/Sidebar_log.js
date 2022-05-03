@@ -135,7 +135,7 @@ function Sidebar_log(props) {
             <div className="sidebar-list">
                 <ul>
                     <li><Link to={`/${drId}/${mnId}/log`}>회의록 열람</Link></li>
-                    <li><Link to="">감정분석</Link></li>
+                    <li><Link to={`/${drId}/${mnId}/emotion`}>감정분석</Link></li>
                     <li><Link to={`/${toList}`}>목록으로</Link></li>
                 </ul>
             </div>
@@ -207,7 +207,13 @@ function Sidebar_log(props) {
                     </Modal.Footer>
                 </Modal>
                 <button type="button" className="none-btn" style={{marginBottom:"8px", color:"#B96BC6",marginLeft: 'auto' } }  onClick={() => setLogShow(true)}>
-                        수정
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                         className="bi bi-pencil-square" viewBox="0 0 16 16">
+                        <path
+                            d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                        <path fill-rule="evenodd"
+                              d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                    </svg>
                 </button>
                 <Modal show={logShow} onHide={() => setLogShow(false)} >
                     <EditLog_modal dr_id={drId} mn_id={mnId} setLogShow={setLogShow} title={mn_info.mn_title} date={mn_info.mn_date} place={mn_info.mn_place} explanation={mn_info.mn_explanation}/*NewLog_modal에 setLogShow 전달하고 props로 바뀐 값 받아야 '생성'시 모달 사라짐  *//>

@@ -646,6 +646,37 @@ label input[type=radio]:checked{ /*안먹음*/
   font-size: 20px;
 }
 
+/*emotion.js*/
+.emotion h5 {
+  font-weight: bold;
+  margin-bottom: 25px;
+}
+
+.chart {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.chart text {
+  margin-left: 5px;
+}
+
+.analyse {
+  margin-bottom: 20px;
+}
+
+.emotion-label {
+  display: flex;
+}
+
+.emotion-label h6 {
+  font-weight: bold;
+  text-decoration: underline dotted;
+  text-underline-position: under;
+  padding: 0 0 8px 2px;
+}
+
 /*Start_page.css*/
 .navbar {
   height: 100px;

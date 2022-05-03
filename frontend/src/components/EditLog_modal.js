@@ -82,7 +82,7 @@ export default function EditLog_modal(props) {
             </Modal.Body>
             <div id="modalFooter-override">
                 <button type="button" id="btn-color" className="btn-override modal-btn" onClick={onSubmit} >
-                    생성
+                    저장
                 </button>
                 
             </div>
