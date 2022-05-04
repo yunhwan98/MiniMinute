@@ -19,9 +19,10 @@ function Log(){
     const dr_id = params.dr_id;
     const mn_id = params.mn_id;
     const [memo,setMemo] = useState("");    //메모
-    const [isUpload, setIsUpload] = useState(false);
-    const [audio, setAudio] = useState(""); //파일 url
-    const [dialogue, setDialogue] = useState("");   //대화
+    const [file, setFile] = useState("");   //file id
+    const isUpload = file ? true : false;
+    const [path, setPath] = useState(""); //파일 url
+    const [dialogue, setDialogue] = useState([]);   //대화
     const [bookmark, setBookmark] = useState([]);   //북마크 리스트
     const [showBm, setShowBm] = useState(false);    //북마크모달
     const [participant, setParticipant] = useState(false);  //참가자 모달
@@ -58,7 +59,8 @@ function Log(){
             )
             .then((response) => {
             console.log('회의록 정보 불러오기');
-            console.log(response.data.mn_memo);
+            console.log(response.data);
+            setFile(response.data.file_id);
             setMemo(response.data.mn_memo);
             })
             .catch((error) => { //오류메시지 보이게 함
@@ -82,29 +84,73 @@ function Log(){
    //let bookmarkList = bookmark.map((bookmark) => (<li key={bookmark.bm_seq}>{bookmark.mn_id}</li>));
     let keywordList = [];
 
+    useEffect(() => {   //파일 불러오기
+        url.get(
+            `/files/${file}`)   //이상한 데이터 return
+            .then((response) => {
+                console.log(response);
+                console.log("파일 조회 성공")
+                setPath("https://storage.cloud.google.com/miniminute_voice_file/testquiz.wav?authuser=1");
+            })
+            .catch((error) => {
+                console.log("파일 조회 실패 " + error);
+            })
+    }, [file])
+
     const onAudioHandler = (e) => {
         const file = e.target.files[0];
         let type = file.name.slice(file.name.indexOf('.'), undefined);
         console.log(type);
-        setIsUpload(true);
-        setAudio("https://docs.google.com/uc?export=open&id=1glavx1db3_NMDUQgzmvPdP57UdaFXfVH");
         setParticipant(false);
 
         //파일 전송
         const formData = new FormData();
         formData.append("file", file);
 
-        // url.post(`/minutes/${mn_id}/file/upload`, formData)
-        //     .then((response) => {
-        //         console.log(response.data);
-        //         console.log(response.data.location);
-        //         setAudio(response.data.location);
-        //         console.log("업로드 성공");
-        //     })
-        //     .catch((error) => {
-        //         console.log("업로드 실패 "+ error);
-        //     });
+        url.post(`/minutes/${mn_id}/file/upload`, {
+            "file_name": "testquiz",
+            "file_extension": "wav",
+            "file_path": "https://storage.cloud.google.com/miniminute_voice_file/testquiz.wav?authuser=1"
+        })
+            .then((response) => {
+                console.log(response.data);
+                console.log("업로드 성공");
+                setPath("https://storage.cloud.google.com/miniminute_voice_file/testquiz.wav?authuser=1");
+            })
+            .catch((error) => {
+                console.log("업로드 실패 "+ error);
+            });
+    }
 
+    useEffect(() => {
+        //stt 호출
+        url.post("/voice/recognition/lists", {
+        "mn_id": mn_id
+        })
+        .then((response) => {
+            console.log("stt 호출 성공");
+            console.log(response);
+            // getDialogue();
+            setDialogue(response.data);
+        })
+        .catch((error) => {
+            console.log("stt 실패 "+ error);
+        })
+    }, [isUpload])
+
+    const getDialogue = (e) => {
+        //stt 결과 -> 안받아짐(keyError: mn_id)
+        url.get(
+            "/voice/recognition/lists",
+            {params: {mn_id: mn_id}})
+            .then((response) => {
+                console.log("stt 결과 조회 성공");
+                console.log(response);
+                setDialogue(response.data);
+            })
+            .catch((error) => {
+                console.log("stt 조회 실패 "+ error);
+            })
     }
 
     return (
@@ -134,6 +180,15 @@ function Log(){
                             <div className='chat-wrapper'>
                                 <div className='display-container'>
                                     <ul className='chatting-list'>
+                                        <li className="chat-other" >
+                                            <span className='chat-profile'>
+                                                <span className='chat-user' >참가자{dialogue.vr_id}</span>
+                                                <img src={chatProfile} alt='any' />
+                                            </span>
+                                            <span className='chat-msg' >{dialogue.vr_text}</span>
+                                            <span className='chat-time'>{dialogue.vr_start}</span>
+                                            😄
+                                        </li>
                                         <li className="chat-mine">
                                             <span className='chat-profile'>
                                                 <span className='chat-user'>참가자1</span>
@@ -151,28 +206,7 @@ function Log(){
                                             <span className='chat-msg' >안녕</span>
                                             <span className='chat-time'>03:10</span>
                                             <img src={happy} alt='any' className='chat-emo'/>
-
                                         </li>
-                                        <li className="chat-other">
-                                            <span className='chat-profile'>
-                                                <span className='chat-user' >참가자3</span>
-                                                <img src={chatProfile} alt='any' />
-                                            </span>
-                                            <span className='chat-msg' >안녕</span>
-                                            <span className='chat-time'>03:10</span>
-                                            <img src={happy} alt='any' className='chat-emo'/>
-                                        </li>
-                                        <li className="chat-other">
-                                            <span className='chat-profile'>
-                                                <span className='chat-user' >참가자4</span>
-                                                <img src={chatProfile} alt='any' />
-                                            </span>
-                                            <span className='chat-msg' >안녕</span>
-                                            <span className='chat-time'>03:10</span>
-                                            <img src={happy} alt='any' className='chat-emo'/>
-
-                                        </li>      
-                                                                        
                                     </ul>                     
                                 </div>
                             </div>
@@ -181,23 +215,24 @@ function Log(){
                         <div className="side-func">
                             <div className="bookmark">
                                 <div style={{ display: "flex"}}>
-                                <h5 style={{ flexGrow: 1}}>북마크</h5>
-                                <button type="button" className="none-btn" style={{marginBottom:"8px", color:"#B96BC6"} } onClick={()=>setShowBm(true)} >
-                                    <img src={Add_bm} style={{width : "20px" , height : "20px" }} />
-                                </button>
-                                <NewBm showBm={showBm} setShowBm = {setShowBm} mn_id={mn_id}/>
+                                    <h5 style={{ flexGrow: 1}}>북마크</h5>
+                                    <button type="button" className="none-btn" style={{marginBottom:"8px", color:"#B96BC6"} } onClick={()=>setShowBm(true)} >
+                                        <img src={Add_bm} style={{width : "20px" , height : "20px" }} />
+                                    </button>
+                                    <NewBm showBm={showBm} setShowBm = {setShowBm} mn_id={mn_id}/>
                                 </div>
                                 <hr id="log-hr" />
-                              
-                                {bookmarkList= bookmark.map((bookmark) =>
+                                <div className="bookmark-detail">
+                                    {bookmarkList= bookmark.map((bookmark) =>
 
-                                            <Bookmark key={bookmark.bm_seq} bm_seq={bookmark.bm_seq} bm_name={bookmark.bm_name} bm_start={bookmark.bm_start} bm_end={bookmark.bm_end} mn_id={bookmark.mn_id} />                                                   
-                                )}
+                                        <Bookmark key={bookmark.bm_seq} bm_seq={bookmark.bm_seq} bm_name={bookmark.bm_name} bm_start={bookmark.bm_start} bm_end={bookmark.bm_end} mn_id={bookmark.mn_id} />
+                                    )}
+                                </div>
                             </div>
                             <div className="keyword">
                                 <h5>주요 키워드</h5>
                                 <hr id="log-hr" />
-                                <div style={{width:'300px' , height: '205px'}}>
+                                <div className="keyword-detail">
                                 {keywordList= keyword.map((keyword) =>            
                                        <span className="keyword-list" style={{minWidth : "40px" , height : "25px", display: 'inline-block', backgroundColor: '#B96BC6' ,color:'white',margin: '5px', textAlign: 'center'}}>{keyword}</span>                                   
                                 )}
@@ -243,8 +278,8 @@ function Log(){
                         </Modal>
                     </div>}
                     {isUpload && <AudioPlayer
-                        src={audio}   //test audio
-                        style={{marginBottom: "40px", width: "74%", border:"1px solid #E0BFE6", boxShadow: "none", borderRadius:"0"}}
+                        src={path}   //test audio
+                        style={{marginBottom: "40px", width: "76%", border:"1px solid #E0BFE6", boxShadow: "none", borderRadius:"0"}}
                         customAdditionalControls={[]}
                     />}
                 </div>

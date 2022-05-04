@@ -4,9 +4,9 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import Sidebar from "../components/Sidebar";
 import Log_card from "../components/Log_card";
+import NotFound from "./NotFound";
 import {alignPropType} from "react-bootstrap/types";
 import button from "bootstrap/js/src/button";
-import NotFound from "./NotFound";
 import url from '../api/axios';
 
 const Home = () => {

@@ -22,7 +22,7 @@ def transcribe_file(gcs_uri, mn_id):
     audio = speech.RecognitionAudio(uri=gcs_uri)
     config = speech.RecognitionConfig(
         encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
-        sample_rate_hertz=16000,
+        sample_rate_hertz=48000,
         language_code='ko-KR',
         enable_word_time_offsets=True,
         enable_speaker_diarization=True,

@@ -19,7 +19,7 @@ function Sidebar(props) {
 
     const [dr_info, setDr_info] = useState([]);
     const [drName, setDrName] = useState("");
-    const [newDrName, setNewDrName] = useState("");
+    const [newDrName, setNewDrName] = useState(""); //edit
     const [editDr, setEditDr] = useState(false);
     const [delDr, setDelDr] = useState(false);
     //유저정보
@@ -94,9 +94,9 @@ function Sidebar(props) {
     //수정
     const editDirectory = (e, id) => {
         e.preventDefault();
-
+        console.log(id);
         url.put(
-            "/directorys/"+id,
+            `/directorys/${id}`,
             {"dr_name": newDrName},)
             .then((response) => {
                 console.log(response);
@@ -113,9 +113,9 @@ function Sidebar(props) {
     //삭제
     const delDirectory = (e, id) => {
         e.preventDefault();
-
+        console.log(id);
         url.delete(
-            "/directorys/"+id)
+            `/directorys/${id}`)
             .then((response) => {
                 console.log("디렉토리 삭제 성공");
                 alert("디렉토리가 삭제되었습니다!");
@@ -210,14 +210,14 @@ function Sidebar(props) {
                                     </Modal.Body>
                                     <Modal.Footer>
                                         <button type="submit" id="btn-color" className="modal-btn"
-                                        onClick={(e) => {editDirectory(e, dr_info.dr_id);}}
+                                        onClick={(e) => {editDirectory(e, defaultDir.dr_id);}}
                                         >수정
                                         </button>
                                     </Modal.Footer>
                                 </Modal>
 
                                 <li className="dr-li"><button type="button" className="none-btn dr-item"
-                                onClick={(e) => {delDirectory(e, dr_info.dr_id);}}
+                                onClick={(e) => {delDirectory(e, defaultDir.dr_id);}}
                                 >삭제</button></li>
                             </ul>
                         </li>

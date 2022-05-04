@@ -59,7 +59,7 @@ export default function SignupModal(props) {
           else if(password !== confirmPassword) {
             setErrormsg("※ 비밀번호를 확인해주세요 ※");
           }
-          else if(password == 'This password is too common.', 'This password is entirely numeric.'){
+          else if(password == 'This password is entirely numeric.'){
             setErrormsg("※ 특수문자를 포함한 8자 이상의 비밀번호를 입력해주세요 ※");
           }
         });
