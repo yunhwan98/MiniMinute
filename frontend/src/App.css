@@ -981,6 +981,25 @@ label{
 }
 /*Log.js 채팅 부분*/
 
+.Speech-result{
+  display: flex;
+  justify-content: flex-start;
+  margin: 0px 50px;
+  padding: 1rem;
+
+
+}
+.speech-analyse{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 3rem;
+}
+
+.speech-analyse li{
+  padding: 1rem;
+  font-size: 1.2rem;
+}
 .App-logo {
   height: 40vmin;
   pointer-events: none;
