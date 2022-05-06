@@ -572,7 +572,7 @@ label input[type=radio]:checked{ /*안먹음*/
 }
 
 .side-func {
-  margin-left: 5em;
+  margin-left: 7em;
 }
 
 .side-func h5{
@@ -585,6 +585,12 @@ label input[type=radio]:checked{ /*안먹음*/
 .bookmark, .keyword, .memo {
   min-height: 150px;
   margin-bottom: 25px;
+}
+
+.bookmark-detail, .keyword-detail {
+  width: 300px;
+  max-height: 200px;
+  overflow: scroll;
 }
 
 .memo textarea{
@@ -946,18 +952,16 @@ label{
   padding: 0.5rem;
   font-size: 12px;
   margin: 0 5px;
-  box-shadow: 1px 1px 0 rgba(0,0,0,0.3);
-  font-weight:bold;
-
-
+  box-shadow: 1px 1px 0 rgba(0,0,0,0.12);
 }
+
 .chat-time{
   font-size:10px;
   margin: 0 5px;
 }
 
 .chat-other .chat-msg{
-  background-color: yellow;
+  background-color: #FFF200;
 }
 
 .chat-mine .chat-msg{
@@ -967,6 +971,7 @@ label{
 .chat-mine {
   flex-direction: row-reverse;
   float: right;
+  margin-right: 20px;
 }
 .chat-emo{
   border-radius: 50%;
@@ -976,6 +981,25 @@ label{
 }
 /*Log.js 채팅 부분*/
 
+.Speech-result{
+  display: flex;
+  justify-content: flex-start;
+  margin: 0px 50px;
+  padding: 1rem;
+
+
+}
+.speech-analyse{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 3rem;
+}
+
+.speech-analyse li{
+  padding: 1rem;
+  font-size: 1.2rem;
+}
 .App-logo {
   height: 40vmin;
   pointer-events: none;

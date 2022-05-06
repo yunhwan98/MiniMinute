@@ -40,6 +40,9 @@ urlpatterns = [
     # 파일 관련
     path('files/', include('minute.file_urls')),
 
+    # 음성 인식 관련
+    path('voice/', include('voice_recognition.urls')),
+
     # 토큰(발급, 인증, 갱신)
     path('api/token', obtain_jwt_token),
     path('api/token/verify', verify_jwt_token),
