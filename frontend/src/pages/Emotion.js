@@ -36,7 +36,7 @@ function Emotion (){
         }, 
         plotOptions: {
           bar: {
-            columnWidth: '25%',
+            columnWidth: '50%',
             distributed: true,
           }
         },

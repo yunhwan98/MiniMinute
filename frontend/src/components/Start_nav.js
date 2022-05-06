@@ -24,12 +24,13 @@ const Start_nav = (props) => {
             <ul className="navbar-nav me-auto">          
             </ul>
 
-            <form className="d-flex">
-
+            <form className="d-flex" style={{display:'flex'}}>
+              <div style={{padding:'1rem'}}>
               <LoginModal title="로그인" userHasAuthenticated={props.userHasAuthenticated}/>
-              <ul></ul>
+              </div>
+              <div style={{padding:'1rem'}}>
               <SignupModal title="회원가입"/>
-
+              </div>
             </form>
             </div>
             </div>
@@ -45,11 +46,13 @@ const Start_nav = (props) => {
           <ul className="navbar-nav me-auto">          
           </ul>
 
-          <form className="d-flex">
+          <form className="d-flex" style={{display:'flex'}}>
+              <div style={{padding:'1rem'}}>
               <Button className="nextButton" id="Login-Button" onClick={onClick}>내 회의록</Button>
-              <ul></ul>
+              </div>
+              <div style={{padding:'1rem'}}>
               <Button className="nextButton" id="Login-Button" onClick={Logout}>로그아웃</Button>
-
+              </div>           
           </form>
           </div>
           </div>
