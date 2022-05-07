@@ -12,6 +12,7 @@ function Emotion (){
     const dr_id = params.dr_id;
     const mn_id = params.mn_id;
     const [minutes,setMinutes] = useState([]);
+
     const data = [  //임시 데이터
         {title: "무감정", value: 56, color: "#E0BFE6"},
         {title: "행복", value: 27, color: "#B5E61D"},
@@ -79,7 +80,7 @@ function Emotion (){
         <div>
             <Header_log/>
             <div className="main">
-                <SidebarLog dr_id={dr_id} mn_id={mn_id} memo={minutes.mn_memo}/>
+                <SidebarLog dr_id={dr_id} mn_id={mn_id}/>
                 <div className="article">
                     <div className="fade-in" >
 
@@ -101,11 +102,11 @@ function Emotion (){
                             </div>
                             <div className="emotion" style={{border: 'solid',margin: '0px 50px', padding: '4rem', display:"flex"}}>
                                 <div>
-                                    <h5>회의내 감정 현황</h5>
+                                    <h5>회의 전체 감정 현황</h5>
                                     <div className="chart">
                                         <PieChart
                                             data={data}
-                                            style={{width: "300px", margin: "0 100px 20px 10px"}}
+                                            style={{width: "300px", margin: "0 80px 20px 0"}}
                                             segmentsShift={0.5}
                                             viewBoxSize={[105, 105]}
                                             label={({dataEntry}) => dataEntry.value+"%"}
@@ -189,11 +190,11 @@ function Emotion (){
                                 </div>
 
                                 <div>
-                                    <h5>회의내 감정 현황</h5>
+                                    <h5>내 감정 현황</h5>
                                     <div className="chart">
                                         <PieChart
                                             data={data}
-                                            style={{width: "300px", margin: "0 100px 20px 10px"}}
+                                            style={{width: "300px", margin: "0 80px 20px 10px"}}
                                             segmentsShift={0.5}
                                             viewBoxSize={[105, 105]}
                                             label={({dataEntry}) => dataEntry.value+"%"}

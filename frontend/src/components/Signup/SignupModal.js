@@ -121,18 +121,21 @@ export default function SignupModal(props) {
 
 }
       useEffect(() => { //회원가입 시 자동으로 home 디렉토리 생성
-        axios.post('http://127.0.0.1:8000/directorys/lists',{"dr_name": 'home'}, {
-          headers: {
-            "Authorization": `jwt ${accessToken}`
-          },})
-          .then((response) => {
-              console.log("디렉토리 추가 성공");
-              //alert("디렉토리 추가 성공");
-          })
-          .catch((error) => {
-              console.log("디렉토리 추가 실패 "+error);
-              //alert("디렉토리 추가 실패");
-          });
+          if (accessToken) {
+              axios.post('http://127.0.0.1:8000/directorys/lists',{"dr_name": 'home'}, {
+                  headers: {
+                      "Authorization": `jwt ${accessToken}`
+                  },})
+                  .then((response) => {
+                      console.log("디렉토리 추가 성공");
+                      console.log(response.data);
+                      //alert("디렉토리 추가 성공");
+                  })
+                  .catch((error) => {
+                      console.log("디렉토리 추가 실패 "+error);
+                      //alert("디렉토리 추가 실패");
+                  });
+          }
       }, [accessToken])
 
   const {title} = props; 

@@ -16,7 +16,7 @@ export default function EditLog_modal(props) {
     const [startDate, setStartDate] = useState(new Date(props.date)); //DB에 저장 형식 다름
     const [memo, setMemo] = useState(props.explanation);
     const [place, setPlace] = useState(props.place);
-    const [dr_id,setDr_id] = useState("");   //디렉토리 지정 필요
+    const [dr_id, setDr_id] = useState("");   //디렉토리 지정 필요
     const [share_link , setShare_link] =useState("");
     const [errormsg, setErrormsg] = useState("");
     const navigate = useNavigate();
@@ -76,7 +76,7 @@ export default function EditLog_modal(props) {
                     <input type="text" className="form-control" placeholder={place} id="place" value={place} onChange={(e)=>setPlace(e.target.value)}/>
                 </div>
                 <div className="body-form">
-                    <h6 style={{fontWeight: "bold"}}>메모</h6>
+                    <h6 style={{fontWeight: "bold"}}>설명</h6>
                     <input type="text" className="form-control"  placeholder={memo} id="memo" value={memo} onChange={(e)=>setMemo(e.target.value)}/>
                 </div>
             </Modal.Body>

@@ -80,7 +80,7 @@ function NewLog_modal(props) {
                     <input type="text" className="form-control" id="speaker" value={place} onChange={(e)=>setPlace(e.target.value)}/>
                 </div>
                 <div className="body-form">
-                    <h6 style={{fontWeight: "bold"}}>메모</h6>
+                    <h6 style={{fontWeight: "bold"}}>설명</h6>
                     <input type="text" className="form-control" id="memo" value={memo} onChange={(e)=>setMemo(e.target.value)}/>
                 </div>
                 <button type="button" id="btn-color" className="btn-override modal-btn" onClick={onSubmit} >

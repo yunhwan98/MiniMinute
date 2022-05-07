@@ -36,21 +36,20 @@ const Start_page = () => {
     }
 
     useEffect(() => { // 유저 정보 받아옴
-        url.get(     
-            "/users/profile"
+        if (isAuthenticated){
+            url.get(
+                "/users/profile"
             )
-            .then((response) => {
-            localStorage.setItem('user',JSON.stringify(response.data));
-            setUser(response.data)
-            console.log(response.data.user_profile)
-            })
-            .catch((error) => { //오류메시지 보이게 함
-                console.log(error.response)
-            });       
+                .then((response) => {
+                    localStorage.setItem('user',JSON.stringify(response.data));
+                    setUser(response.data)
+                    console.log(response.data.user_profile)
+                })
+                .catch((error) => { //오류메시지 보이게 함
+                    console.log(error.response)
+                });
+        }
       },[isAuthenticated]);
-      
-      
-
 
     return (
         <div className = "Start" >

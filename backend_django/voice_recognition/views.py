@@ -48,14 +48,14 @@ def transcribe_file(gcs_uri, mn_id):
 @api_view(['GET', 'POST'])
 @permission_classes((IsAuthenticated,))
 @authentication_classes((JSONWebTokenAuthentication,))
-def voice_recognition_list(request):
+def voice_recognition_list(request, mn_id):
     if request.method == 'GET':
-        voice_recognitions = VoiceRecognition.objects.filter(mn_id=request.data["mn_id"])
+        voice_recognitions = VoiceRecognition.objects.filter(mn_id=mn_id)
         serializer = VoiceRecognitionSerializer(voice_recognitions, many=True)
         return JsonResponse(serializer.data, safe=False)
 
     elif request.method == 'POST':
-        minute = Minutes.objects.get(mn_id=request.data["mn_id"])
+        minute = Minutes.objects.get(mn_id=mn_id)
         file = File.objects.get(file_id=minute.file_id.file_id)
         response = transcribe_file("gs://miniminute_voice_file/" + file.file_name + "." + file.file_extension, minute.mn_id)
         failed = 0
