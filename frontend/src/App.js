@@ -10,6 +10,7 @@ import Profile from './pages/Profile';
 import Log from './pages/Log';
 import NotFound from "./pages/NotFound";
 import Emotion from "./pages/Emotion";
+import Summary from "./pages/Summary";
 
 function App(){
     return (
@@ -23,6 +24,7 @@ function App(){
                     <Route path="/recent" element={<Recent />} />
                     <Route path="/profile" element={<Profile />} />
                     <Route path="/:dr_id/:mn_id/log" element={<Log />} />
+                    <Route path="/:dr_id/:mn_id/summary" element={<Summary />} />
                     <Route path="/:dr_id/:mn_id/emotion" element={<Emotion />} />
                     <Route path="*" element={<NotFound />} />
                 </Routes>
