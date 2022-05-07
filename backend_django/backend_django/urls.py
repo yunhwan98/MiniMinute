@@ -43,6 +43,12 @@ urlpatterns = [
     # 음성 인식 관련
     path('voice/', include('voice_recognition.urls')),
 
+    # 문서 요약 관련
+    path('keyword/', include('text_keyword.urls')),
+    path('summary/', include('summary.urls')),
+
+    # 감정 인식 & 피드백 관련
+
     # 토큰(발급, 인증, 갱신)
     path('api/token', obtain_jwt_token),
     path('api/token/verify', verify_jwt_token),
@@ -56,5 +62,5 @@ urlpatterns = [
     path('rest-auth/logout', LogoutView.as_view(), name='rest_logout'),
     path('rest-auth/signup', RegisterView.as_view(), name='rest_register'),
     path('rest-auth/password/change', PasswordChangeView.as_view(), name='rest_password_change'),
-  
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

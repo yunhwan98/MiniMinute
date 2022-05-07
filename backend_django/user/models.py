@@ -44,7 +44,7 @@ class User(AbstractBaseUser):
         max_length=20,
         blank=False,
         unique=True,
-        default=''
+        default=""
     )
     first_name = models.CharField(
         max_length=5,
