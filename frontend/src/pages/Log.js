@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect,useRef} from "react";
 import Bookmark from "../components/bookmark";
 import Header_log from "../components/Header_log";
 import SidebarLog from "../components/Sidebar_log";
@@ -27,6 +27,12 @@ function Log(){
     const [showBm, setShowBm] = useState(false);    //북마크모달
     const [participant, setParticipant] = useState(false);  //참가자 모달
     const [pNum, setPNum] = useState("");   //참가자 수
+    const [keyword, setKeyword] = useState([]);   //키워드 리스트
+    const [chat, setChat] = useState([]);   //키워드 리스트
+    const [start,setStart] = useState("");
+    const [end,setEnd] = useState("");
+    const playerInput = useRef();
+
 
     const onMemoHandler = (event) => {
         setMemo(event.currentTarget.value);
@@ -150,6 +156,33 @@ function Log(){
             })
     }
 
+  
+    const moveAudio = (current) => {//클릭시 시간으로 이동
+        //playerInput.current.audio.current.currentTime = 3;    
+        let start = parseInt(current.slice(0,1))*3600 +  parseInt(current.slice(2,4)) * 60 + parseInt(current.slice(5,7)); //
+
+        playerInput.current.audio.current.currentTime = start;
+        playerInput.current.audio.current.play();   //오디오객체에 접근해서 플레이 조작
+
+    }
+
+    const bookmarkOperate = (current,current2) => {//클릭시 시간으로 이동
+        //playerInput.current.audio.current.currentTime = 3;    
+        let start = parseInt(current.slice(0,1))*3600 +  parseInt(current.slice(2,4)) * 60 + parseInt(current.slice(5,7)); //
+        let end = parseInt(current2.slice(0,1))*3600 +  parseInt(current2.slice(2,4)) * 60 + parseInt(current2.slice(5,7));
+        console.log(start);
+        console.log(end);
+        playerInput.current.audio.current.currentTime = start;
+        playerInput.current.audio.current.play();   //오디오객체에 접근해서 플레이 조작
+
+        console.log((end-start));
+        setTimeout(() => { playerInput.current.audio.current.pause(); console.log('멈춤');}, (end-start+1)*1000);   
+
+    }
+
+    
+
+
     return (
         <div>
             <Header_log/>
@@ -179,14 +212,15 @@ function Log(){
                                     <ul className='chatting-list'>
                                         {dialogue.map(dialogue =>
                                             <li className="chat-other" key={dialogue.vr_id}>
-                                            <span className='chat-profile'>
-                                                <span className='chat-user' >참가자{dialogue.vr_id}</span>
-                                                <img src={chatProfile} alt='any' />
-                                            </span>
-                                            <span className='chat-msg' >{dialogue.vr_text}</span>
-                                            <span className='chat-time'>{dialogue.vr_start.slice(undefined, 7)}</span>
-                                            😄
-                                        </li>
+                                                <span className='chat-profile'>
+                                                    <span className='chat-user' >참가자{dialogue.vr_id}</span>
+                                                    {/* <img src={chatProfile} alt='any' /> */}
+                                                    <span style={{fontSize: '2rem'}}>😄</span>
+                                                </span>
+                                                <span className='chat-msg' onClick={()=>moveAudio(dialogue.vr_start.slice(undefined, 7))}>{dialogue.vr_text}</span>
+                                                <span className='chat-time'onClick={()=>{setStart(dialogue.vr_start.slice(undefined, 7));  setEnd(dialogue.vr_end.slice(undefined, 7)); setShowBm(true);}}>{dialogue.vr_start.slice(undefined, 7)}</span>
+                                                <NewBm showBm={showBm} setShowBm = {setShowBm} mn_id={mnId} start={start} end={end}/>
+                                            </li>
                                         )}
 
                                         <li className="chat-mine">
@@ -207,15 +241,15 @@ function Log(){
                             <div className="bookmark">
                                 <div style={{ display: "flex"}}>
                                     <h5 style={{ flexGrow: 1}}>북마크</h5>
-                                    <button type="button" className="none-btn" style={{marginBottom:"8px", color:"#B96BC6"} } onClick={()=>setShowBm(true)} >
+                                    {/* <button type="button" className="none-btn" style={{marginBottom:"8px", color:"#B96BC6"} } onClick={()=>setShowBm(true)} >
                                         <img src={Add_bm} style={{width : "20px" , height : "20px" }} />
                                     </button>
-                                    <NewBm showBm={showBm} setShowBm = {setShowBm} mn_id={mnId}/>
+                                    <NewBm showBm={showBm} setShowBm = {setShowBm} mn_id={mnId}/> */}
                                 </div>
                                 <hr id="log-hr" />
                                 <div className="bookmark-detail">
                                     {bookmarkList= bookmark.map((bookmark) =>
-                                        <Bookmark key={bookmark.bm_seq} bm_seq={bookmark.bm_seq} bm_name={bookmark.bm_name} bm_start={bookmark.bm_start} bm_end={bookmark.bm_end} mn_id={bookmark.mn_id} />
+                                        <Bookmark key={bookmark.bm_seq} bm_seq={bookmark.bm_seq} bm_name={bookmark.bm_name} bm_start={bookmark.bm_start} bm_end={bookmark.bm_end} mn_id={bookmark.mn_id} bookmarkOperate={bookmarkOperate}/>
                                     )}
                                 </div>
                             </div>
@@ -251,9 +285,13 @@ function Log(){
                     </div>}
                     {isUpload && <AudioPlayer
                         src={path}   //test audio
+                        ref={playerInput}
+                        volume={0.5}
                         style={{marginBottom: "40px", width: "76%", border:"1px solid #E0BFE6", boxShadow: "none", borderRadius:"0"}}
-                        customAdditionalControls={[]}
-                    />}
+                        customAdditionalControls={[]}  
+                    />                  
+                    }
+
                 </div>
             </div>
         </div>

@@ -54,7 +54,7 @@ const Start_page = () => {
     return (
         <div className = "Start" >
             <Start_nav  isAuthenticated ={isAuthenticated} userHasAuthenticated={userHasAuthenticated} userLogout={userLogout}/>
-            <div style={{ padding: '50px 200px'}}>
+            <div style={{ padding: '5% 10%'}}>
             <Carousel variant="dark">
             <Carousel.Item >
                         <div className="start-div"
@@ -69,8 +69,8 @@ const Start_page = () => {
                                     <p style={{ padding: '1rem', fontSize: '2rem', fontWeight: 'bold', color: 'white' }}>회의시간에는 회의에만 집중하세요!</p>
                                     <p style={{ padding: '1rem', fontSize: '1.3rem', color: 'white' }}>미니미닛이 회의 내용을 대신 기록해줄게요</p>
                                 </div>
-                                <div style={{ display: 'flex', width: '30%', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-                                    <img src={start1} style={{ height: "300px" }} />
+                                <div style={{ display: 'flex', width: '30%', height: "50%", flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                                    <img src={start1} style={{height:'100%'  }} />
                                 </div>
                             </div>
                         </div>
@@ -89,8 +89,8 @@ const Start_page = () => {
                                     <p style={{ padding: '1rem', fontSize: '2rem', fontWeight: 'bold', color: 'white' }}>회의의 분위기를 떠올리고 싶나요?</p>
                                     <p style={{ padding: '1rem', fontSize: '1.3rem', color: 'white' }}>참가자들의 감정을 대화형식으로 한 눈에 볼 수 있어요</p>
                                 </div>
-                                <div style={{ display: 'flex', width: '30%', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-                                    <img src={start2} style={{ height: "300px" }} />
+                                <div style={{ display: 'flex', width: '30%', height: '50%', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                                    <img src={start2} style={{ height: "100%" }} />
                                 </div>
                             </div>
                         </div>
@@ -107,8 +107,8 @@ const Start_page = () => {
                                     <p style={{ padding: '1rem', fontSize: '2rem', fontWeight: 'bold', color: 'white' }}>회의에서 나는 어땠을까?</p>
                                     <p style={{ padding: '1rem', fontSize: '1.3rem', color: 'white' }}>감정분석을 기반하여 문제점을 파악해봐요</p>
                                 </div>
-                                <div style={{ display: 'flex', width: '30%', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-                                    <img src={start3} style={{ height: "300px" }} />
+                                <div style={{ display: 'flex', width: '30%',height: '50%', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                                    <img src={start3} style={{ height: "100%" }} />
                                 </div>
                             </div>
                         </div>

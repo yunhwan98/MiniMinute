@@ -23,7 +23,7 @@ const Demo = styled('div')(({ theme }) => ({
 }));
 
 
-export default function InteractiveList({bm_seq, mn_id, bm_name, bm_start, bm_end}) {
+export default function InteractiveList({bm_seq, mn_id, bm_name, bm_start, bm_end, bookmarkOperate}) {
 
     const delBm = (e) => {
         e.preventDefault();
@@ -39,8 +39,12 @@ export default function InteractiveList({bm_seq, mn_id, bm_name, bm_start, bm_en
             })
     }
 
+    const bookmarkHandler =()=>{    //클릭시 북마크 시작
+        bookmarkOperate(bm_start,bm_end);
+    }
+
   return (
-      <ListItem
+      <ListItem onClick={()=>bookmarkHandler()}
 
           secondaryAction={
               <IconButton edge="end" aria-label="delete" onClick={delBm}>
@@ -48,7 +52,7 @@ export default function InteractiveList({bm_seq, mn_id, bm_name, bm_start, bm_en
               </IconButton>
           }
       >
-          <ListItemText
+          <ListItemText 
               primary={bm_name}
               secondary={bm_start + ' - ' + bm_end}
           />
