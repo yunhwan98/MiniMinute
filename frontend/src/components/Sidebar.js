@@ -9,7 +9,8 @@ import axios from "axios";
 
 function Sidebar(props) {
     let params = useParams();  //url로 정보받아오기
-    const dr_id = params.dr_id;
+    const [home,setHome]= useState(''); // 홈 디렉토리 번호 설정
+    const dr_id = ( params.dr_id ? params.dr_id : home); // params 값이 없으면 홈 디렉토리 번호 설정
     const navigate = useNavigate();
     const dropDownRef = useRef(null);
     const [isOpen, setIsOpen] = useState(false);
@@ -67,6 +68,7 @@ function Sidebar(props) {
             .then((response) => {
                 console.log(response.data);
                 setDr_info(response.data);
+                setHome(response.data[0].dr_id);
             })
             .catch((error) => {
                 console.log("디렉토리 목록 불러오기 실패 " + error);
@@ -127,8 +129,8 @@ function Sidebar(props) {
             });
     }
 
-    const defaultDir = dr_info.filter(dr_info => `${dr_info.dr_id}` > 1); //디렉토리 번호 1 이상(기본 디렉토리 제외)
-
+    const defaultDir = dr_info.filter(dr_info => `${dr_info.dr_id}` > home); //home 디렉토리 안보이기
+    
     return (
         <div className="sidebar">
             <div className="dropdown">
