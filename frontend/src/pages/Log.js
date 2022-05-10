@@ -6,13 +6,11 @@ import NewBm from "../components/New_Bookmark";
 import {useParams} from "react-router-dom";
 import AudioPlayer from 'react-h5-audio-player';
 import 'react-h5-audio-player/lib/styles.css';
-import {google} from "@google-cloud/speech/build/protos/protos";
 import url from '../api/axios';
-import axios from "axios";
 import {Modal, Nav} from "react-bootstrap";
 import chatProfile from '../images/profile.png';
-import Add_bm from '../images/Add_bm2.png';
 import happy from '../images/happy.png';
+import Add_bm from '../images/Add_bm2.png';
 
 function Log(){
     let params = useParams();  //url로 정보받아오기
@@ -31,6 +29,10 @@ function Log(){
     const [chat, setChat] = useState([]);   //키워드 리스트
     const [start,setStart] = useState("");
     const [end,setEnd] = useState("");
+    const [nameModal, setNameModal] = useState(false);
+    const [name, setName] = useState("");
+    const [dialModal, setDialModal] = useState(false);  //대화 수정
+    const [dial, setDial] = useState("");
     const playerInput = useRef();
 
 
@@ -180,8 +182,34 @@ function Log(){
 
     }
 
-    
+    const openCtxt = (e) => {   //우클릭 메뉴
+        e.preventDefault();
 
+        const menu = document.getElementById("chat-menu");
+
+        menu.style.display = "block";
+        menu.style.top = e.pageY+"px";
+        menu.style.left = e.pageX+"px";
+    }
+
+    const closeCtxt = (e) => {
+      const menu = document.getElementById("chat-menu");
+
+      if (menu) menu.style.display = "none";
+    }
+
+    //다른 곳 클릭 시 메뉴 닫힘
+    document.addEventListener("click", closeCtxt, false);
+
+    const changeName = (e) => { //참가자 이름 변경
+        e.preventDefault();
+        console.log(name+" 으로 이름 변경");
+    }
+
+    const changeDial = (e) => {
+        e.preventDefault();
+        console.log(dial+" 으로 대화 내용 변경");
+    }
 
     return (
         <div>
@@ -213,13 +241,51 @@ function Log(){
                                         {dialogue.map(dialogue =>
                                             <li className="chat-other" key={dialogue.vr_id}>
                                                 <span className='chat-profile'>
-                                                    <span className='chat-user' >참가자{dialogue.vr_id}</span>
+                                                    <span className='chat-user' onClick={() => setNameModal(true)}>
+                                                        참가자{dialogue.vr_id}
+                                                    </span>
+                                                    <Modal show={nameModal} onHide={() => setNameModal(false)}>
+                                                        <Modal.Header closeButton>
+                                                            <Modal.Title>참가자 이름 변경</Modal.Title>
+                                                        </Modal.Header>
+                                                        <Modal.Body>
+                                                            <h6>참거자 이름</h6>
+                                                            <input type="text" className="form-control" id="name" value={name} onChange={(e) => setName(e.target.value)} />
+                                                        </Modal.Body>
+                                                        <Modal.Footer>
+                                                            <button type="button" id="btn-color" className="btn-override modal-btn" onClick={changeName} >
+                                                                생성
+                                                            </button>
+                                                        </Modal.Footer>
+                                                    </Modal>
                                                     {/* <img src={chatProfile} alt='any' /> */}
                                                     <span style={{fontSize: '2rem'}}>😄</span>
                                                 </span>
-                                                <span className='chat-msg' onClick={()=>moveAudio(dialogue.vr_start.slice(undefined, 7))}>{dialogue.vr_text}</span>
-                                                <span className='chat-time'onClick={()=>{setStart(dialogue.vr_start.slice(undefined, 7));  setEnd(dialogue.vr_end.slice(undefined, 7)); setShowBm(true);}}>{dialogue.vr_start.slice(undefined, 7)}</span>
-                                                <NewBm showBm={showBm} setShowBm = {setShowBm} mn_id={mnId} start={start} end={end}/>
+                                                <span className='chat-msg' onClick={()=>moveAudio(dialogue.vr_start.slice(undefined, 7))}
+                                                      onContextMenu={(e)=>{openCtxt(e); setStart(dialogue.vr_start.slice(undefined, 7)); setEnd(dialogue.vr_end.slice(undefined, 7)); setDial(dialogue.vr_text);}}>
+                                                    {dialogue.vr_text}</span>
+                                                <span className='chat-time'>{dialogue.vr_start.slice(undefined, 7)}</span>
+                                                <div id="chat-menu">
+                                                    <ul>
+                                                        <li className="dropdown-item" onClick={()=>setShowBm(true)}>북마크</li>
+                                                        <NewBm showBm={showBm} setShowBm ={setShowBm} mn_id={mnId} start={start} end={end}/>
+                                                        <li className="dropdown-item" onClick={() => setDialModal(true)}>대화 수정</li>
+                                                        <Modal show={dialModal} onHide={() => setDialModal(false)}>
+                                                        <Modal.Header closeButton>
+                                                            <Modal.Title>대화 수정</Modal.Title>
+                                                        </Modal.Header>
+                                                        <Modal.Body>
+                                                            <h6>변경할 내용을 입력해주세요</h6>
+                                                            <textarea className="chat-txtarea" placeholder="" cols="60" rows="10" value={dial ? dial : ""} onChange={(e)=>setDial(e.target.value)}></textarea>
+                                                        </Modal.Body>
+                                                        <Modal.Footer>
+                                                            <button type="button" id="btn-color" className="btn-override modal-btn" onClick={changeDial} >
+                                                                저장
+                                                            </button>
+                                                        </Modal.Footer>
+                                                    </Modal>
+                                                    </ul>
+                                                </div>
                                             </li>
                                         )}
 
