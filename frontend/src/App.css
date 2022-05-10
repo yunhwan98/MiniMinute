@@ -210,7 +210,6 @@
   transform: translateY(-20px);
   transition: opacity 0.4s ease, transform 0.4s ease, visibility 0.4s;
   padding: 10px;
-  list-style: none;
 }
 
 .menu.active {
@@ -304,7 +303,7 @@
 }
 
 #card-override {
-  border: 1px solid #E0BFE6;
+  border: 1px solid #212529;
   height: 232px;
   width: 248px;
   margin: 0 10px 10px 0;
@@ -356,6 +355,7 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  padding-left: 10px;
 }
 
 .card-link {
@@ -590,6 +590,10 @@ label input[type=radio]:checked{ /*안먹음*/
   width: 300px;
   max-height: 205px;
   overflow: scroll;
+}
+
+.bookmark-detail li {
+  cursor: pointer;
 }
 
 .memo textarea{
@@ -955,9 +959,11 @@ label{
   background-color: rgba(213, 219, 219, 0.46);
   overflow-y: scroll;
 }
+
 .display-container {
    
 }
+
 .chatting-list li{
   width: 90%;
   padding : 0.3rem;
@@ -966,19 +972,33 @@ label{
   align-items: flex-end;
   margin-top: 0.5rem;
 }
+
+#chat-btn {
+  display: none;
+}
+
+.chatting-list li:hover #chat-btn{
+  display: block;
+}
+
 .chat-profile{
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
 }
+
 .chat-profile img{
   border-radius: 50%;
   object-fit: cover;
   width: 30px;
   height: 30px;
-
 }
+
+.chat-user:hover{
+  cursor: pointer;
+}
+
 .chat-profile .chat-user{
   font-size: 10px;
   margin-bottom: 0.3rem;
@@ -995,6 +1015,36 @@ label{
 .chat-time{
   font-size:10px;
   margin: 0 5px;
+}
+
+#chat-menu {
+  display: none;
+  background: #fff;
+  border-radius: 8px;
+  position: absolute;
+  width: 150px;
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.3);
+  transform: translateY(-20px);
+  transition: opacity 0.4s ease, transform 0.4s ease, visibility 0.4s;
+  padding: 10px;
+}
+
+#chat-menu ul {
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#chat-menu li {
+  display: flex;
+  justify-content: center;
+  margin: 0;
+}
+
+.chat-txtarea {
+  resize: none;
+  border: 1px solid #dee2e6;
 }
 
 .chat-other .chat-msg{

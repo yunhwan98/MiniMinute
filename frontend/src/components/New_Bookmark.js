@@ -9,8 +9,8 @@ import { optionGroupUnstyledClasses } from "@mui/base";
 export default function New_Bookmark(props) {
     
     const [name, setName] = useState("");
-    const [start, setStart] = useState("");
-    const [end, setEnd] = useState("");
+    // const [start, setStart] = useState("");
+    // const [end, setEnd] = useState("");
 
     //클릭시 회의록 생성
     const onSubmit = async(event) => {
