@@ -11,6 +11,8 @@ import {Modal, Nav} from "react-bootstrap";
 import chatProfile from '../images/profile.png';
 import happy from '../images/happy.png';
 import Add_bm from '../images/Add_bm2.png';
+import { createRoot } from "react-dom/client";
+import Highlighter from "react-highlight-words";
 
 function Log(){
     let params = useParams();  //url로 정보받아오기
@@ -34,11 +36,8 @@ function Log(){
     const [dialModal, setDialModal] = useState(false);  //대화 수정
     const [dial, setDial] = useState("");
     const playerInput = useRef();
+    const [search, setSearch] = useState('');   //검색어
 
-
-    const onMemoHandler = (event) => {
-        setMemo(event.currentTarget.value);
-    }
 
     const onEditLogHandler =(event) => {
         event.preventDefault();
@@ -210,10 +209,10 @@ function Log(){
         e.preventDefault();
         console.log(dial+" 으로 대화 내용 변경");
     }
-
+    
     return (
         <div>
-            <Header_log/>
+            <Header_log setSearch={setSearch}/>
             <div className="main">
                 <SidebarLog dr_id={dr_id} mn_id={mnId} memo={memo}/>
                 <div className="article">
@@ -242,7 +241,12 @@ function Log(){
                                             <li className="chat-other" key={dialogue.vr_id}>
                                                 <span className='chat-profile'>
                                                     <span className='chat-user' onClick={() => setNameModal(true)}>
-                                                        참가자{dialogue.vr_id}
+                                                        <Highlighter
+                                                        highlightClassName="YourHighlightClass"
+                                                        searchWords={[search]}
+                                                        autoEscape={true}
+                                                        textToHighlight={'참가자' + dialogue.vr_id}
+                                                    />
                                                     </span>
                                                     <Modal show={nameModal} onHide={() => setNameModal(false)}>
                                                         <Modal.Header closeButton>
@@ -263,8 +267,18 @@ function Log(){
                                                 </span>
                                                 <span className='chat-msg' onClick={()=>moveAudio(dialogue.vr_start.slice(undefined, 7))}
                                                       onContextMenu={(e)=>{openCtxt(e); setStart(dialogue.vr_start.slice(undefined, 7)); setEnd(dialogue.vr_end.slice(undefined, 7)); setDial(dialogue.vr_text);}}>
-                                                    {dialogue.vr_text}</span>
-                                                <span className='chat-time'>{dialogue.vr_start.slice(undefined, 7)}</span>
+                                                    <Highlighter
+                                                    highlightClassName="YourHighlightClass"
+                                                    searchWords={[search]}
+                                                    autoEscape={true}
+                                                    textToHighlight={dialogue.vr_text}
+                                                /></span>
+                                                <span className='chat-time'><Highlighter
+                                                    highlightClassName="YourHighlightClass"
+                                                    searchWords={[search]}
+                                                    autoEscape={true}
+                                                    textToHighlight={dialogue.vr_start.slice(undefined, 7)}
+                                                /></span>
                                                 <div id="chat-menu">
                                                     <ul>
                                                         <li className="dropdown-item" onClick={()=>setShowBm(true)}>북마크</li>
@@ -307,10 +321,6 @@ function Log(){
                             <div className="bookmark">
                                 <div style={{ display: "flex"}}>
                                     <h5 style={{ flexGrow: 1}}>북마크</h5>
-                                    {/* <button type="button" className="none-btn" style={{marginBottom:"8px", color:"#B96BC6"} } onClick={()=>setShowBm(true)} >
-                                        <img src={Add_bm} style={{width : "20px" , height : "20px" }} />
-                                    </button>
-                                    <NewBm showBm={showBm} setShowBm = {setShowBm} mn_id={mnId}/> */}
                                 </div>
                                 <hr id="log-hr" />
                                 <div className="bookmark-detail">
@@ -322,7 +332,7 @@ function Log(){
                             <div className="memo">
                                 <h5>메모</h5>
                                 <hr id="log-hr" />
-                                <textarea placeholder="여기에 메모하세요" cols="35" rows="10" value={memo ? memo : ""} onChange={onMemoHandler}></textarea>
+                                <textarea placeholder="여기에 메모하세요" cols="35" rows="10" value={memo ? memo : ""} onChange={(e)=>setMemo(e.currentTarget.value)}></textarea>
                             </div>
                             
                         </div>
