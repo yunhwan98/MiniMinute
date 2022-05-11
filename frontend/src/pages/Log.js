@@ -13,8 +13,10 @@ import happy from '../images/happy.png';
 import Add_bm from '../images/Add_bm2.png';
 import { createRoot } from "react-dom/client";
 import Highlighter from "react-highlight-words";
+import Scroll from 'react-scroll';
 
 function Log(){
+    let Element = Scroll.Element;
     let params = useParams();  //url로 정보받아오기
     const dr_id = params.dr_id;
     const mnId = params.mn_id;
@@ -177,8 +179,7 @@ function Log(){
         playerInput.current.audio.current.play();   //오디오객체에 접근해서 플레이 조작
 
         console.log((end-start));
-        setTimeout(() => { playerInput.current.audio.current.pause(); console.log('멈춤');}, (end-start+1)*1000);   
-
+        setTimeout(() => { playerInput.current.audio.current.pause(); console.log('멈춤');}, (end-start+1)*1000);
     }
 
     const openCtxt = (e) => {   //우클릭 메뉴
@@ -234,7 +235,7 @@ function Log(){
                                 </Nav.Item>
                             </Nav>
                             <div className="dialogue"/*채팅 대화 구현*/>
-                            <div className='chat-wrapper'>
+                            <Element className='chat-wrapper' id="chat">
                                 <div className='display-container'>
                                     <ul className='chatting-list'>
                                         {dialogue.map(dialogue =>
@@ -265,14 +266,15 @@ function Log(){
                                                     {/* <img src={chatProfile} alt='any' /> */}
                                                     <span style={{fontSize: '2rem'}}>😄</span>
                                                 </span>
-                                                <span className='chat-msg' onClick={()=>moveAudio(dialogue.vr_start.slice(undefined, 7))}
+                                                <Element name={dialogue.vr_start.slice(undefined, 7)} className='chat-msg' onClick={()=>moveAudio(dialogue.vr_start.slice(undefined, 7))}
                                                       onContextMenu={(e)=>{openCtxt(e); setStart(dialogue.vr_start.slice(undefined, 7)); setEnd(dialogue.vr_end.slice(undefined, 7)); setDial(dialogue.vr_text);}}>
                                                     <Highlighter
                                                     highlightClassName="YourHighlightClass"
                                                     searchWords={[search]}
                                                     autoEscape={true}
                                                     textToHighlight={dialogue.vr_text}
-                                                /></span>
+                                                />
+                                                </Element>
                                                 <span className='chat-time'><Highlighter
                                                     highlightClassName="YourHighlightClass"
                                                     searchWords={[search]}
@@ -314,7 +316,7 @@ function Log(){
                                         </li>
                                     </ul>                     
                                 </div>
-                            </div>
+                            </Element>
                         </div>
                         </div>
                         <div className="side-func">
@@ -333,11 +335,10 @@ function Log(){
                                 <h5>메모</h5>
                                 <hr id="log-hr" />
                                 <textarea placeholder="여기에 메모하세요" cols="35" rows="10" value={memo ? memo : ""} onChange={(e)=>setMemo(e.currentTarget.value)}></textarea>
+                                <button type="submit" id="btn-color" onClick={onEditLogHandler} className="memo-btn" >저장</button>
                             </div>
-                            
                         </div>
-                        {/* <div><button type="submit"  onClick={onEditLogHandler} className="submit-btn" >저장</button></div>    */}
-                        
+
                     </div>
                     {!isUpload && <div className="voice-play">
                         <button type="button" id="btn-color" className="participant-btn" onClick={() => setParticipant(true)}>
