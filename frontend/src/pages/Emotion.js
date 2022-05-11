@@ -8,6 +8,7 @@ import url from "../api/axios";
 import emo_img from '../images/emotionpage.png';
 
 function Emotion (){
+    const [user, setUser] = useState(localStorage.getItem('token') ? JSON.parse( localStorage.getItem('user') ) : []);
     let params = useParams();  //url로 정보받아오기
     const dr_id = params.dr_id;
     const mn_id = params.mn_id;
@@ -90,7 +91,7 @@ function Emotion (){
                                     <span style={{fontSize:'1.2rem' ,margin:'1rem',fontWeight:'bold'}}>미니미닛 감정분석</span>
                             </div>
                             <div className='Speech-result' style={{fontSize:"1.4em" , textDecoration: 'underline'}}>                                         
-                                    <b>"OO님의 이번 회의 스타일은 #행복형 #일반적 대화 #매우 빠름 입니다."</b>
+                                    <b>"{user.username}님의 {minutes.mn_title} 회의 스타일은 #행복형 #일반적 대화 #매우 빠름 입니다."</b>
                             </div>
                         </div>
 

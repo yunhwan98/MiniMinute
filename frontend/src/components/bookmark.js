@@ -16,6 +16,7 @@ import Typography from '@mui/material/Typography';
 import FolderIcon from '@mui/icons-material/Folder';
 import DeleteIcon from '@mui/icons-material/Delete';
 import url from '../api/axios';
+import Scroll from 'react-scroll';
 
 
 const Demo = styled('div')(({ theme }) => ({
@@ -24,6 +25,7 @@ const Demo = styled('div')(({ theme }) => ({
 
 
 export default function InteractiveList({bm_seq, mn_id, bm_name, bm_start, bm_end, bookmarkOperate}) {
+    let scroller = Scroll.scroller;
 
     const delBm = (e) => {
         e.preventDefault();
@@ -41,6 +43,14 @@ export default function InteractiveList({bm_seq, mn_id, bm_name, bm_start, bm_en
 
     const bookmarkHandler =()=>{    //클릭시 북마크 시작
         bookmarkOperate(bm_start,bm_end);
+
+        scroller.scrollTo(bm_start, {
+            smooth: true,
+            duration: 1500,
+            delay: 100,
+            containerId: "chat",
+            offsetTop: 0
+        })
     }
 
   return (
@@ -52,7 +62,7 @@ export default function InteractiveList({bm_seq, mn_id, bm_name, bm_start, bm_en
               </IconButton>
           }
       >
-          <ListItemText 
+          <ListItemText
               primary={bm_name}
               secondary={bm_start + ' - ' + bm_end}
           />

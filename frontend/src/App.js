@@ -11,6 +11,7 @@ import Log from './pages/Log';
 import NotFound from "./pages/NotFound";
 import Emotion from "./pages/Emotion";
 import Summary from "./pages/Summary";
+import Favorite from "./pages/Favorite";
 
 function App(){
     return (
@@ -20,7 +21,8 @@ function App(){
                     <Route path="/" element={<Start />} />    //초기화면 진입
                     <Route path="/home" element={<Home />} />
                     <Route path="/:dr_id/loglist" element={<Log_list />} />   {/*디렉토리별 회의록 목록*/}
-                    <Route path="/search" element={<Search />} />
+                    {/*<Route path="/search" element={<Search />} />*/}
+                    <Route path="/favorite" element={<Favorite />} />
                     <Route path="/recent" element={<Recent />} />
                     <Route path="/profile" element={<Profile />} />
                     <Route path="/:dr_id/:mn_id/log" element={<Log />} />
