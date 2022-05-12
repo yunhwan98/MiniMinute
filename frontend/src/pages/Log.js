@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect,useRef} from "react";
 import Bookmark from "../components/bookmark";
 import Header_log from "../components/Header_log";
 import SidebarLog from "../components/Sidebar_log";
@@ -6,21 +6,23 @@ import NewBm from "../components/New_Bookmark";
 import {useParams} from "react-router-dom";
 import AudioPlayer from 'react-h5-audio-player';
 import 'react-h5-audio-player/lib/styles.css';
-import {google} from "@google-cloud/speech/build/protos/protos";
 import url from '../api/axios';
-import axios from "axios";
 import {Modal, Nav} from "react-bootstrap";
 import chatProfile from '../images/profile.png';
-import Add_bm from '../images/Add_bm2.png';
 import happy from '../images/happy.png';
+import Add_bm from '../images/Add_bm2.png';
+import { createRoot } from "react-dom/client";
+import Highlighter from "react-highlight-words";
+import Scroll from 'react-scroll';
 
 function Log(){
+    let Element = Scroll.Element;
     let params = useParams();  //url로 정보받아오기
     const dr_id = params.dr_id;
-    const mn_id = params.mn_id;
+    const mnId = params.mn_id;
     const [memo,setMemo] = useState("");    //메모
     const [file, setFile] = useState("");   //file id
-    const isUpload = file ? true : false;
+    const [isUpload, setIsUpload] = useState(false);
     const [path, setPath] = useState(""); //파일 url
     const [dialogue, setDialogue] = useState([]);   //대화
     const [bookmark, setBookmark] = useState([]);   //북마크 리스트
@@ -29,16 +31,20 @@ function Log(){
     const [pNum, setPNum] = useState("");   //참가자 수
     const [keyword, setKeyword] = useState([]);   //키워드 리스트
     const [chat, setChat] = useState([]);   //키워드 리스트
+    const [start,setStart] = useState("");
+    const [end,setEnd] = useState("");
+    const [nameModal, setNameModal] = useState(false);
+    const [name, setName] = useState("");
+    const [dialModal, setDialModal] = useState(false);  //대화 수정
+    const [dial, setDial] = useState("");
+    const playerInput = useRef();
+    const [search, setSearch] = useState('');   //검색어
 
-
-    const onMemoHandler = (event) => {
-        setMemo(event.currentTarget.value);
-    }
 
     const onEditLogHandler =(event) => {
         event.preventDefault();
         url.put(
-            `/minutes/${mn_id}`,{
+            `/minutes/${mnId}`,{
                 "mn_memo" : memo        //우선 메모만 추가
             }
         )
@@ -55,7 +61,7 @@ function Log(){
 
     useEffect(() => { // 처음에만 정보 받아옴
         url.get(     
-            `/minutes/${mn_id}`
+            `/minutes/${mnId}`
             )
             .then((response) => {
             console.log('회의록 정보 불러오기');
@@ -70,7 +76,7 @@ function Log(){
 
     useEffect(() => {
         url.get(
-            `/minutes/${mn_id}/bookmark/lists`)
+            `/minutes/${mnId}/bookmark/lists`)
             .then((response) => {
                 console.log(response.data);
                 setBookmark(response.data);
@@ -90,9 +96,12 @@ function Log(){
             .then((response) => {
                 console.log(response);
                 console.log("파일 조회 성공")
+                setIsUpload(true);
                 setPath("https://storage.cloud.google.com/miniminute_voice_file/testquiz.wav?authuser=1");
+                getDialogue();
             })
             .catch((error) => {
+                setIsUpload(false);
                 console.log("파일 조회 실패 " + error);
             })
     }, [file])
@@ -104,10 +113,10 @@ function Log(){
         setParticipant(false);
 
         //파일 전송
-        const formData = new FormData();
-        formData.append("file", file);
+        // const formData = new FormData();
+        // formData.append("file", file);
 
-        url.post(`/minutes/${mn_id}/file/upload`, {
+        url.post(`/minutes/${mnId}/file/upload`, {
             "file_name": "testquiz",
             "file_extension": "wav",
             "file_path": "https://storage.cloud.google.com/miniminute_voice_file/testquiz.wav?authuser=1"
@@ -115,6 +124,8 @@ function Log(){
             .then((response) => {
                 console.log(response.data);
                 console.log("업로드 성공");
+                setIsUpload(true);
+                voice_recog();
                 setPath("https://storage.cloud.google.com/miniminute_voice_file/testquiz.wav?authuser=1");
             })
             .catch((error) => {
@@ -122,30 +133,25 @@ function Log(){
             });
     }
 
-    useEffect(() => {
+    const voice_recog = () => {
         //stt 호출
-        url.post("/voice/recognition/lists", {
-        "mn_id": mn_id
-        })
+        url.post(`/voice/recognition/lists/${mnId}`)
         .then((response) => {
             console.log("stt 호출 성공");
             console.log(response);
-            // getDialogue();
-            setDialogue(response.data);
+            getDialogue();
         })
         .catch((error) => {
             console.log("stt 실패 "+ error);
         })
-    }, [isUpload])
+    }
 
     const getDialogue = (e) => {
-        //stt 결과 -> 안받아짐(keyError: mn_id)
         url.get(
-            "/voice/recognition/lists",
-            {params: {mn_id: mn_id}})
+            `/voice/recognition/lists/${mnId}`)
             .then((response) => {
                 console.log("stt 결과 조회 성공");
-                console.log(response);
+                console.log(response.data);
                 setDialogue(response.data);
             })
             .catch((error) => {
@@ -153,11 +159,63 @@ function Log(){
             })
     }
 
+  
+    const moveAudio = (current) => {//클릭시 시간으로 이동
+        //playerInput.current.audio.current.currentTime = 3;    
+        let start = parseInt(current.slice(0,1))*3600 +  parseInt(current.slice(2,4)) * 60 + parseInt(current.slice(5,7)); //
+
+        playerInput.current.audio.current.currentTime = start;
+        playerInput.current.audio.current.play();   //오디오객체에 접근해서 플레이 조작
+
+    }
+
+    const bookmarkOperate = (current,current2) => {//클릭시 시간으로 이동
+        //playerInput.current.audio.current.currentTime = 3;    
+        let start = parseInt(current.slice(0,1))*3600 +  parseInt(current.slice(2,4)) * 60 + parseInt(current.slice(5,7)); //
+        let end = parseInt(current2.slice(0,1))*3600 +  parseInt(current2.slice(2,4)) * 60 + parseInt(current2.slice(5,7));
+        console.log(start);
+        console.log(end);
+        playerInput.current.audio.current.currentTime = start;
+        playerInput.current.audio.current.play();   //오디오객체에 접근해서 플레이 조작
+
+        console.log((end-start));
+        setTimeout(() => { playerInput.current.audio.current.pause(); console.log('멈춤');}, (end-start+1)*1000);
+    }
+
+    const openCtxt = (e) => {   //우클릭 메뉴
+        e.preventDefault();
+
+        const menu = document.getElementById("chat-menu");
+
+        menu.style.display = "block";
+        menu.style.top = e.pageY+"px";
+        menu.style.left = e.pageX+"px";
+    }
+
+    const closeCtxt = (e) => {
+      const menu = document.getElementById("chat-menu");
+
+      if (menu) menu.style.display = "none";
+    }
+
+    //다른 곳 클릭 시 메뉴 닫힘
+    document.addEventListener("click", closeCtxt, false);
+
+    const changeName = (e) => { //참가자 이름 변경
+        e.preventDefault();
+        console.log(name+" 으로 이름 변경");
+    }
+
+    const changeDial = (e) => {
+        e.preventDefault();
+        console.log(dial+" 으로 대화 내용 변경");
+    }
+    
     return (
         <div>
-            <Header_log/>
+            <Header_log setSearch={setSearch}/>
             <div className="main">
-                <SidebarLog dr_id={dr_id} mn_id={mn_id} memo={memo}/>
+                <SidebarLog dr_id={dr_id} mn_id={mnId} memo={memo}/>
                 <div className="article">
                     <div style={{display: "flex"}} className="fade-in">
                         <div>
@@ -177,18 +235,76 @@ function Log(){
                                 </Nav.Item>
                             </Nav>
                             <div className="dialogue"/*채팅 대화 구현*/>
-                            <div className='chat-wrapper'>
+                            <Element className='chat-wrapper' id="chat">
                                 <div className='display-container'>
                                     <ul className='chatting-list'>
-                                        <li className="chat-other" >
-                                            <span className='chat-profile'>
-                                                <span className='chat-user' >참가자{dialogue.vr_id}</span>
-                                                <img src={chatProfile} alt='any' />
-                                            </span>
-                                            <span className='chat-msg' >{dialogue.vr_text}</span>
-                                            <span className='chat-time'>{dialogue.vr_start}</span>
-                                            😄
-                                        </li>
+                                        {dialogue.map(dialogue =>
+                                            <li className="chat-other" key={dialogue.vr_id}>
+                                                <span className='chat-profile'>
+                                                    <span className='chat-user' onClick={() => setNameModal(true)}>
+                                                        <Highlighter
+                                                        highlightClassName="YourHighlightClass"
+                                                        searchWords={[search]}
+                                                        autoEscape={true}
+                                                        textToHighlight={'참가자' + dialogue.vr_id}
+                                                    />
+                                                    </span>
+                                                    <Modal show={nameModal} onHide={() => setNameModal(false)}>
+                                                        <Modal.Header closeButton>
+                                                            <Modal.Title>참가자 이름 변경</Modal.Title>
+                                                        </Modal.Header>
+                                                        <Modal.Body>
+                                                            <h6>참거자 이름</h6>
+                                                            <input type="text" className="form-control" id="name" value={name} onChange={(e) => setName(e.target.value)} />
+                                                        </Modal.Body>
+                                                        <Modal.Footer>
+                                                            <button type="button" id="btn-color" className="btn-override modal-btn" onClick={changeName} >
+                                                                생성
+                                                            </button>
+                                                        </Modal.Footer>
+                                                    </Modal>
+                                                    {/* <img src={chatProfile} alt='any' /> */}
+                                                    <span style={{fontSize: '2rem'}}>😄</span>
+                                                </span>
+                                                <Element name={dialogue.vr_start.slice(undefined, 7)} className='chat-msg' onClick={()=>moveAudio(dialogue.vr_start.slice(undefined, 7))}
+                                                      onContextMenu={(e)=>{openCtxt(e); setStart(dialogue.vr_start.slice(undefined, 7)); setEnd(dialogue.vr_end.slice(undefined, 7)); setDial(dialogue.vr_text);}}>
+                                                    <Highlighter
+                                                    highlightClassName="YourHighlightClass"
+                                                    searchWords={[search]}
+                                                    autoEscape={true}
+                                                    textToHighlight={dialogue.vr_text}
+                                                />
+                                                </Element>
+                                                <span className='chat-time'><Highlighter
+                                                    highlightClassName="YourHighlightClass"
+                                                    searchWords={[search]}
+                                                    autoEscape={true}
+                                                    textToHighlight={dialogue.vr_start.slice(undefined, 7)}
+                                                /></span>
+                                                <div id="chat-menu">
+                                                    <ul>
+                                                        <li className="dropdown-item" onClick={()=>setShowBm(true)}>북마크</li>
+                                                        <NewBm showBm={showBm} setShowBm ={setShowBm} mn_id={mnId} start={start} end={end}/>
+                                                        <li className="dropdown-item" onClick={() => setDialModal(true)}>대화 수정</li>
+                                                        <Modal show={dialModal} onHide={() => setDialModal(false)}>
+                                                        <Modal.Header closeButton>
+                                                            <Modal.Title>대화 수정</Modal.Title>
+                                                        </Modal.Header>
+                                                        <Modal.Body>
+                                                            <h6>변경할 내용을 입력해주세요</h6>
+                                                            <textarea className="chat-txtarea" placeholder="" cols="60" rows="10" value={dial ? dial : ""} onChange={(e)=>setDial(e.target.value)}></textarea>
+                                                        </Modal.Body>
+                                                        <Modal.Footer>
+                                                            <button type="button" id="btn-color" className="btn-override modal-btn" onClick={changeDial} >
+                                                                저장
+                                                            </button>
+                                                        </Modal.Footer>
+                                                    </Modal>
+                                                    </ul>
+                                                </div>
+                                            </li>
+                                        )}
+
                                         <li className="chat-mine">
                                             <span className='chat-profile'>
                                                 <span className='chat-user'>참가자1</span>
@@ -198,64 +314,31 @@ function Log(){
                                             <span className='chat-time'>03:10</span>
                                             <img src={happy} alt='any' className='chat-emo'/>
                                         </li>
-                                        <li className="chat-other">
-                                            <span className='chat-profile'>
-                                                <span className='chat-user' >참가자2</span>
-                                                <img src={chatProfile} alt='any' />
-                                            </span>
-                                            <span className='chat-msg' >안녕</span>
-                                            <span className='chat-time'>03:10</span>
-                                            <img src={happy} alt='any' className='chat-emo'/>
-                                        </li>
                                     </ul>                     
                                 </div>
-                            </div>
+                            </Element>
                         </div>
                         </div>
                         <div className="side-func">
                             <div className="bookmark">
                                 <div style={{ display: "flex"}}>
                                     <h5 style={{ flexGrow: 1}}>북마크</h5>
-                                    <button type="button" className="none-btn" style={{marginBottom:"8px", color:"#B96BC6"} } onClick={()=>setShowBm(true)} >
-                                        <img src={Add_bm} style={{width : "20px" , height : "20px" }} />
-                                    </button>
-                                    <NewBm showBm={showBm} setShowBm = {setShowBm} mn_id={mn_id}/>
                                 </div>
                                 <hr id="log-hr" />
                                 <div className="bookmark-detail">
                                     {bookmarkList= bookmark.map((bookmark) =>
-
-                                        <Bookmark key={bookmark.bm_seq} bm_seq={bookmark.bm_seq} bm_name={bookmark.bm_name} bm_start={bookmark.bm_start} bm_end={bookmark.bm_end} mn_id={bookmark.mn_id} />
+                                        <Bookmark key={bookmark.bm_seq} bm_seq={bookmark.bm_seq} bm_name={bookmark.bm_name} bm_start={bookmark.bm_start} bm_end={bookmark.bm_end} mn_id={bookmark.mn_id} bookmarkOperate={bookmarkOperate}/>
                                     )}
-                                </div>
-                            </div>
-                            <div className="keyword">
-                                <h5>주요 키워드</h5>
-                                <hr id="log-hr" />
-                                <div className="keyword-detail">
-                                {keywordList= keyword.map((keyword) =>            
-                                       <span className="keyword-list" style={{minWidth : "40px" , height : "25px", display: 'inline-block', backgroundColor: '#B96BC6' ,color:'white',margin: '5px', textAlign: 'center'}}>{keyword}</span>                                   
-                                )}
-                                <button type="button" className="none-btn" style={{marginBottom:"8px", color:"#B96BC6"} } >
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                             fill="currentColor" className="bi bi-plus-circle" viewBox="0 0 16 16">
-                                            <path
-                                                d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                                            <path
-                                                d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
-                                        </svg>
-                                </button>
                                 </div>
                             </div>
                             <div className="memo">
                                 <h5>메모</h5>
                                 <hr id="log-hr" />
-                                <textarea placeholder="여기에 메모하세요" cols="35" rows="10" value={memo ? memo : ""} onChange={onMemoHandler}></textarea>
+                                <textarea placeholder="여기에 메모하세요" cols="35" rows="10" value={memo ? memo : ""} onChange={(e)=>setMemo(e.currentTarget.value)}></textarea>
+                                <button type="submit" id="btn-color" onClick={onEditLogHandler} className="memo-btn" >저장</button>
                             </div>
-                            
                         </div>
-                        {/* <div><button type="submit"  onClick={onEditLogHandler} className="submit-btn" >저장</button></div>    */}
-                        
+
                     </div>
                     {!isUpload && <div className="voice-play">
                         <button type="button" id="btn-color" className="participant-btn" onClick={() => setParticipant(true)}>
@@ -279,9 +362,13 @@ function Log(){
                     </div>}
                     {isUpload && <AudioPlayer
                         src={path}   //test audio
+                        ref={playerInput}
+                        volume={0.5}
                         style={{marginBottom: "40px", width: "76%", border:"1px solid #E0BFE6", boxShadow: "none", borderRadius:"0"}}
-                        customAdditionalControls={[]}
-                    />}
+                        customAdditionalControls={[]}  
+                    />                  
+                    }
+
                 </div>
             </div>
         </div>

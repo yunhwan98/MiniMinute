@@ -9,27 +9,14 @@ import url from '../../api/axios';
 export default function SignupModal(props) {
   const [show, setShow] = useState(false);
   const [errormsg, setErrormsg] = useState("");
-  const [name, setname] = useState("");
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [color, setColor] = useState("red");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [accessToken,setaccessToken] = useState('');
-  const handleClose = () => {setShow(false); setErrormsg(''); setname(''); setEmail(''); setPassword(''); setConfirmPassword('');}
+  const handleClose = () => {setShow(false); setErrormsg(''); setName(''); setEmail(''); setPassword(''); setConfirmPassword('');}
   const handleShow = () => setShow(true);
-
-  const onNameHandler = (event) => {
-    setname(event.currentTarget.value)
-  }
-  const onEmailHandler = (event) => {
-      setEmail(event.currentTarget.value)
-  }
-  const onPasswordHandler = (event) => {
-      setPassword(event.currentTarget.value)
-  }
-  const onConfirmPasswordHandler = (event) => {
-      setConfirmPassword(event.currentTarget.value)
-  }
   
   //회원가입 버튼 누르면 정보 전달
   const onSubmit = async(event) => {  
@@ -121,18 +108,21 @@ export default function SignupModal(props) {
 
 }
       useEffect(() => { //회원가입 시 자동으로 home 디렉토리 생성
-        axios.post('http://127.0.0.1:8000/directorys/lists',{"dr_name": 'home'}, {
-          headers: {
-            "Authorization": `jwt ${accessToken}`
-          },})
-          .then((response) => {
-              console.log("디렉토리 추가 성공");
-              //alert("디렉토리 추가 성공");
-          })
-          .catch((error) => {
-              console.log("디렉토리 추가 실패 "+error);
-              //alert("디렉토리 추가 실패");
-          });
+          if (accessToken) {
+              axios.post('http://127.0.0.1:8000/directorys/lists',{"dr_name": 'home'}, {
+                  headers: {
+                      "Authorization": `jwt ${accessToken}`
+                  },})
+                  .then((response) => {
+                      console.log("디렉토리 추가 성공");
+                      console.log(response.data);
+                      //alert("디렉토리 추가 성공");
+                  })
+                  .catch((error) => {
+                      console.log("디렉토리 추가 실패 "+error);
+                      //alert("디렉토리 추가 실패");
+                  });
+          }
       }, [accessToken])
 
   const {title} = props; 
@@ -150,18 +140,13 @@ export default function SignupModal(props) {
         </Modal.Header>          
             <form  onSubmit={onSubmit}>
               <div className="Errormsg" style={{backgroundColor : color}}>{errormsg} </div>
-              <div><label>이메일</label> <input name="email" type="email" placeholder="이메일" value={email} onChange={onEmailHandler} className="signup-text"/>
+              <div><label>이메일</label> <input name="email" type="email" placeholder="이메일" value={email} onChange={(e) => setEmail(e.target.value)} className="signup-text"/>
               <button type="button" onClick={checkEmail} className="submit-btn" id="email_check">중복 확인</button></div>
-              <div><label>닉네임</label> <input name="name" type="text" placeholder="닉네임" value={name} onChange={onNameHandler} className="signup-text"/>
+              <div><label>닉네임</label> <input name="name" type="text" placeholder="닉네임" value={name} onChange={(e) => setName(e.target.value)} className="signup-text"/>
               <button type="button" onClick={checkNickname} className="submit-btn" id="nickname_check">중복 확인</button></div>                 
-              <div><label>비밀번호</label> <input name="password" type="password" placeholder="비밀번호" value={password} onChange={onPasswordHandler} className="signup-text"/></div>
-              <div><label>비밀번호 확인</label> <input name="confirmPassword" type="password" placeholder="비밀번호 확인" value={confirmPassword} onChange={onConfirmPasswordHandler} className="signup-text"/></div>
+              <div><label>비밀번호</label> <input name="password" type="password" placeholder="비밀번호" value={password} onChange={(e) => setPassword(e.target.value)} className="signup-text"/></div>
+              <div><label>비밀번호 확인</label> <input name="confirmPassword" type="password" placeholder="비밀번호 확인" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} className="signup-text"/></div>
               <div><button type="submit" onSubmit={onSubmit} className="submit-btn">회원가입</button></div>
-              {/* <hr className="signup-hr"/>
-              <div id="google-title">구글 아이디로 회원가입</div>
-              <div className ="google-login">
-                <LoginGoogle setaccessToken={setaccessToken} handleClose={handleClose} />
-                </div> */}
             </form> 
         </div>
       </Modal>

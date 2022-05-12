@@ -126,11 +126,11 @@ export default function Log_card({dr_id, dr_name, mn_id, mn_title, mn_date, mn_e
                 </div>
                 <Link to={`/${drId}/${mn_id}/log`} className="card-link">
                     <div className="card-body">
-                        <h5 className="card-title">회의주제</h5>
+                        <h5 className="card-title">📚&nbsp;회의주제</h5>
                         <p className="card-text">{mn_title}</p>
-                        <h5 className="card-title">회의시간</h5>
+                        <h5 className="card-title">⏳&nbsp;회의시간</h5>
                         <p className="card-text">{mn_date}</p>
-                        <h5 className="card-title">메모</h5>
+                        <h5 className="card-title">📝&nbsp;메모</h5>
                         <p className="card-text">{mn_explanation}</p>
                     </div>
                 </Link>

@@ -55,6 +55,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'minute',
     'voice_recognition',
+    'text_keyword',
+    'summary',
 ]
 
 AUTH_USER_MODEL = 'user.User'

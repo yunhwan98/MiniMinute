@@ -7,9 +7,10 @@ import NewLog_modal from "./NewLog_modal";
 import url from '../api/axios';
 import axios from "axios";
 
-function Sidebar(props) {
+function Sidebar() {
     let params = useParams();  //url로 정보받아오기
-    const dr_id = params.dr_id;
+    const [home,setHome]= useState(''); // 홈 디렉토리 번호 설정
+    const dr_id = ( params.dr_id ? params.dr_id : home); // params 값이 없으면 홈 디렉토리 번호 설정
     const navigate = useNavigate();
     const dropDownRef = useRef(null);
     const [isOpen, setIsOpen] = useState(false);
@@ -67,6 +68,7 @@ function Sidebar(props) {
             .then((response) => {
                 console.log(response.data);
                 setDr_info(response.data);
+                setHome(response.data[0].dr_id);
             })
             .catch((error) => {
                 console.log("디렉토리 목록 불러오기 실패 " + error);
@@ -127,8 +129,8 @@ function Sidebar(props) {
             });
     }
 
-    const defaultDir = dr_info.filter(dr_info => `${dr_info.dr_id}` > 1); //디렉토리 번호 1 이상(기본 디렉토리 제외)
-
+    const defaultDir = dr_info.filter(dr_info => `${dr_info.dr_id}` > home); //home 디렉토리 안보이기
+    
     return (
         <div className="sidebar">
             <div className="dropdown">
@@ -170,7 +172,7 @@ function Sidebar(props) {
                         <path
                             d="M1 3.5A1.5 1.5 0 0 1 2.5 2h2.764c.958 0 1.76.56 2.311 1.184C7.985 3.648 8.48 4 9 4h4.5A1.5 1.5 0 0 1 15 5.5v7a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 1 12.5v-9zM2.5 3a.5.5 0 0 0-.5.5V6h12v-.5a.5.5 0 0 0-.5-.5H9c-.964 0-1.71-.629-2.174-1.154C6.374 3.334 5.82 3 5.264 3H2.5zM14 7H2v5.5a.5.5 0 0 0 .5.5h11a.5.5 0 0 0 .5-.5V7z"/>
                     </svg>
-                    <Link to ="" className="directory-link">즐겨찾기</Link>
+                    <Link to ="/favorite" className="directory-link">즐겨찾기</Link>
                 </li>
                 <li>
                     <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor"

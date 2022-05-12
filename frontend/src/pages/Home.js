@@ -10,6 +10,7 @@ import button from "bootstrap/js/src/button";
 import url from '../api/axios';
 
 const Home = () => {
+    const [home,setHome]= useState(''); // 홈 디렉토리 번호 설정
     const navigate = useNavigate();
     const [isAuthenticated, setisAuthenticated] = useState(localStorage.getItem('token') ? true : false);   //인증여부 확인
     const [user, setUser] = useState(localStorage.getItem('token') ? JSON.parse( localStorage.getItem('user') ) : []); //유저 정보
@@ -39,6 +40,7 @@ const Home = () => {
             .then((response) => {
             console.log(response.data);
             setDr_info(response.data);
+            setHome(response.data[0].dr_id);
             console.log('디렉토리 목록 조회');
             })
             .catch((error) => {
@@ -46,8 +48,9 @@ const Home = () => {
             });
       }, []);
 
-    const defaultMin = minutes.filter(minutes => `${minutes.dr_id}` === "1"); //디렉토리 번호 1(기본 디렉토리)
-    const defaultDir = dr_info.filter(dr_info => `${dr_info.dr_id}` > 1); //디렉토리 번호 1 이상(기본 디렉토리 제외)
+    const defaultMin = minutes.filter(minutes => minutes.dr_id === parseInt(home)); //home 디렉토리
+    const defaultDir = dr_info.filter(dr_info => dr_info.dr_id > home); //home 디렉토리 제외
+    const favMin = minutes.filter(minutes => `${minutes}`); //즐겨찾기
     
     searchResult = minutes.filter(minute => ( //search 검색어가 포함되는 회의록만 filter(search가 공백시에는 전부 보임)
         `${minute.mn_title}`.toLowerCase().includes(search) || `${minute.mn_date}`.toLowerCase().includes(search)
@@ -59,7 +62,7 @@ const Home = () => {
         <div>
             <Header setSearch={setSearch}/>
             <div className="main">
-                <Sidebar dr_id={1}/>
+                <Sidebar />
                 <div className="article">
                     <div className="log-list fade-in">
                         <div className="default">
@@ -88,18 +91,9 @@ const Home = () => {
                                 <p>즐겨찾기</p>
                             </div>
                             <div className="log-card">
-                                <div id="card-override" className="card" style={{width: "18rem"}}>
-                                    <Link to="" className="card-link">
-                                        <div className="card-body">
-                                            <h5 className="card-title">회의주제</h5>
-                                            <p className="card-text">Some quick example text</p>
-                                            <h5 className="card-title">회의시간</h5>
-                                            <p className="card-text">Some quick example text</p>
-                                            <h5 className="card-title">참여자</h5>
-                                            <p className="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vitae dapibus purus. Interdum et malesuada fames ac ante ipsum primis in faucibus.</p>
-                                        </div>
-                                    </Link>
-                                </div>
+                                {favMin.map(result =>
+                                    <Log_card key={result.mn_title} dr_id={result.dr_id} mn_id={result.mn_id} mn_title={result.mn_title} mn_date={result.mn_date} mn_explanation={result.mn_explanation}/>
+                                )}
                             </div>
                         </div>
 
@@ -122,9 +116,9 @@ const Home = () => {
                         <div className="my">
                             <div className="directory-name">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
-                                     className="bi bi-star-fill" viewBox="0 -3 16 19">
+                                     className="bi bi-folder-fill" viewBox="0 -3 16 19">
                                     <path
-                                        d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+                                        d="M9.828 3h3.982a2 2 0 0 1 1.992 2.181l-.637 7A2 2 0 0 1 13.174 14H2.825a2 2 0 0 1-1.991-1.819l-.637-7a1.99 1.99 0 0 1 .342-1.31L.5 3a2 2 0 0 1 2-2h3.672a2 2 0 0 1 1.414.586l.828.828A2 2 0 0 0 9.828 3zm-8.322.12C1.72 3.042 1.95 3 2.19 3h5.396l-.707-.707A1 1 0 0 0 6.172 2H2.5a1 1 0 0 0-1 .981l.006.139z"/>
                                 </svg>
                                 <p>내 회의록</p>
                             </div>

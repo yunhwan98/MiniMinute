@@ -98,20 +98,22 @@ function Sidebar_log(props) {
     //회의록수정
     const onEditLogHandler =(event) => {
         event.preventDefault();
-        url.put(
-            `/minutes/${mnId}`,{
-                "mn_memo" : props.memo        //우선 메모만 추가
-            }
-        )
-            .then((response) => {
-                console.log(response);
-                alert('저장!');
-            })
-            .catch((error) => {
-                console.log(error.response);
-                alert('실패!'); 
-            });
-
+        if (!props.memo) navigate(`/${drId}/${mnId}/log`);  //log.js에서만 수정 가능
+        else {
+            url.put(
+                `/minutes/${mnId}`,{
+                    "mn_memo" : props.memo        //우선 메모만 추가
+                }
+            )
+                .then((response) => {
+                    console.log(response);
+                    alert('저장!');
+                })
+                .catch((error) => {
+                    console.log(error.response);
+                    alert('실패!');
+                });
+        }
     }
 
     const defaultDir = dr_info.filter(dr_info => `${dr_info.dr_id}` > 1); //디렉토리 번호 1 이상(기본 디렉토리 제외)
@@ -136,6 +138,7 @@ function Sidebar_log(props) {
             <div className="sidebar-list">
                 <ul>
                     <li><Link to={`/${drId}/${mnId}/log`}>회의록 열람</Link></li>
+                    <li><Link to={`/${drId}/${mnId}/summary`}>내용 정리</Link></li>
                     <li><Link to={`/${drId}/${mnId}/emotion`}>감정분석</Link></li>
                     <li><Link to={`/${toList}`}>목록으로</Link></li>
                 </ul>

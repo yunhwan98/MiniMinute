@@ -7,6 +7,10 @@ import SignupModal from '../components/Signup/SignupModal';
 import miniminute_logo from '../images/logo.png';
 import axios from 'axios';
 import LogoutGoogle from '../components/Login/LogoutGoogle';
+import start1 from '../images/start1.png';
+import start2 from '../images/start2.png';
+import start3 from '../images/start3.png';
+import background from '../images/start_background.png';
 import Carousel from 'react-bootstrap/Carousel'
 import url from '../api/axios';
 
@@ -32,64 +36,84 @@ const Start_page = () => {
     }
 
     useEffect(() => { // 유저 정보 받아옴
-        url.get(     
-            "/users/profile"
+        if (isAuthenticated){
+            url.get(
+                "/users/profile"
             )
-            .then((response) => {
-            localStorage.setItem('user',JSON.stringify(response.data));
-            setUser(response.data)
-            console.log(response.data.user_profile)
-            })
-            .catch((error) => { //오류메시지 보이게 함
-                console.log(error.response)
-            });       
+                .then((response) => {
+                    localStorage.setItem('user',JSON.stringify(response.data));
+                    setUser(response.data)
+                    console.log(response.data.user_profile)
+                })
+                .catch((error) => { //오류메시지 보이게 함
+                    console.log(error.response)
+                });
+        }
       },[isAuthenticated]);
-      
-      
-
 
     return (
-        <div className = "Start">
-           
+        <div className = "Start" >
             <Start_nav  isAuthenticated ={isAuthenticated} userHasAuthenticated={userHasAuthenticated} userLogout={userLogout}/>
+            <div style={{ padding: '5% 10%'}}>
             <Carousel variant="dark">
-                <Carousel.Item>
-                    <div
-                    style={{height: "400px"}}
-                    className="d-block w-100"
-                    alt="First slide"
-                    />
-                    <Carousel.Caption>
-                    <img src={miniminute_logo} style={{height: "200px", padding: "40px"}} />
-                    <h5 style={{ marginBottom: "20px"}}>당신의 감정을 파악해주는 회의록</h5>
-                    {/* <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p> */}
-                    </Carousel.Caption>
+            <Carousel.Item >
+                        <div className="start-div"
+                            style={{
+                                height: "500px", borderRadius: '50px', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundImage:
+                                    `url(${background})`, backgroundSize: '100%'
+                            }}
+                        >
+                            <div></div>
+                            <div style={{ height: "100%", display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'start' }}>
+                                <div style={{ display: 'flex', width: '70%', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                                    <p style={{ padding: '1rem', fontSize: '2rem', fontWeight: 'bold', color: 'white' }}>회의시간에는 회의에만 집중하세요!</p>
+                                    <p style={{ padding: '1rem', fontSize: '1.3rem', color: 'white' }}>미니미닛이 회의 내용을 대신 기록해줄게요</p>
+                                </div>
+                                <div style={{ display: 'flex', width: '30%', height: "50%", flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                                    <img src={start1} style={{height:'100%'  }} />
+                                </div>
+                            </div>
+                        </div>
+
                 </Carousel.Item>
                 <Carousel.Item>
-                    <div
-                    style={{height: "400px"}}
-                    className="d-block w-100"
-                    alt="Second slide"
-                    />
-                    <Carousel.Caption>
-                    <h5>Second slide label</h5>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                    </Carousel.Caption>
+                
+                        <div className="start-div"
+                            style={{
+                                height: "500px", borderRadius: '50px', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundImage:
+                                    `url(${background})`, backgroundSize: '100%'
+                            }}
+                        >
+                            <div style={{ height: "100%", display: 'flex', flexDirection: 'row-reverse', alignItems: 'center', justifyContent: 'start' }}>
+                                <div style={{ display: 'flex', width: '70%', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                                    <p style={{ padding: '1rem', fontSize: '2rem', fontWeight: 'bold', color: 'white' }}>회의의 분위기를 떠올리고 싶나요?</p>
+                                    <p style={{ padding: '1rem', fontSize: '1.3rem', color: 'white' }}>참가자들의 감정을 대화형식으로 한 눈에 볼 수 있어요</p>
+                                </div>
+                                <div style={{ display: 'flex', width: '30%', height: '50%', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                                    <img src={start2} style={{ height: "100%" }} />
+                                </div>
+                            </div>
+                        </div>
                 </Carousel.Item>
                 <Carousel.Item>
-                    <div
-                    style={{height: "400px"}}
-                    className="d-block w-100"
-                    alt="Third slide"
-                    />
-                    <Carousel.Caption>
-                    <h5>Third slide label</h5>
-                    <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>
-                    </Carousel.Caption>
+                        <div className="start-div"
+                            style={{
+                                height: "500px", borderRadius: '50px', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundImage:
+                                    `url(${background})`, backgroundSize: '100%'
+                            }}
+                        >
+                            <div style={{ height: "100%", display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'start' }}>
+                                <div style={{ display: 'flex', width: '70%', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                                    <p style={{ padding: '1rem', fontSize: '2rem', fontWeight: 'bold', color: 'white' }}>회의에서 나는 어땠을까?</p>
+                                    <p style={{ padding: '1rem', fontSize: '1.3rem', color: 'white' }}>감정분석을 기반하여 문제점을 파악해봐요</p>
+                                </div>
+                                <div style={{ display: 'flex', width: '30%',height: '50%', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                                    <img src={start3} style={{ height: "100%" }} />
+                                </div>
+                            </div>
+                        </div>
                 </Carousel.Item>
             </Carousel>
-            <div className = "bottom">
-
             </div>
             <Start_footer/>
         </div>

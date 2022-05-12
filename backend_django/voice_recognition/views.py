@@ -80,8 +80,10 @@ def transcribe_file(file_nm, user_id, speaker_cnt):
 @permission_classes((IsAuthenticated,))
 @authentication_classes((JSONWebTokenAuthentication,))
 def voice_recognition_list(request, mn_id):
+
     minute = Minutes.objects.get(mn_id=mn_id)
     file = File.objects.get(file_id=minute.file_id.file_id)
+
 
     if request.method == 'GET':
         voice_recognitions = VoiceRecognition.objects.filter(mn_id=mn_id)
@@ -122,6 +124,7 @@ def voice_recognition_list(request, mn_id):
             vr_serializer=VoiceRecognitionSerializer(data=vr_data)
             if vr_serializer.is_valid():
                 vr_serializer.save()
+
             else:
                 return JsonResponse(vr_serializer.errors, status=400)
             seq+=1
