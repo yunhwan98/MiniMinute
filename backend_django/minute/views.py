@@ -235,7 +235,7 @@ def file_upload(request, mn_id):
 @permission_classes((IsAuthenticated,))
 @authentication_classes((JSONWebTokenAuthentication,))
 def minute_search(request):
-    keyword = request.data["keyword"]
+    keyword = request.GET.get('keyword', None)
     minute_list = Minutes.objects.filter(user_id=request.user.id).order_by('-mn_make_date')
     if keyword :
         minute_list = minute_list.filter(

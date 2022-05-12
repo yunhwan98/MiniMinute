@@ -82,16 +82,20 @@
 |/<int : 디렉토리 번호>|DELETE|{}|{}|204 성공<br>401 실패(토큰 인증 실패)|디렉토리 삭제|
 
 ### /minutes
-
 > 회의록 관련 주소
 
-| Path          | Method | request  | response | code     | 설명        |
-|---------------|--------|----------|-------|----------|-----------|
-| /lists        | GET    | {}| {mn_id,<br>mn_make_date,<br>mn_title,<br>mn_date,<br>mn_place,<br>mn_explanation,<br>mn_memo,<br>mn_share_link,<br>user_id,<br>dr_id,<br>speaker_seq} | 200 성공<br>401 실패(토큰 인증 실패)                    | 회의록 목록 조회 |
-| /lists/       | POST   | {mn_title,dr_id}<br>선택:<br>{mn_date,<br>mn_place,<br>mn_explanation,<br>mn_memo,<br>speaker_seq} | {mn_id,<br>mn_make_date,<br>mn_title,<br>mn_date,<br>mn_place,<br>mn_explanation,<br>mn_memo,<br>mn_share_link,<br>user_id,<br>dr_id,<br>speaker_seq} | 201 성공<br>400 실패(요구되지 않는 필드값)<br>401 실패(토큰 인증 실패) | 회의록 생성    |
-| /<int:mn_id > | GET    |{}| {mn_id,<br>mn_make_date,<br>mn_title,<br>mn_date,<br>mn_place,<br>mn_explanation,<br>mn_memo,<br>mn_share_link,<br>user_id,<br>dr_id,<br>speaker_seq} | 200 성공<br>401 실패(토큰 인증 실패)<br>500 실패(존재하지 않는 회의록) | 회의록 조회    |
-| /<int:mn_id > |PUT|선택:<br>{mn_title,<br>dr_id,<br>mn_date,<br>mn_place,<br>mn_explanation,<br>mn_memo,<br>speaker_seq}| {mn_id,<br>mn_make_date,<br>mn_title,<br>mn_date,<br>mn_place,<br>mn_explanation,<br>mn_memo,<br>mn_share_link,<br>user_id,<br>dr_id,<br>speaker_seq} | 200 성공<br>400 실패(요구되지 않는 필드값)<br>401 실패(토큰 인증 실패) | 회의록 수정    |
-| /<int:mn_id > |DELETE|{}|   |204 성공<br>401 실패(토큰 인증 실패)| 회의록 삭제    |
+| Path                                                    | Method | request  | response | code     | 설명                 |
+|---------------------------------------------------------|--------|----------|-------|----------|--------------------|
+| /lists                                                  | GET    | {}| {mn_id,<br>mn_make_date,<br>mn_title,<br>mn_date,<br>mn_place,<br>mn_explanation,<br>mn_memo,<br>mn_share_link,<br>user_id,<br>dr_id,<br>speaker_seq} | 200 성공<br>401 실패(토큰 인증 실패)                    | 회의록 목록 조회          |
+| /lists/                                                 | POST   | {mn_title,dr_id}<br>선택:<br>{mn_date,<br>mn_place,<br>mn_explanation,<br>mn_memo,<br>speaker_seq} | {mn_id,<br>mn_make_date,<br>mn_title,<br>mn_date,<br>mn_place,<br>mn_explanation,<br>mn_memo,<br>mn_share_link,<br>user_id,<br>dr_id,<br>speaker_seq} | 201 성공<br>400 실패(요구되지 않는 필드값)<br>401 실패(토큰 인증 실패) | 회의록 생성             |
+| /<int:mn_id >                                           | GET    |{}| {mn_id,<br>mn_make_date,<br>mn_title,<br>mn_date,<br>mn_place,<br>mn_explanation,<br>mn_memo,<br>mn_share_link,<br>user_id,<br>dr_id,<br>speaker_seq} | 200 성공<br>401 실패(토큰 인증 실패)<br>500 실패(존재하지 않는 회의록) | 회의록 조회             |
+| /<int:mn_id >                                           | PUT    |선택:<br>{mn_title,<br>dr_id,<br>mn_date,<br>mn_place,<br>mn_explanation,<br>mn_memo,<br>speaker_seq}| {mn_id,<br>mn_make_date,<br>mn_title,<br>mn_date,<br>mn_place,<br>mn_explanation,<br>mn_memo,<br>mn_share_link,<br>user_id,<br>dr_id,<br>speaker_seq} | 200 성공<br>400 실패(요구되지 않는 필드값)<br>401 실패(토큰 인증 실패) | 회의록 수정             |
+| /<int:mn_id >                                           | DELETE |{}|   |204 성공<br>401 실패(토큰 인증 실패)| 회의록 삭제             |
+| /share/link                                             | POST   | {mn_id} | {}       |      | 공유 링크 생성           |
+| ~~**/create/with/share/<br>link/<str:mn_share_link>**~~ | GET    | {}      | {}       |      | 공유 링크로 회의록 화자 조회   |
+| ~~**/create/with/share/<br>link/<str:mn_share_link>**~~ | POST   | {}      | {}       |      | 화자 선택 후 회의록 복사     |
+| /search?keyword=검색어                                   | GET    | {}      | {}       |      | 내 회의록 제목,메모 등으로 검색 |
+
 
 ### /minutes/<int:mn_id >/bookmark
 > 북마크 관련 주소
@@ -114,4 +118,17 @@
 | /<int:speaker_seq > | PUT    |{speaker_name}| {speaker_seq,speaker_name,mn_id} | 200 성공<br>400 실패(요구되지 않는 필드값)<br>401 실패(토큰 인증 실패) | 화자 수정 |
 | /<int:speaker_seq > | DELETE |{}|                                                  |204 성공<br>401 실패(토큰 인증 실패)| 화자 삭제 |
 
+### /voice/recognition
+> 음성 인식 관련 주소
+
+| Path                            | Method | request                               | response  | code | 설명                            |
+|---------------------------------|--------|---------------------------------------|-----------|------|-------------------------------|
+| /lists/<int:mn_id>              | GET    | {}                                    | {__all__} |      | 특정 회의록 음성인식 전체 조회             |
+| /lists/<int:mn_id>              | POST   | {speaker_cnt}<br/>총 화자 수           | {__all__} |      | 음성 인식 생성                      |
+| /lists/<int:mn_id>              | DELETE | {}                                    | { }       |      | 특정 회의록 음성인식 결과 전체 삭제          |
+| /<int:mn_id>/<int:vr_seq>       | GET    | {}                                    |           |      | 특정 문장 조회                      |
+| /<int:mn_id>/<int:vr_seq>       | PUT    | {vr_text/vr_start/<br/>vr_end/speaker_seq} |           |      | 특정 문장 수정 (시간, 텍스트, 화자)        |
+| /<int:mn_id>/<int:vr_seq>       | DELETE | {}                                    |           |      | 특정 문장 삭제                      |
+| /<int:mn_id>/<int:vr_seq>       | POST   | {vr_text,vr_start,<br/>vr_end,speaker_seq} |           |      | 특정 문장 생성 되긴하는데 seq 안맞아서 일단 보류 |
+| /<int:mn_id>/search?keyword=검색어 | GET    | {}                                    | {}        |      | 음성인식 결과 검색                    |
 

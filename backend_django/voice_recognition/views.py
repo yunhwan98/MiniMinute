@@ -193,7 +193,6 @@ def voice_recognition(request, mn_id, vr_seq):
 def voice_recognition_search(request, mn_id):
     #TO DO mn_id에 해당하는 minutes의 user_id가 로그인된 사용자가 아니면 에러
     keyword = request.GET.get('keyword', None)
-    print(request.GET.get('keyword', None))
     voice_recognition_list = VoiceRecognition.objects.filter(mn_id=mn_id).order_by('vr_seq')
     if keyword :
         voice_recognition_list = voice_recognition_list.filter(
