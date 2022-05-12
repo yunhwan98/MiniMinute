@@ -6,7 +6,10 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
 from .models import Minutes, Speaker, Bookmark, File
+from user.models import Directory
+from voice_recognition.models import VoiceRecognition
 from .serializers import MinutesSerializer, SpeakerSerializer, BookmarkSerializer, FileSerializer
+from voice_recognition.serializers import VoiceRecognitionSerializer
 from django.db.models import Q
 
 from botocore.config import Config
@@ -281,32 +284,63 @@ def minute_share_link(request):
 @permission_classes((IsAuthenticated,))
 @authentication_classes((JSONWebTokenAuthentication,))
 def create_minute_with_share_link(request, mn_share_link):
-#     #회의록 정보 불러오기 > 화자 선택하기 > 회의록 생성
-#     minutes = Minutes.objects.get(mn_share_link=mn_share_link)
-#
-#     if request.method == 'GET':
-#         speaker = Speaker.objects.filter(mn_id=minutes.mn_id)
-#         serializer = SpeakerSerializer(speaker, many=True)
-#         return JsonResponse(serializer.data, safe=False)
-#
-#     elif request.method == 'POST':
-#         minutes.mn_id = None
-#         minutes.user_id.id = request.user.id
-#         minutes.dr_id.dr_id = request.data['dr_id']
-#         minutes.mn_make_date = None
-#         minutes.mn_share_link = None
-#         # minutes.speaker_seq.speaker_seq = request.data['speaker_seq']
-#         minutes.speaker_seq = None
-#         minutes.save()
-#         serializer = MinutesSerializer(minutes)
-#
-#         # 화자 생성
-#
-#         # s3 작업
-#
-#         # vr 복사
-#
-#         return JsonResponse(serializer.data, status=201)
-    return HttpResponse("회의록 공유 링크로 생성 테스트")
+    #회의록 정보 불러오기 > 화자 선택하기 > 회의록 생성
+    minutes = Minutes.objects.get(mn_share_link=mn_share_link)
+    speaker = Speaker.objects.filter(mn_id=minutes.mn_id)
+    file = File.objects.get(file_id=minutes.file_id.file_id)
+
+    if request.method == 'GET':
+        serializer = SpeakerSerializer(speaker, many=True)
+        return JsonResponse(serializer.data, safe=False)
+
+    elif request.method == 'POST':
+        # file 업로드
+        file_key = '{}_{}.{}'.format(minutes.user_id.id, minutes.file_id.file_name, minutes.file_id.file_extension)
+        file.file_id = None
+        file.save()
+        minutes.mn_id = None
+        minutes.user_id = request.user
+        minutes.dr_id = Directory.objects.get(dr_id=request.data['dr_id'])
+        minutes.mn_make_date = None
+        minutes.mn_share_link = None
+        minutes.speaker_seq = None
+        minutes.file_id = file
+        minutes.save()
+
+        # 화자 생성
+        speaker_dic={}
+        old_speaker_seq = 0
+        for obj in speaker:
+            old_speaker_seq = obj.speaker_seq
+            obj.speaker_seq=None
+            obj.mn_id=minutes
+            obj.save()
+            speaker_dic[old_speaker_seq]=obj
+        minutes.speaker_seq = speaker_dic[request.data['speaker_seq']]
+        minutes.save()
+
+        # vr 복사
+        voice_recognition = VoiceRecognition.objects.filter(mn_id=Minutes.objects.get(mn_share_link=mn_share_link).mn_id)
+        for vr in voice_recognition:
+            vr.vr_id=None
+            vr.mn_id=minutes
+            vr.speaker_seq=speaker_dic[vr.speaker_seq.speaker_seq]
+            vr.save()
+
+        # s3 작업
+        s3 = boto3.resource('s3')
+        bucket = 'miniminute-bucket'
+        copy_source = {
+            'Bucket': bucket,
+            'Key': file_key
+        }
+        s3.meta.client.copy(copy_source, bucket, '{}_{}.{}'.format(request.user.id, file.file_name, file.file_extension))
+
+        minutes_serializer = MinutesSerializer(minutes)
+        file_serializer=FileSerializer(file)
+        speaker_serializer = SpeakerSerializer(speaker,many=True)
+        vr_serializer=VoiceRecognitionSerializer(voice_recognition,many=True)
+        response={'minutes':minutes_serializer.data,'file':file_serializer.data,'speaker':speaker_serializer.data,'voice_recognition':vr_serializer.data}
+        return JsonResponse(response, status=201)
 
 
