@@ -11,6 +11,7 @@ from voice_recognition.models import VoiceRecognition
 from .serializers import MinutesSerializer, SpeakerSerializer, BookmarkSerializer, FileSerializer
 from voice_recognition.serializers import VoiceRecognitionSerializer
 from django.db.models import Q
+from django.forms.models import model_to_dict
 
 from botocore.config import Config
 import boto3
@@ -219,17 +220,17 @@ def file_upload(request, mn_id):
         if file_serializer.is_valid():
             file_serializer.save()
             # 회의록 정보 수정
-            minutes.file_id = file_serializer.data.get("file_id")
+            minutes.file_id = File.objects.get(file_id=file_serializer.data.get("file_id"))
             minutes.save()
             # 버킷에 업로드
             try :
                 audio = open('{}{}.{}'.format(file_data.get('file_path'), file_data.get('file_name'), file_data.get('file_extension')),'rb')
             except FileNotFoundError:
-                return JsonResponse(status=400)
+                return HttpResponse('FileNotFoundError')
             else :
                 s3 = boto3.resource('s3')
                 s3.Bucket('miniminute-bucket').put_object(Key='{}_{}.{}'.format(request.user.id,file_data.get('file_name'),file_data.get('file_extension')), Body=audio)
-                data = {'file':file_serializer.data,'minutes':minutes_serializer.data}
+                data = {'file':file_serializer.data,'minutes':model_to_dict(minutes)}
                 return JsonResponse(data, status=201)
         return JsonResponse(file_serializer.errors, status=400)
 
