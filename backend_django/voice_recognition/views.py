@@ -91,7 +91,9 @@ def voice_recognition_list(request, mn_id):
         return JsonResponse(serializer.data, safe=False)
 
     elif request.method == 'POST':
+
         results = transcribe_file(file.file_name, request.user.id, request.data.get('speaker_cnt'))
+
 
         # 화자 생성
         for i in range(1,results['results']['speaker_labels']['speakers']+1):
