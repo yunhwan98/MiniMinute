@@ -21,20 +21,10 @@ export default function LoginModal(props) {
 
     const handleClose = () => {setShow(false); setErrormsg('');
         if(!check){setEmail('');}  setPassword('');}
+    
     const handleShow = () => setShow(true);
+    
 
-
-    const onEmailHandler = (event) => {
-        setEmail(event.currentTarget.value);
-    }
-
-    const onPasswordHandler = (event) => {
-        setPassword(event.currentTarget.value)
-    }
-    const onClick = (event) => {
-        setCheck(!check);
-        console.log(check);
-    }
 
     //로그인 버튼 누를 때 서버에 정보 전달
     const onSubmit = (event) => {
@@ -72,12 +62,12 @@ export default function LoginModal(props) {
 
                     <form onSubmit={onSubmit}>
                         <div className="Errormsg">{errormsg}</div>
-                        <div><input type="email" name="email"  placeholder="이메일" value={email} onChange={onEmailHandler} className="login-text"/></div>
-                        <div><input type="password" name="password"  placeholder="비밀번호" value={password} onChange={onPasswordHandler}className="login-text"/></div>
-                        <div className="remember-email"><input type="checkbox" onChange={onClick} checked/>이메일 기억하기</div>
+                        <div><input type="email" name="email"  placeholder="이메일" value={email} onChange={(e)=>setEmail(e.currentTarget.value)} className="login-text"/></div>
+                        <div><input type="password" name="password"  placeholder="비밀번호" value={password} onChange={(e)=>setPassword(e.currentTarget.value)}className="login-text"/></div>
+                        {/* <div className="remember-email"><input type="checkbox" onChange={onClick} checked/>이메일 기억하기</div> */}
                         <button type="submit"  onSubmit={onSubmit} className="submit-btn" >로그인</button>
                         <div className="links">
-                            <Find_pwModal name="비밀번호를 잊으셨나요?" />
+                            {/* <Find_pwModal name="비밀번호를 잊으셨나요?" /> */}
                         </div>
                         {/* <hr className="login-hr"/>
                         <div id="google-title">구글 아이디로 로그인</div>

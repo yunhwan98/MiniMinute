@@ -211,6 +211,23 @@ function Log(){
         console.log(dial+" 으로 대화 내용 변경");
     }
     
+    const addSpeaker=(e)=>{ //선택한 수만큼 화자 추가
+        let num = parseInt(pNum);
+
+        for(let i=0 ;i<num;i++){
+            console.log(num);
+            url.post(
+                `/minutes/${mnId}/speaker/lists`,{})
+                .then((response) => {
+                    console.log('성공'+response.data);
+                })
+                .catch((error) => {
+                    console.log("실패 "+ error);
+                })
+        }
+    }
+
+
     return (
         <div>
             <Header_log setSearch={setSearch}/>
@@ -254,7 +271,7 @@ function Log(){
                                                             <Modal.Title>참가자 이름 변경</Modal.Title>
                                                         </Modal.Header>
                                                         <Modal.Body>
-                                                            <h6>참거자 이름</h6>
+                                                            <h6>참가자 이름</h6>
                                                             <input type="text" className="form-control" id="name" value={name} onChange={(e) => setName(e.target.value)} />
                                                         </Modal.Body>
                                                         <Modal.Footer>
@@ -356,7 +373,8 @@ function Log(){
                                 <label id="btn-color" className="voice-btn" htmlFor="input-file">파일 업로드</label>
                                 <input type="file" id="input-file" style={{display: "none"}}
                                        accept="audio/*"
-                                       onChange={onAudioHandler}/>
+                                       onChange={(e)=>{onAudioHandler(e); addSpeaker(e);}}/>  
+                                
                             </Modal.Footer>
                         </Modal>
                     </div>}

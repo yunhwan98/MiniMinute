@@ -70,7 +70,7 @@ export default function SignupModal(props) {
           setColor("rgb(65, 187, 81)");
           setErrormsg("사용가능한 이메일 입니다!");
         }
-        else if(error.response.data.email == 'A user is already registered with this e-mail address.'){
+        else if(error.response.data.email == '이미 이 이메일 주소로 등록된 사용자가 있습니다.'){
           setErrormsg("※ 중복된 이메일 입니다 ※");
         }
         else{
@@ -146,7 +146,7 @@ export default function SignupModal(props) {
               <button type="button" onClick={checkNickname} className="submit-btn" id="nickname_check">중복 확인</button></div>                 
               <div><label>비밀번호</label> <input name="password" type="password" placeholder="비밀번호" value={password} onChange={(e) => setPassword(e.target.value)} className="signup-text"/></div>
               <div><label>비밀번호 확인</label> <input name="confirmPassword" type="password" placeholder="비밀번호 확인" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} className="signup-text"/></div>
-              <div><button type="submit" onSubmit={onSubmit} className="submit-btn">회원가입</button></div>
+              <div><button type="submit" onSubmit={onSubmit} className="submit-btn" style={{marginTop:'1rem'}}>회원가입</button></div>
             </form> 
         </div>
       </Modal>
