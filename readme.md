@@ -132,8 +132,10 @@
 | /<int:mn_id>/<int:vr_seq>       | POST   | {vr_text,vr_start,<br/>vr_end,speaker_seq} |           |      | 특정 문장 생성 되긴하는데 seq 안맞아서 일단 보류 |
 | /<int:mn_id>/search?keyword=검색어 | GET    | {}                                    | {}        |      | 음성인식 결과 검색                    |
 
+
 ### /keyword
 > 키워드 관련 주소
+
 
 | Path                | Method | request                  | response                                         |code| 설명  |
 |---------------------|--------|--------------------------|--------------------------------------------------|----|-----|
