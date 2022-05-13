@@ -40,11 +40,11 @@ function Profile() {
             .then((response) => {
             localStorage.setItem('user',JSON.stringify(response.data)); //유저 정보 변경
             console.log(response.data.user_profile);
-            alert('변경했습니다'); //추후 삭제
+            alert('이미지를 변경했습니다.'); //추후 삭제
             })
             .catch((error) => { //오류메시지 보이게 함
             console.log(error.response);
-            alert("실패!")
+            alert("이미지를 변경하지 못했습니다.")
             });
             //localStorage.setItem('profile_img', preview);
             formdata.delete('user_profile');     
@@ -67,11 +67,11 @@ function Profile() {
             })
             .then((response) => {
             localStorage.setItem('user',JSON.stringify(response.data)); //유저 정보 변경
-            alert('변경했습니다'); //추후 삭제
+            alert('닉네임 변경 성공'); //추후 삭제
             })
             .catch((error) => { //오류메시지 보이게 함
             console.log(error.response);
-            alert("실패!")
+            alert("닉네임 변경 실패")
             });       
     }
     const changeEmail= async(event) => {    //이메일변경
@@ -83,13 +83,13 @@ function Profile() {
             })
             .then((response) => {
             console.log(response);
-            alert('성공!다시 로그인해주세요'); //추후 삭제
+            alert('이메일 변경 성공'); //추후 삭제
             localStorage.clear();
             navigate(`/`); 
             })
             .catch((error) => { //오류메시지 보이게 함
             console.log(error.response);
-            alert("실패!")
+            alert("이메일 변경 실패")
             });       
     }
 
@@ -105,11 +105,11 @@ function Profile() {
             console.log(response);
             localStorage.clear();
             navigate(`/`);
-            alert('성공!다시 로그인해주세요'); //추후 삭제 
+            alert('비밀번호 변경 성공'); //추후 삭제 
             })
             .catch((error) => { //오류메시지 보이게 함
             console.log(error.response);
-            alert("실패!")
+            alert("비밀번호 변경 실패")
             });       
     }
 
@@ -128,7 +128,7 @@ function Profile() {
             })
             .catch((error) => { //오류메시지 보이게 함
             console.log(error.response);
-            alert("탈퇴실패!")
+            alert("탈퇴에 실패했습니다")
             });       
     }
 
@@ -147,13 +147,11 @@ function Profile() {
                         <input type="file" id="input-file" style={{ display: "none" }}
                             accept="image/*"
                             onChange={loadImage} />
-                        <div style={{ margin: "auto"}} >
 
-                                <button id="btn-color" className="change-btn" style={{ width: "70px", height: "30px", cursor: "pointer", margin: "10px"}} onClick={() =>  submitFileImage()}> 저장 </button>
+                        <button id="btn-color" className="input-file img-btn" onClick={() =>  submitFileImage()}>사진 변경</button>
             
                                 {/* <button id="btn-color" className="change-btn" style={{ width: "70px", height: "30px", cursor: "pointer", margin: "10px"}} onClick={() => deleteFileImage()} > 삭제 </button>  */}
 
-                        </div>
                     </div>
 
                 

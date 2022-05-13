@@ -27,6 +27,8 @@ function Sidebar_log(props) {
     const [logShow, setLogShow] = useState(false);
       //유저정보
     const [user, setUser] = useState(localStorage.getItem('token') ? JSON.parse( localStorage.getItem('user') ) : []);
+
+    const [shareLink,setShareLink]=useState('');
     //유저 로그아웃
     const userLogout =(e)=> {
         localStorage.clear(); 
@@ -116,6 +118,25 @@ function Sidebar_log(props) {
         }
     }
 
+    const creatSharelink = () =>{   //공유링크 생성
+        setShare(true);    
+        url.post(
+            `/minutes/share/link`, {
+            "mn_id": mnId       //우선 메모만 추가
+        }
+        )
+            .then((response) => {
+                console.log(response.data.mn_share_link);
+                setShareLink(response.data.mn_share_link);
+            })
+            .catch((error) => {
+                console.log(error.response);
+                alert('실패!');
+            });
+        
+
+    }
+
     const defaultDir = dr_info.filter(dr_info => `${dr_info.dr_id}` > 1); //디렉토리 번호 1 이상(기본 디렉토리 제외)
 
     return(
@@ -148,7 +169,7 @@ function Sidebar_log(props) {
                 <div style={{ display: "flex"}}>
                                
                 <button type="button" className="none-btn" style={{marginBottom:"8px", color:"#B96BC6"}}
-                        onClick={() => setShare(true)}>
+                        onClick={() => creatSharelink()}>
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
                          className="bi bi-share-fill" viewBox="0 0 16 16" style={{borderRadius:"0"}}>
                         <path
@@ -161,10 +182,10 @@ function Sidebar_log(props) {
                     </Modal.Header>
                     <Modal.Body>
                         <h6>공유코드</h6>
-                        <p className="code">random code</p>
+                        <p className="code">{shareLink}</p>
                     </Modal.Body>
                     <Modal.Footer>
-                        <CopyToClipboard text={"random code"}>
+                        <CopyToClipboard text={shareLink}>
                             <button type="button" id="btn-color" className="modal-btn" onClick={null}>
                                 복사
                             </button>

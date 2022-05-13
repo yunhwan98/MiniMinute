@@ -6,6 +6,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import AddParticipant from "./AddParticipant";
 import axios from 'axios';
 import url from '../api/axios';
+import { CompressOutlined } from "@mui/icons-material";
 
 function NewLog_modal(props) {
     const drId = props.dr_id ? props.dr_id : 1;   //home.js에서 만들면 1
@@ -20,7 +21,10 @@ function NewLog_modal(props) {
     const [share_link , setShare_link] =useState("");
     const [errormsg, setErrormsg] = useState("");
     const navigate = useNavigate();
-
+    const [speakermodal, setSpeakermodal] =useState(false);//화자 선택 모달
+    const [speakerlist, setSpeakerlist] =useState([]);  //화자리스트 
+    const [checked, setChecked] = useState(""); 
+    
     //날짜를 DB에 저장할 형식으로 변경
     var year = startDate.getFullYear();
     var month = ('0' + (startDate.getMonth() + 1)).slice(-2);
@@ -54,6 +58,56 @@ function NewLog_modal(props) {
             });       
     }
 
+    const submitSharelink =(e)=>{
+        console.log("실행");
+        
+        url.get(     
+            `/minutes/create/with/share/link/${share_link}`,{})
+            .then((response) => {
+            console.log(response);
+            setSpeakerlist(response.data);
+            // props.setLogShow(false); 
+            setSpeakermodal(true);
+            alert('성공');
+            
+            })
+            .catch((error) => { //오류메시지 보이게 함
+            console.log(error.response);
+            alert("실패!")
+            });  
+    }
+
+    const handleChecked = (e) => {  //화자 체크
+        console.log(e.target.value);
+        setChecked(e.target.value);
+    }
+
+
+    const selectSpeaker =(e)=>{
+        let speaker = parseInt(checked);
+        url.post(     
+            `/minutes/create/with/share/link/${share_link}`,{
+                "dr_id": drId,
+                "speaker_seq": speaker
+
+            })
+            .then((response) => {
+            console.log(response);     
+            setSpeakermodal(false);
+            props.setLogShow(false); 
+            alert('성공');
+            
+            })
+            .catch((error) => { //오류메시지 보이게 함
+            console.log(error.response);
+            alert("실패!")
+            });  
+
+    }
+
+
+
+    console.log(checked);
     return (
 
         <>
@@ -92,10 +146,34 @@ function NewLog_modal(props) {
                     <h6 style={{fontWeight: "bold"}}>공유 코드</h6>
                     <input type="text" className="form-control" id="memo" value={share_link} onChange={(e)=>setShare_link(e.target.value)}/>
                 </div>
-                <button type="button" id="btn-color" className="btn-override modal-btn" onClick={onSubmit} >
+                <button type="button" id="btn-color" className="btn-override modal-btn" onClick={submitSharelink} >
                     생성
                 </button>
-                
+                <Modal show={speakermodal} onHide={() => setSpeakermodal(false)}>
+                        <Modal.Header closeButton>
+                            <Modal.Title>화자 선택하기</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <h5>화자 목록</h5>
+                            <div className="radio-dr">
+                            {speakerlist.map(result =>
+                                <label className="radio-label" key={result.speaker_seq}>
+                                    <input type="radio"
+                                           value={result.speaker_seq}
+                                           checked={checked === `${result.speaker_seq}`}
+                                           onChange={handleChecked}
+                                    />
+                                    {result.speaker_seq}</label>
+                                )}
+                            </div>
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <button type="button" id="btn-color" className="modal-btn"
+                                    onClick={selectSpeaker}>
+                                선택
+                            </button>
+                        </Modal.Footer>
+                    </Modal>
             </div>
         </>
     );
