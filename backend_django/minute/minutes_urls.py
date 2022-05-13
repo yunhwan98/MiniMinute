@@ -25,4 +25,7 @@ urlpatterns = [
     #공유 링크 생성
     path('share/link', views.minute_share_link),
     path('create/with/share/link/<str:mn_share_link>',views.create_minute_with_share_link),
+
+    #음성인식 후 화자 선택
+    path('<int:mn_id>/choice/speaker', views.choice_speaker),
 ]

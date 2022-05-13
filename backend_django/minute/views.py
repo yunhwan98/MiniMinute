@@ -271,7 +271,7 @@ def minute_share_link(request):
             'mn_explanation':minutes.mn_explanation,
             'mn_memo':minutes.mn_memo,
             'mn_share_link':share_str,
-            'speaker_seq':minutes.speaker_seq
+            'speaker_seq':minutes.speaker_seq.speaker_seq
         }
 
         serializer = MinutesSerializer(minutes, data=data)
@@ -344,4 +344,19 @@ def create_minute_with_share_link(request, mn_share_link):
         response={'minutes':minutes_serializer.data,'file':file_serializer.data,'speaker':speaker_serializer.data,'voice_recognition':vr_serializer.data}
         return JsonResponse(response, status=201)
 
+#음성인식 후 화자 선택
+@api_view(['GET', 'POST'])
+@permission_classes((IsAuthenticated,))
+@authentication_classes((JSONWebTokenAuthentication,))
+def choice_speaker(request, mn_id):
+    minutes = Minutes.objects.get(mn_id=mn_id)
+    if request.method=='GET':
+        speakers = Speaker.objects.filter(mn_id=mn_id)
+        serializer = SpeakerSerializer(speakers, many=True)
+        return JsonResponse(serializer.data, safe=False)
+    elif request.method=='POST':
+        speaker = Speaker.objects.get(mn_id=mn_id, speaker_seq=request.data['speaker_seq'])
+        minutes.speaker_seq=speaker
+        minutes.save()
+        return JsonResponse({'minutes':model_to_dict(minutes)}, status=201)
 
