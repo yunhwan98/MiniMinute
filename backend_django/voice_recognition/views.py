@@ -7,8 +7,8 @@ from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
 from .models import VoiceRecognition
 from minute.models import Minutes, File
-from minute.serializers import SpeakerSerializer
 from .serializers import VoiceRecognitionSerializer
+from minute.serializers import SpeakerSerializer
 from django.db.models import Q
 from requests_toolbelt.multipart.encoder import MultipartEncoder
 
@@ -97,10 +97,11 @@ def voice_recognition_list(request, mn_id):
 
         # 화자 생성
         for i in range(1,results['results']['speaker_labels']['speakers']+1):
-            speaker_data={'speaker_seq':i,'speaker_name':'spk_'+str(i),'mn_id':mn_id}
+            speaker_data={'speaker_name':'spk_'+str(i),'mn_id':mn_id}
             speaker_serializer=SpeakerSerializer(data=speaker_data)
             if speaker_serializer.is_valid():
                 speaker_serializer.save()
+
         # 음성 인식 생성
         seq=0
         item_seq=0
@@ -125,6 +126,7 @@ def voice_recognition_list(request, mn_id):
             vr_serializer=VoiceRecognitionSerializer(data=vr_data)
             if vr_serializer.is_valid():
                 vr_serializer.save()
+
             else:
                 return JsonResponse(vr_serializer.errors, status=400)
             seq+=1
