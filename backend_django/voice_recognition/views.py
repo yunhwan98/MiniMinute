@@ -94,11 +94,13 @@ def voice_recognition_list(request, mn_id):
         results = transcribe_file(file.file_name, request.user.id, request.data.get('speaker_cnt'))
 
         # 화자 생성
-        for i in range(1,results['results']['speaker_labels']['speakers']+1):
+        speaker_dic={}
+        for i in range(0,results['results']['speaker_labels']['speakers']):
             speaker_data={'speaker_name':'spk_'+str(i),'mn_id':mn_id}
             speaker_serializer=SpeakerSerializer(data=speaker_data)
             if speaker_serializer.is_valid():
                 speaker_serializer.save()
+                speaker_dic[i]=speaker_serializer.data['speaker_seq']
 
         # 음성 인식 생성
         seq=0
@@ -120,11 +122,10 @@ def voice_recognition_list(request, mn_id):
                 item_seq += 1
             vr_text = ''.join(vr_text)
 
-            vr_data = {'vr_seq':seq,'vr_start':segment['start_time'],'vr_end':segment['end_time'],'vr_text':vr_text,'mn_id':mn_id,'speaker_seq':int(segment['speaker_label'][4:])+1}
+            vr_data = {'vr_seq':seq,'vr_start':segment['start_time'],'vr_end':segment['end_time'],'vr_text':vr_text,'mn_id':mn_id,'speaker_seq':speaker_dic[int(segment['speaker_label'][4:])]}
             vr_serializer=VoiceRecognitionSerializer(data=vr_data)
             if vr_serializer.is_valid():
                 vr_serializer.save()
-
             else:
                 return JsonResponse(vr_serializer.errors, status=400)
             seq+=1
