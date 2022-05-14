@@ -62,7 +62,6 @@ function Emotion (){
         }
       };
 
-
     useEffect(() => { // 처음에만 정보 받아옴
         url.get(
             `/minutes/${mn_id}`

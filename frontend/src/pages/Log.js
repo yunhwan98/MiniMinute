@@ -34,9 +34,12 @@ function Log(){
     const [start,setStart] = useState("");
     const [end,setEnd] = useState("");
     const [nameModal, setNameModal] = useState(false);
-    const [name, setName] = useState("");
+    const [name, setName] = useState("");   //참가자 이름
+    const [nameList, setNameList] = useState("");
+    const [spkSeq, setSpkSeq] = useState([]);
     const [dialModal, setDialModal] = useState(false);  //대화 수정
     const [dial, setDial] = useState("");
+    const [vrSeq, setVrSeq] = useState("");
     const playerInput = useRef();
     const [search, setSearch] = useState('');   //검색어
 
@@ -98,7 +101,6 @@ function Log(){
                 console.log("파일 조회 성공")
                 setIsUpload(true);
                 setPath("https://storage.cloud.google.com/miniminute_voice_file/testquiz.wav?authuser=1");
-                getDialogue();
             })
             .catch((error) => {
                 setIsUpload(false);
@@ -115,18 +117,19 @@ function Log(){
         //파일 전송
         // const formData = new FormData();
         // formData.append("file", file);
+        setIsUpload(true);
+        voice_recog();
+        setPath("https://miniminute-bucket.s3.ap-northeast-2.amazonaws.com/1_1_test0510.wav");
 
         url.post(`/minutes/${mnId}/file/upload`, {
-            "file_name": "testquiz",
+            "file_name": "1_1_test0510",
             "file_extension": "wav",
-            "file_path": "https://storage.cloud.google.com/miniminute_voice_file/testquiz.wav?authuser=1"
+            "file_path": "https://miniminute-bucket.s3.ap-northeast-2.amazonaws.com/1_1_test0510.wav"
         })
             .then((response) => {
                 console.log(response.data);
                 console.log("업로드 성공");
-                setIsUpload(true);
-                voice_recog();
-                setPath("https://storage.cloud.google.com/miniminute_voice_file/testquiz.wav?authuser=1");
+
             })
             .catch((error) => {
                 console.log("업로드 실패 "+ error);
@@ -135,18 +138,19 @@ function Log(){
 
     const voice_recog = () => {
         //stt 호출
-        url.post(`/voice/recognition/lists/${mnId}`)
+        console.log("stt 호출");
+        url.post(`/voice/recognition/lists/${mnId}`,
+            {"speaker_cnt": pNum})
         .then((response) => {
-            console.log("stt 호출 성공");
+            console.log("stt 성공");
             console.log(response);
-            getDialogue();
         })
         .catch((error) => {
             console.log("stt 실패 "+ error);
         })
     }
 
-    const getDialogue = (e) => {
+    useEffect(() => {
         url.get(
             `/voice/recognition/lists/${mnId}`)
             .then((response) => {
@@ -157,8 +161,7 @@ function Log(){
             .catch((error) => {
                 console.log("stt 조회 실패 "+ error);
             })
-    }
-
+    }, [isUpload, dialModal, nameModal])
   
     const moveAudio = (current) => {//클릭시 시간으로 이동
         //playerInput.current.audio.current.currentTime = 3;    
@@ -201,14 +204,51 @@ function Log(){
     //다른 곳 클릭 시 메뉴 닫힘
     document.addEventListener("click", closeCtxt, false);
 
-    const changeName = (e) => { //참가자 이름 변경
+    useEffect(() => {
+        url.get(`/minutes/${mnId}/speaker/lists`)
+            .then((response) => {
+                console.log("화자 list 조회");
+                console.log(response.data);
+                setNameList(response.data);
+            })
+            .catch((error) => {
+                console.log("화자 list 조회 fail: "+error);
+            })
+    }, [nameModal])
+
+    const changeName = (e, speaker_seq) => { //참가자 이름 변경
         e.preventDefault();
-        console.log(name+" 으로 이름 변경");
+
+        url.put(
+            `/minutes/${mnId}/speaker/${speaker_seq}`, {
+                "speaker_name": name
+            })
+            .then((response) => {
+                console.log("참가자 이름 변경 성공");
+                console.log(response);
+                setNameModal(false);
+            })
+            .catch((error)=>{
+                console.log("참가자 이름 변경 실패: "+error);
+            })
     }
 
-    const changeDial = (e) => {
+    const changeDial = (e, vr_seq) => {
         e.preventDefault();
-        console.log(dial+" 으로 대화 내용 변경");
+        console.log(dialogue);
+
+        url.put(
+            `/voice/recognition/${mnId}/${vr_seq}`, {
+                "vr_text": dial
+            })
+            .then((response) => {
+                console.log("대화 내용 변경 성공");
+                console.log(response);
+                setDialModal(false);
+            })
+            .catch((error)=>{
+                console.log("대화 내용 변경 실패: "+error);
+            })
     }
     
     const addSpeaker=(e)=>{ //선택한 수만큼 화자 추가
@@ -257,14 +297,15 @@ function Log(){
                                     <ul className='chatting-list'>
                                         {dialogue.map(dialogue =>
                                             <li className="chat-other" key={dialogue.vr_id}>
+                                                {nameList.filter(data => data.speaker_seq===dialogue.speaker_seq).map(data =>
                                                 <span className='chat-profile'>
-                                                    <span className='chat-user' onClick={() => setNameModal(true)}>
+                                                    <span className='chat-user' onClick={() => {setNameModal(true); setSpkSeq(dialogue.speaker_seq)}}>
                                                         <Highlighter
-                                                        highlightClassName="YourHighlightClass"
-                                                        searchWords={[search]}
-                                                        autoEscape={true}
-                                                        textToHighlight={'참가자' + dialogue.vr_id}
-                                                    />
+                                                            highlightClassName="YourHighlightClass"
+                                                            searchWords={[search]}
+                                                            autoEscape={true}
+                                                            textToHighlight={data.speaker_name ? data.speaker_name : "참가자"+data.speaker_seq}
+                                                        />
                                                     </span>
                                                     <Modal show={nameModal} onHide={() => setNameModal(false)}>
                                                         <Modal.Header closeButton>
@@ -275,16 +316,18 @@ function Log(){
                                                             <input type="text" className="form-control" id="name" value={name} onChange={(e) => setName(e.target.value)} />
                                                         </Modal.Body>
                                                         <Modal.Footer>
-                                                            <button type="button" id="btn-color" className="btn-override modal-btn" onClick={changeName} >
-                                                                생성
+                                                            <button type="button" id="btn-color" className="btn-override modal-btn" onClick={(e)=>changeName(e,spkSeq)} >
+                                                                변경
                                                             </button>
                                                         </Modal.Footer>
                                                     </Modal>
-                                                    {/* <img src={chatProfile} alt='any' /> */}
-                                                    <span style={{fontSize: '2rem'}}>😄</span>
+                                                            {/* <img src={chatProfile} alt='any' /> */}
+                                                            <span style={{fontSize: '2rem'}}>😄</span>
                                                 </span>
+                                                )}
+
                                                 <Element name={dialogue.vr_start.slice(undefined, 7)} className='chat-msg' onClick={()=>moveAudio(dialogue.vr_start.slice(undefined, 7))}
-                                                      onContextMenu={(e)=>{openCtxt(e); setStart(dialogue.vr_start.slice(undefined, 7)); setEnd(dialogue.vr_end.slice(undefined, 7)); setDial(dialogue.vr_text);}}>
+                                                      onContextMenu={(e)=>{openCtxt(e); setStart(dialogue.vr_start.slice(undefined, 7)); setEnd(dialogue.vr_end.slice(undefined, 7)); setDial(dialogue.vr_text); setVrSeq(dialogue.vr_seq)}}>
                                                     <Highlighter
                                                     highlightClassName="YourHighlightClass"
                                                     searchWords={[search]}
@@ -312,7 +355,7 @@ function Log(){
                                                             <textarea className="chat-txtarea" placeholder="" cols="60" rows="10" value={dial ? dial : ""} onChange={(e)=>setDial(e.target.value)}></textarea>
                                                         </Modal.Body>
                                                         <Modal.Footer>
-                                                            <button type="button" id="btn-color" className="btn-override modal-btn" onClick={changeDial} >
+                                                            <button type="button" id="btn-color" className="btn-override modal-btn" onClick={(e)=>changeDial(e, vrSeq)} >
                                                                 저장
                                                             </button>
                                                         </Modal.Footer>
