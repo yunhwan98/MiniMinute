@@ -22,6 +22,9 @@ import io
 import requests
 import json
 
+from voice_recognition import emotion as em
+
+
 def index(request):
     return HttpResponse("음성인식 테스트")
 
@@ -206,3 +209,14 @@ def voice_recognition_search(request, mn_id):
         context = {'voice_recognition_list':list(voice_recognition_list), 'keyword':keyword}
         return JsonResponse(context)
 
+# 감정인식 테스트 (아직 미작동)
+@api_view(['GET'])
+@permission_classes((IsAuthenticated,))
+@authentication_classes((JSONWebTokenAuthentication,))
+def test(request):
+    data = JSONParser().parse(request)
+    text = data['text']
+    result = str(em.text_predict(text))
+    result = result.index(max(result))
+    data['emotion']=str(result)
+    return JsonResponse(data)

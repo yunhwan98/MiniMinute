@@ -166,3 +166,5 @@ cython_debug/
 
 # End of https://www.toptal.com/developers/gitignore/api/django
 /minute/migrations/
+/audio_model.h5
+/text_model.pickle
