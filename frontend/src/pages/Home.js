@@ -17,7 +17,6 @@ const Home = () => {
     const [minutes,setMinutes] = useState([]);
     const [dr_info, setDr_info] = useState([]);
     const [search, setSearch] = useState("");
-    let searchResult=[];
 
     useEffect(() => { // 처음에만 정보 받아옴
         url.get(     
@@ -52,10 +51,15 @@ const Home = () => {
     const defaultDir = dr_info.filter(dr_info => dr_info.dr_id > home); //home 디렉토리 제외
     const favMin = minutes.filter(minutes => `${minutes}`); //즐겨찾기
     
-    searchResult = minutes.filter(minute => ( //search 검색어가 포함되는 회의록만 filter(search가 공백시에는 전부 보임)
+    const minResult = defaultMin.filter(minute => ( //search 검색어가 포함되는 회의록만 filter(search가 공백시에는 전부 보임)
         `${minute.mn_title}`.toLowerCase().includes(search) || `${minute.mn_date}`.toLowerCase().includes(search)
         || `${minute.mn_explanation}`.toLowerCase().includes(search)
-    ))  
+    ))
+
+    const favResult = favMin.filter(minute => ( //search 검색어가 포함되는 회의록만 filter(search가 공백시에는 전부 보임)
+        `${minute.mn_title}`.toLowerCase().includes(search) || `${minute.mn_date}`.toLowerCase().includes(search)
+        || `${minute.mn_explanation}`.toLowerCase().includes(search)
+    ))
 
     if(isAuthenticated){ //권한이 있을 때만 표시
     return (
@@ -75,7 +79,7 @@ const Home = () => {
                                 <p>회의록</p>
                             </div>
                             <div className="log-card">
-                                {defaultMin.map(result =>
+                                {minResult.map(result =>
                                     <Log_card key={result.mn_title} dr_id={result.dr_id} mn_id={result.mn_id} mn_title={result.mn_title} mn_date={result.mn_date} mn_explanation={result.mn_explanation}/>
                                 )}
                             </div>
@@ -91,27 +95,27 @@ const Home = () => {
                                 <p>즐겨찾기</p>
                             </div>
                             <div className="log-card">
-                                {favMin.map(result =>
+                                {favResult.map(result =>
                                     <Log_card key={result.mn_title} dr_id={result.dr_id} mn_id={result.mn_id} mn_title={result.mn_title} mn_date={result.mn_date} mn_explanation={result.mn_explanation}/>
                                 )}
                             </div>
                         </div>
 
-                        <div className="recent">
-                            <div className="directory-name">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
-                                     className="bi bi-star-fill" viewBox="0 -3 16 19">
-                                    <path
-                                        d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
-                                </svg>
-                                <p>최근 회의록</p>
-                            </div>
-                            <div className="log-card">
-                                {searchResult.map(minute =>
-                                    <Log_card key={minute.mn_id} dr_id={minute.dr_id} mn_id={minute.mn_id} mn_title={minute.mn_title} mn_date={minute.mn_date} mn_explanation={minute.mn_explanation}/>
-                                )}
-                            </div>
-                        </div>
+                        {/*<div className="recent">*/}
+                        {/*    <div className="directory-name">*/}
+                        {/*        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"*/}
+                        {/*             className="bi bi-star-fill" viewBox="0 -3 16 19">*/}
+                        {/*            <path*/}
+                        {/*                d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>*/}
+                        {/*        </svg>*/}
+                        {/*        <p>최근 회의록</p>*/}
+                        {/*    </div>*/}
+                        {/*    <div className="log-card">*/}
+                        {/*        {searchResult.map(minute =>*/}
+                        {/*            <Log_card key={minute.mn_id} dr_id={minute.dr_id} mn_id={minute.mn_id} mn_title={minute.mn_title} mn_date={minute.mn_date} mn_explanation={minute.mn_explanation}/>*/}
+                        {/*        )}*/}
+                        {/*    </div>*/}
+                        {/*</div>*/}
 
                         <div className="my">
                             <div className="directory-name">

@@ -3,8 +3,6 @@ import {Modal} from "react-bootstrap";
 import DatePicker, { registerLocale } from "react-datepicker";
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 import "react-datepicker/dist/react-datepicker.css";
-import AddParticipant from "./AddParticipant";
-import axios from 'axios';
 import url from '../api/axios';
 import { CompressOutlined } from "@mui/icons-material";
 
@@ -60,7 +58,7 @@ function NewLog_modal(props) {
 
     const submitSharelink =(e)=>{
         console.log("실행");
-        
+
         url.get(     
             `/minutes/create/with/share/link/${share_link}`,{})
             .then((response) => {
@@ -85,6 +83,7 @@ function NewLog_modal(props) {
 
     const selectSpeaker =(e)=>{
         let speaker = parseInt(checked);
+
         url.post(     
             `/minutes/create/with/share/link/${share_link}`,{
                 "dr_id": drId,
@@ -101,11 +100,8 @@ function NewLog_modal(props) {
             .catch((error) => { //오류메시지 보이게 함
             console.log(error.response);
             alert("실패!")
-            });  
-
+            });
     }
-
-
 
     console.log(checked);
     return (
@@ -163,7 +159,7 @@ function NewLog_modal(props) {
                                            checked={checked === `${result.speaker_seq}`}
                                            onChange={handleChecked}
                                     />
-                                    {result.speaker_seq}</label>
+                                    {result.speaker_name ? result.speaker_name : "참가자"+result.speaker_seq}</label>
                                 )}
                             </div>
                         </Modal.Body>

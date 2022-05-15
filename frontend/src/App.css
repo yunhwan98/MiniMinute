@@ -609,6 +609,15 @@ label input[type=radio]:checked{ /*안먹음*/
   cursor: pointer;
 }
 
+#bm-edit{
+  padding: 8px;
+}
+
+#bm-edit:hover{
+  background-color: rgba(0, 0, 0, 0.05);
+  border-radius: 50%;
+}
+
 .memo textarea{
   width:300px;
   height: 205px;
@@ -1037,7 +1046,7 @@ li{
   margin: 0 5px;
 }
 
-#chat-menu {
+#chat-menu, #prof-menu {
   display: none;
   background: #fff;
   border-radius: 8px;
@@ -1049,14 +1058,14 @@ li{
   padding: 10px;
 }
 
-#chat-menu ul {
+#chat-menu ul, #prof-menu ul {
   padding: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-#chat-menu li {
+#chat-menu li, #prof-menu li {
   display: flex;
   justify-content: center;
   margin: 0;
