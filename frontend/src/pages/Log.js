@@ -20,6 +20,7 @@ function Log(){
     let params = useParams();  //url로 정보받아오기
     const dr_id = params.dr_id;
     const mnId = params.mn_id;
+    const [minutes, setMinutes] = useState([]);
     const [memo,setMemo] = useState("");    //메모
     const [file, setFile] = useState("");   //file id
     const [isUpload, setIsUpload] = useState(false);
@@ -29,8 +30,6 @@ function Log(){
     const [showBm, setShowBm] = useState(false);    //북마크모달
     const [participant, setParticipant] = useState(false);  //참가자 모달
     const [pNum, setPNum] = useState("");   //참가자 수
-    const [keyword, setKeyword] = useState([]);   //키워드 리스트
-    const [chat, setChat] = useState([]);   //키워드 리스트
     const [start,setStart] = useState("");
     const [end,setEnd] = useState("");
     const [nameModal, setNameModal] = useState(false);
@@ -69,6 +68,7 @@ function Log(){
             .then((response) => {
             console.log('회의록 정보 불러오기');
             console.log(response.data);
+            setMinutes(response.data);
             setFile(response.data.file_id);
             setMemo(response.data.mn_memo);
             })
@@ -189,16 +189,34 @@ function Log(){
         e.preventDefault();
 
         const menu = document.getElementById("chat-menu");
+        const prof = document.getElementById("prof-menu");
+
+        if (prof) prof.style.display = "none";
 
         menu.style.display = "block";
         menu.style.top = e.pageY+"px";
         menu.style.left = e.pageX+"px";
     }
 
+    const openCtxtProf = (e) => {   //우클릭 메뉴
+        e.preventDefault();
+
+        const menu = document.getElementById("chat-menu");
+        const prof = document.getElementById("prof-menu");
+
+        if (menu) menu.style.display = "none";
+
+        prof.style.display = "block";
+        prof.style.top = e.pageY+"px";
+        prof.style.left = e.pageX+"px";
+    }
+
     const closeCtxt = (e) => {
       const menu = document.getElementById("chat-menu");
+      const prof = document.getElementById("prof-menu");
 
       if (menu) menu.style.display = "none";
+      if (prof) prof.style.display = "none";
     }
 
     //다른 곳 클릭 시 메뉴 닫힘
@@ -215,6 +233,22 @@ function Log(){
                 console.log("화자 list 조회 fail: "+error);
             })
     }, [nameModal])
+
+    const setSpeaker = (e) => {
+        e.preventDefault();
+
+        url.put( `/minutes/${mnId}`, {
+            "speaker_seq": spkSeq
+        })
+            .then((response) => {
+                console.log("화자 설정 성공");
+                console.log(response);
+                window.location.reload();
+            })
+            .catch((error) => {
+                console.log("화자 설정 실패: "+error);
+            })
+    }
 
     const changeName = (e, speaker_seq) => { //참가자 이름 변경
         e.preventDefault();
@@ -296,9 +330,14 @@ function Log(){
                                 <div className='display-container'>
                                     <ul className='chatting-list'>
                                         {dialogue.map(dialogue =>
-                                            <li className="chat-other" key={dialogue.vr_id}>
+                                            <li className={dialogue.speaker_seq === minutes.speaker_seq ? "chat-mine" : "chat-other"} key={dialogue.vr_id}>
                                                 {nameList.filter(data => data.speaker_seq===dialogue.speaker_seq).map(data =>
-                                                <span className='chat-profile'>
+                                                <span className='chat-profile' key={data.speaker_seq} onContextMenu={(e)=>{openCtxtProf(e); setSpkSeq(dialogue.speaker_seq)}}>
+                                                    <div id="prof-menu">
+                                                        <ul>
+                                                            <li className="dropdown-item" onClick={setSpeaker}>'나'로 지정하기</li>
+                                                        </ul>
+                                                    </div>
                                                     <span className='chat-user' onClick={() => {setNameModal(true); setSpkSeq(dialogue.speaker_seq)}}>
                                                         <Highlighter
                                                             highlightClassName="YourHighlightClass"
@@ -364,16 +403,6 @@ function Log(){
                                                 </div>
                                             </li>
                                         )}
-
-                                        <li className="chat-mine">
-                                            <span className='chat-profile'>
-                                                <span className='chat-user'>참가자1</span>
-                                                <img src={chatProfile} alt='any' />
-                                            </span>
-                                            <span className='chat-msg'>안녕하십니까</span>
-                                            <span className='chat-time'>03:10</span>
-                                            <img src={happy} alt='any' className='chat-emo'/>
-                                        </li>
                                     </ul>                     
                                 </div>
                             </Element>

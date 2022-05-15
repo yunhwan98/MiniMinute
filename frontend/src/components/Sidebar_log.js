@@ -131,7 +131,8 @@ function Sidebar_log(props) {
             })
             .catch((error) => {
                 console.log(error.response);
-                alert('실패!');
+                setShare(false);
+                alert('\'나\'를 먼저 지정해주세요!');
             });
         
 

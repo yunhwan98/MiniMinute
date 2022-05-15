@@ -1,23 +1,14 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
-import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
-import FormGroup from '@mui/material/FormGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Grid from '@mui/material/Grid';
-import Typography from '@mui/material/Typography';
-import FolderIcon from '@mui/icons-material/Folder';
 import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 import url from '../api/axios';
 import Scroll from 'react-scroll';
-
+import {Modal} from "react-bootstrap";
+import {useState} from "react";
 
 const Demo = styled('div')(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
@@ -26,6 +17,8 @@ const Demo = styled('div')(({ theme }) => ({
 
 export default function InteractiveList({bm_seq, mn_id, bm_name, bm_start, bm_end, bookmarkOperate}) {
     let scroller = Scroll.scroller;
+    const [editModal, setEditModal] = useState(false);
+    const [name, setName] = useState("");
 
     const delBm = (e) => {
         e.preventDefault();
@@ -53,6 +46,23 @@ export default function InteractiveList({bm_seq, mn_id, bm_name, bm_start, bm_en
         })
     }
 
+    const editBm = (e) => {
+        e.preventDefault();
+
+        url.put(`/minutes/${mn_id}/bookmark/${bm_seq}`, {
+            "bm_name": name
+        })
+            .then((response)=>{
+                console.log("bookmark edit success");
+                setEditModal(false);
+                window.location.reload();
+            })
+            .catch((error)=>{
+                console.log("bookmark edit fail: "+error);
+                alert("이름을 입력해주세요!")
+            })
+    }
+
   return (
       <ListItem onClick={()=>bookmarkHandler()}
 
@@ -66,6 +76,24 @@ export default function InteractiveList({bm_seq, mn_id, bm_name, bm_start, bm_en
               primary={bm_name}
               secondary={bm_start + ' - ' + bm_end}
           />
+          <div id="bm-edit" onClick={() => setEditModal(true)}>
+              <EditIcon sx={{color:"#737374"}}/>
+          </div>
+          <Modal show={editModal} onHide={() => setEditModal(false)}>
+              <Modal.Header closeButton>
+                  <Modal.Title>북마크 수정</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                  <h6>북마크 이름</h6>
+                  <input type="text" className="form-control" id="name" onChange={(e) => setName(e.target.value)} />
+              </Modal.Body>
+              <Modal.Footer>
+                  <button type="button" id="btn-color" className="btn-override modal-btn" onClick={editBm} >
+                      저장
+                  </button>
+
+              </Modal.Footer>
+          </Modal>
       </ListItem>
   );
 }
