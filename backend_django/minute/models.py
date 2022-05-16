@@ -53,8 +53,10 @@ class Minutes(models.Model):
         db_column="file_id",
         null=True,
     )
+
     class Meta:
         db_table = 'minutes'
+
 
 class File(models.Model):
     file_id = models.AutoField(
@@ -64,8 +66,10 @@ class File(models.Model):
     file_name = models.CharField(max_length=20)
     file_extension = models.CharField(max_length=5)
     file_path = models.CharField(max_length=512)
+
     class Meta:
         db_table = 'file'
+
 
 class Speaker(models.Model):
     speaker_seq = models.AutoField(

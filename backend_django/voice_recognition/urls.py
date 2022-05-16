@@ -8,4 +8,5 @@ urlpatterns = [
     path('recognition/<int:mn_id>/<int:vr_seq>', views.voice_recognition),
     path('recognition/<int:mn_id>/search', views.voice_recognition_search),
 
+    path('recognition/emotion/<int:mn_id>', views.emotion_recognition),
 ]

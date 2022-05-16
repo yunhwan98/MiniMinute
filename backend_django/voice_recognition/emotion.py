@@ -1,15 +1,14 @@
 # text
 import torch
-from torch.utils.data import Dataset, DataLoader
+from torch.utils.data import Dataset
 import gluonnlp as nlp
-from manage import Dataset, BERTDataset, BERTClassifier
+from manage import BERTDataset
 from kobert.utils import get_tokenizer
 from kobert.pytorch_kobert import get_pytorch_kobert_model
 from voice_recognition.cpu_unpickler import CPU_Unpickler as cu
 
 # audio
 import librosa
-import keras
 import tensorflow as tf
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 import numpy as np
@@ -56,8 +55,8 @@ def text_predict(predict_sentence):
 
 
 def split_wav(data, sample_rate, start, end):
-    start *= sample_rate
-    end *= sample_rate
+#    start *= sample_rate
+#    end *= sample_rate
     return data[start:end]
 
 
@@ -74,27 +73,27 @@ def audio_predict(predict_audio, sr, start, end):
     padded_mfccs = pad_sequences(mfccs, padding='post', maxlen=max_pad_len)
     audio_data = tf.reshape(padded_mfccs, [-1, n_row, n_columns, n_channels])
     result = audio_model.predict(audio_data).tolist()
-    return result
+    return result[0]
 
 
 def multi_modal_predict(text, audio, sr, start, end):
     text_result = text_predict(text)
     audio_result = audio_predict(audio, sr, start, end)
-    np_text_result = []
-    for r in text_result:
-        np_text_result.append(np.array(r))
-    text_result = np_text_result
-    modified_text_result = []
-    for r in text_result:
-        data = []
-        r = r - min(r)
-        if (sum(r) < 10):
-            r += 10 - sum(r)
-        for i in range(0, 4):
-            data.append(r[i] / sum(r))
-        modified_text_result.append(data)
-    text_result = modified_text_result
 
-    result = audio_result + (text_result * 0.5)
+    text_result = np.array(text_result)
+    audio_result = np.array(audio_result)
+
+    text_result -= min(text_result)
+    if (sum(text_result) < 10):
+        text_result += (10 - sum(text_result))
+    for i in range(0, 4):
+        text_result[i] /= sum(text_result)
+
+    audio_result /= sum(audio_result)
+    audio_result *=0.58
+
+    result = []
+    for i in range(0,4):
+        result.append(text_result[i] + audio_result[i])
     label = result.index(max(result))
     return label

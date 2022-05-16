@@ -1,3 +1,5 @@
+import json
+
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
@@ -17,29 +19,30 @@ from ast import literal_eval
 from botocore.config import Config
 import boto3
 
-import argparse
-import io
-import requests
-import json
+import librosa
+import numpy as np
+import scipy.io.wavfile as sciwav
+from io import BytesIO
 
-from voice_recognition import emotion as em
+from voice_recognition import emotion
 
 
 def index(request):
     return HttpResponse("음성인식 테스트")
 
+
 # AWS transcribe 호출
 def transcribe_file(file_nm, user_id, speaker_cnt):
-    bucket='miniminute-bucket'
-    job_name='{}_{}'.format(user_id,file_nm)
+    bucket = 'miniminute-bucket'
+    job_name = '{}_{}'.format(user_id, file_nm)
 
     # Transcribe를 위한 Config 설정
     my_config = Config(
-        region_name = 'ap-northeast-2',
-        signature_version = 'v4',
+        region_name='ap-northeast-2',
+        signature_version='v4',
         retries={
-            'max_attempts':5,
-            'mode':'standard'
+            'max_attempts': 5,
+            'mode': 'standard'
         }
     )
 
@@ -47,7 +50,7 @@ def transcribe_file(file_nm, user_id, speaker_cnt):
     transcribe = boto3.client('transcribe', config=my_config)
 
     # s3에 업로드한 파일 URL
-    job_uri = 'https://s3.ap-northeast-2.amazonaws.com/{}/{}.wav'.format(bucket,job_name)
+    job_uri = 'https://s3.ap-northeast-2.amazonaws.com/{}/{}.wav'.format(bucket, job_name)
     transcribe.start_transcription_job(
         TranscriptionJobName=job_name,
         Media={'MediaFileUri': job_uri},
@@ -78,15 +81,14 @@ def transcribe_file(file_nm, user_id, speaker_cnt):
     # print(json.dumps(literal_eval(results), indent=2))
     return literal_eval(results)
 
+
 # 음성 인식
 @api_view(['GET', 'POST', 'DELETE'])
 @permission_classes((IsAuthenticated,))
 @authentication_classes((JSONWebTokenAuthentication,))
 def voice_recognition_list(request, mn_id):
-
     minute = Minutes.objects.get(mn_id=mn_id)
     file = File.objects.get(file_id=minute.file_id.file_id)
-
 
     if request.method == 'GET':
         voice_recognitions = VoiceRecognition.objects.filter(mn_id=mn_id)
@@ -97,41 +99,43 @@ def voice_recognition_list(request, mn_id):
         results = transcribe_file(file.file_name, request.user.id, request.data.get('speaker_cnt'))
 
         # 화자 생성
-        speaker_dic={}
-        for i in range(0,results['results']['speaker_labels']['speakers']):
-            speaker_data={'speaker_name':'spk_'+str(i),'mn_id':mn_id}
-            speaker_serializer=SpeakerSerializer(data=speaker_data)
+        speaker_dic = {}
+        for i in range(0, results['results']['speaker_labels']['speakers']):
+            speaker_data = {'speaker_name': 'spk_' + str(i), 'mn_id': mn_id}
+            speaker_serializer = SpeakerSerializer(data=speaker_data)
             if speaker_serializer.is_valid():
                 speaker_serializer.save()
-                speaker_dic[i]=speaker_serializer.data['speaker_seq']
+                speaker_dic[i] = speaker_serializer.data['speaker_seq']
 
         # 음성 인식 생성
-        seq=0
-        item_seq=0
-        max_item_len=len(results['results']['items'])
+        seq = 0
+        item_seq = 0
+        max_item_len = len(results['results']['items'])
         for segment in results['results']['speaker_labels']['segments']:
             # vr_text 구하기
             item_len = len(segment['items'])
-            vr_text=[]
-            while (item_len>0):
-                if(results['results']['items'][item_seq]['type']=='punctuation'):
+            vr_text = []
+            while (item_len > 0):
+                if (results['results']['items'][item_seq]['type'] == 'punctuation'):
                     item_len += 1
                 vr_text.append(results['results']['items'][item_seq]['alternatives'][0]['content'])
                 vr_text.append(' ')
                 item_seq += 1
-                item_len -=1
+                item_len -= 1
             if (item_seq < max_item_len and results['results']['items'][item_seq]['type'] == 'punctuation'):
                 vr_text.append(results['results']['items'][item_seq]['alternatives'][0]['content'])
                 item_seq += 1
             vr_text = ''.join(vr_text)
 
-            vr_data = {'vr_seq':seq,'vr_start':segment['start_time'],'vr_end':segment['end_time'],'vr_text':vr_text,'mn_id':mn_id,'speaker_seq':speaker_dic[int(segment['speaker_label'][4:])]}
-            vr_serializer=VoiceRecognitionSerializer(data=vr_data)
+            vr_data = {'vr_seq': seq, 'vr_start': segment['start_time'], 'vr_end': segment['end_time'],
+                       'vr_text': vr_text, 'mn_id': mn_id,
+                       'speaker_seq': speaker_dic[int(segment['speaker_label'][4:])]}
+            vr_serializer = VoiceRecognitionSerializer(data=vr_data)
             if vr_serializer.is_valid():
                 vr_serializer.save()
             else:
                 return JsonResponse(vr_serializer.errors, status=400)
-            seq+=1
+            seq += 1
         return JsonResponse(results)
 
     elif request.method == 'DELETE':
@@ -165,7 +169,8 @@ def voice_recognition(request, mn_id, vr_seq):
 
     elif request.method == 'POST':
         data = JSONParser().parse(request)
-        vr_data = {'mn_id':mn_id,'vr_seq':vr_seq,'vr_start':data.get("vr_start"),'vr_end':data.get("vr_end"),'vr_text':data.get("vr_text"),'speaker_seq':data.get("speaker_seq")}
+        vr_data = {'mn_id': mn_id, 'vr_seq': vr_seq, 'vr_start': data.get("vr_start"), 'vr_end': data.get("vr_end"),
+                   'vr_text': data.get("vr_text"), 'speaker_seq': data.get("speaker_seq")}
         serializer = VoiceRecognitionSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
@@ -174,8 +179,8 @@ def voice_recognition(request, mn_id, vr_seq):
 
     elif request.method == 'PUT':
         data = JSONParser().parse(request)
-        data['mn_id']=mn_id
-        data['vr_seq']=vr_seq
+        data['mn_id'] = mn_id
+        data['vr_seq'] = vr_seq
         if data.get("vr_start") == None:
             data["vr_start"] = obj.vr_start
         if data.get("vr_end") == None:
@@ -194,29 +199,59 @@ def voice_recognition(request, mn_id, vr_seq):
         obj.delete()
         return HttpResponse(status=204)
 
+
 # 음성인식 결과 검색
 @api_view(['GET'])
 @permission_classes((IsAuthenticated,))
 @authentication_classes((JSONWebTokenAuthentication,))
 def voice_recognition_search(request, mn_id):
-    #TO DO mn_id에 해당하는 minutes의 user_id가 로그인된 사용자가 아니면 에러
+    # TO DO mn_id에 해당하는 minutes의 user_id가 로그인된 사용자가 아니면 에러
     keyword = request.GET.get('keyword', None)
     voice_recognition_list = VoiceRecognition.objects.filter(mn_id=mn_id).order_by('vr_seq')
-    if keyword :
+    if keyword:
         voice_recognition_list = voice_recognition_list.filter(
             Q(vr_text__icontains=keyword)
         ).distinct().values()
-        context = {'voice_recognition_list':list(voice_recognition_list), 'keyword':keyword}
+        context = {'voice_recognition_list': list(voice_recognition_list), 'keyword': keyword}
         return JsonResponse(context)
 
-# 감정인식 테스트 (아직 미작동)
-@api_view(['GET'])
+
+# 감정인식 테스트 (수정 필요함, 기본적인 기능 연동 끝)
+@api_view(['POST'])
 @permission_classes((IsAuthenticated,))
 @authentication_classes((JSONWebTokenAuthentication,))
-def test(request):
-    data = JSONParser().parse(request)
-    text = data['text']
-    result = str(em.text_predict(text))
-    result = result.index(max(result))
-    data['emotion']=str(result)
-    return JsonResponse(data)
+def emotion_recognition(request, mn_id):
+    obj = Minutes.objects.get(mn_id=mn_id)
+    file_name = str(obj.file_id.file_name)
+    file_extention = str(obj.file_id.file_extension)
+    file = file_name + "." + file_extention
+    data = VoiceRecognition.objects.filter(mn_id=mn_id)
+    serializer = VoiceRecognitionSerializer(data, many=True)
+
+    count = len(serializer.data)
+
+    s3 = boto3.resource('s3')
+    s3_bucket_name = "miniminute-bucket"
+    object = s3.Object(s3_bucket_name, file)
+    result = object.get()['Body'].read()
+
+    wrapper = BytesIO(result)
+    wav_file = sciwav.read(wrapper)
+
+    audio = wav_file[1].astype(np.float64)
+    sr = wav_file[0]
+
+    data = serializer.data
+
+    for idx in range(0, count):
+        vr_id = data[idx]['vr_id']
+        text = data[idx]['vr_text']
+        start = int(data[idx]['vr_start'])
+        end = int(data[idx]['vr_end'])
+
+        label = emotion.multi_modal_predict(text, audio, sr, start, end)
+
+        item = VoiceRecognition.objects.get(vr_id=vr_id)
+        item.emotion_type = label
+        item.save()
+    return HttpResponse(status=200)

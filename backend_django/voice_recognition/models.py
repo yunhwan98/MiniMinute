@@ -15,7 +15,7 @@ class VoiceRecognition(models.Model):
     vr_start=models.CharField(max_length=14)
     vr_end=models.CharField(max_length=14)
     vr_text=models.CharField(max_length=1000)
-    # emotion_type=models.ForeignKey()
+    emotion_type=models.IntegerField(default=4)
     speaker_seq=models.ForeignKey(
         "minute.Speaker",
         related_name="voice_recognition",
