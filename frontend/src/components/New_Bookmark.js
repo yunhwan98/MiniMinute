@@ -33,8 +33,7 @@ export default function New_Bookmark(props) {
             alert("실패!")
             });       
     }
-    console.log('시작' + props.start);
-    console.log('종료'+props.end);
+
     return (
 
             <Modal show={props.showBm} onHide={() => props.setShowBm(false)}>
