@@ -15,6 +15,8 @@ const Demo = styled('div')(({ theme }) => ({
 }));
 
 
+
+
 export default function InteractiveList({bm_seq, mn_id, bm_name, bm_start, bm_end, bookmarkOperate}) {
     let scroller = Scroll.scroller;
     const [editModal, setEditModal] = useState(false);
@@ -63,6 +65,17 @@ export default function InteractiveList({bm_seq, mn_id, bm_name, bm_start, bm_en
             })
     }
 
+    const changeTime =(time)=>{ //시간형식으로 변환
+        
+        let hour = Math.floor(parseInt(time)/3600);
+        let minute = Math.floor(parseInt(time)%3600/60);
+        let second =  Math.floor(parseInt(time)%60);
+    
+        let result=hour.toString().padStart(2,0) + ':' + minute.toString().padStart(2,0)+ ':' +second.toString().padStart(2,0);
+    
+        return result
+    }
+
   return (
       <ListItem onClick={()=>bookmarkHandler()}
 
@@ -74,7 +87,7 @@ export default function InteractiveList({bm_seq, mn_id, bm_name, bm_start, bm_en
       >
           <ListItemText
               primary={bm_name}
-              secondary={bm_start + ' - ' + bm_end}
+              secondary={changeTime(bm_start) + ' - ' + changeTime(bm_end)}
           />
           <div id="bm-edit" onClick={() => setEditModal(true)}>
               <EditIcon sx={{color:"#737374"}}/>

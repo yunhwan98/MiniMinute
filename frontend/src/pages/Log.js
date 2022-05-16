@@ -43,7 +43,7 @@ function Log(){
     const [search, setSearch] = useState('');   //검색어
 
 
-    const onEditLogHandler =(event) => {
+    const onEditLogHandler =(event) => {//메모 수정
         event.preventDefault();
         url.put(
             `/minutes/${mnId}`,{
@@ -61,7 +61,7 @@ function Log(){
 
     }
 
-    useEffect(() => { // 처음에만 정보 받아옴
+    useEffect(() => { // 회의록 정보 받아오기
         url.get(     
             `/minutes/${mnId}`
             )
@@ -77,7 +77,7 @@ function Log(){
             });       
       }, []);
 
-    useEffect(() => {
+    useEffect(() => {   //북마크 정보 받아오기
         url.get(
             `/minutes/${mnId}/bookmark/lists`)
             .then((response) => {
@@ -90,8 +90,6 @@ function Log(){
     },[showBm])
     
     let bookmarkList =[]; 
-   //let bookmarkList = bookmark.map((bookmark) => (<li key={bookmark.bm_seq}>{bookmark.mn_id}</li>));
-    let keywordList = [];
 
     useEffect(() => {   //파일 불러오기
         url.get(
@@ -99,8 +97,8 @@ function Log(){
             .then((response) => {
                 console.log(response);
                 console.log("파일 조회 성공")
-                setIsUpload(true);
-                setPath("https://storage.cloud.google.com/miniminute_voice_file/testquiz.wav?authuser=1");
+                //setIsUpload(true);
+                //setPath("https://storage.cloud.google.com/miniminute_voice_file/testquiz.wav?authuser=1");
             })
             .catch((error) => {
                 setIsUpload(false);
@@ -108,50 +106,54 @@ function Log(){
             })
     }, [file])
 
-    const onAudioHandler = (e) => {
+    const onAudioHandler = (e) => { //파일 업로드 & 오디오 보이기
         const file = e.target.files[0];
-        let type = file.name.slice(file.name.indexOf('.'), undefined);
+        let name = file.name.slice(0,file.name.indexOf('.'));
+        let type = file.name.slice(file.name.indexOf('.')+1, undefined);
+        console.log(name);
         console.log(type);
         setParticipant(false);
 
         //파일 전송
         // const formData = new FormData();
         // formData.append("file", file);
-        setIsUpload(true);
-        voice_recog();
-        setPath("https://miniminute-bucket.s3.ap-northeast-2.amazonaws.com/1_1_test0510.wav");
+        
+        //setPath("https://miniminute-bucket.s3.ap-northeast-2.amazonaws.com/1_1_test0510.wav");
 
         url.post(`/minutes/${mnId}/file/upload`, {
-            "file_name": "1_1_test0510",
-            "file_extension": "wav",
-            "file_path": "https://miniminute-bucket.s3.ap-northeast-2.amazonaws.com/1_1_test0510.wav"
+            "file_name": name,
+            "file_extension": type,
+            "file_path": "C:\\Users\\yunhwan\\Desktop\\"
         })
             .then((response) => {
                 console.log(response.data);
                 console.log("업로드 성공");
-
+               
+                voice_recog();
             })
             .catch((error) => {
                 console.log("업로드 실패 "+ error);
             });
     }
 
-    const voice_recog = () => {
-        //stt 호출
+
+    
+    const voice_recog = () => {//stt 호출
         console.log("stt 호출");
         url.post(`/voice/recognition/lists/${mnId}`,
-            {"speaker_cnt": pNum})
+            {"speaker_cnt": parseInt(pNum)})
         .then((response) => {
             console.log("stt 성공");
             console.log(response);
+            setIsUpload(true);
         })
         .catch((error) => {
-            console.log("stt 실패 "+ error);
+            console.log("stt 실패 "+ error.response);
         })
     }
 
     useEffect(() => {
-        url.get(
+         url.get(
             `/voice/recognition/lists/${mnId}`)
             .then((response) => {
                 console.log("stt 결과 조회 성공");
@@ -163,10 +165,13 @@ function Log(){
             })
     }, [isUpload, dialModal, nameModal])
   
+
+
+
     const moveAudio = (current) => {//클릭시 시간으로 이동
         //playerInput.current.audio.current.currentTime = 3;    
-        let start = parseInt(current.slice(0,1))*3600 +  parseInt(current.slice(2,4)) * 60 + parseInt(current.slice(5,7)); //
-
+        //let start = parseInt(current.slice(0,1))*3600 +  parseInt(current.slice(2,4)) * 60 + parseInt(current.slice(5,7)); //
+        let start =current;
         playerInput.current.audio.current.currentTime = start;
         playerInput.current.audio.current.play();   //오디오객체에 접근해서 플레이 조작
 
@@ -174,8 +179,10 @@ function Log(){
 
     const bookmarkOperate = (current,current2) => {//클릭시 시간으로 이동
         //playerInput.current.audio.current.currentTime = 3;    
-        let start = parseInt(current.slice(0,1))*3600 +  parseInt(current.slice(2,4)) * 60 + parseInt(current.slice(5,7)); //
-        let end = parseInt(current2.slice(0,1))*3600 +  parseInt(current2.slice(2,4)) * 60 + parseInt(current2.slice(5,7));
+        //let start = parseInt(current.slice(0,1))*3600 +  parseInt(current.slice(2,4)) * 60 + parseInt(current.slice(5,7)); //
+        //let end = parseInt(current2.slice(0,1))*3600 +  parseInt(current2.slice(2,4)) * 60 + parseInt(current2.slice(5,7));
+        let start = current;
+        let end = current2;
         console.log(start);
         console.log(end);
         playerInput.current.audio.current.currentTime = start;
@@ -222,7 +229,7 @@ function Log(){
     //다른 곳 클릭 시 메뉴 닫힘
     document.addEventListener("click", closeCtxt, false);
 
-    useEffect(() => {
+    useEffect(() => {   //화자 불러오기
         url.get(`/minutes/${mnId}/speaker/lists`)
             .then((response) => {
                 console.log("화자 list 조회");
@@ -232,7 +239,7 @@ function Log(){
             .catch((error) => {
                 console.log("화자 list 조회 fail: "+error);
             })
-    }, [nameModal])
+    }, [nameModal,dialogue])
 
     const setSpeaker = (e) => {
         e.preventDefault();
@@ -285,22 +292,16 @@ function Log(){
             })
     }
     
-    const addSpeaker=(e)=>{ //선택한 수만큼 화자 추가
-        let num = parseInt(pNum);
+    const changeTime =(time)=>{ //시간형식으로 변환
+        
+        let hour = Math.floor(parseInt(time)/3600);
+        let minute = Math.floor(parseInt(time)%3600/60);
+        let second =  Math.floor(parseInt(time)%60);
 
-        for(let i=0 ;i<num;i++){
-            console.log(num);
-            url.post(
-                `/minutes/${mnId}/speaker/lists`,{})
-                .then((response) => {
-                    console.log('성공'+response.data);
-                })
-                .catch((error) => {
-                    console.log("실패 "+ error);
-                })
-        }
+        let result=hour.toString().padStart(2,0) + ':' + minute.toString().padStart(2,0)+ ':' +second.toString().padStart(2,0);
+
+        return result
     }
-
 
     return (
         <div>
@@ -364,9 +365,9 @@ function Log(){
                                                             <span style={{fontSize: '2rem'}}>😄</span>
                                                 </span>
                                                 )}
-
-                                                <Element name={dialogue.vr_start.slice(undefined, 7)} className='chat-msg' onClick={()=>moveAudio(dialogue.vr_start.slice(undefined, 7))}
-                                                      onContextMenu={(e)=>{openCtxt(e); setStart(dialogue.vr_start.slice(undefined, 7)); setEnd(dialogue.vr_end.slice(undefined, 7)); setDial(dialogue.vr_text); setVrSeq(dialogue.vr_seq)}}>
+                                      
+                                                <Element name={dialogue.vr_start.split(".")[0]} className='chat-msg' onClick={()=>moveAudio(dialogue.vr_start.split(".")[0])}
+                                                      onContextMenu={(e)=>{openCtxt(e); setStart(dialogue.vr_start.split(".")[0]); setEnd(dialogue.vr_end.split(".")[0]); setDial(dialogue.vr_text); setVrSeq(dialogue.vr_seq)}}>
                                                     <Highlighter
                                                     highlightClassName="YourHighlightClass"
                                                     searchWords={[search]}
@@ -378,7 +379,7 @@ function Log(){
                                                     highlightClassName="YourHighlightClass"
                                                     searchWords={[search]}
                                                     autoEscape={true}
-                                                    textToHighlight={dialogue.vr_start.slice(undefined, 7)}
+                                                    textToHighlight={changeTime(dialogue.vr_start.split(".")[0])}
                                                 /></span>
                                                 <div id="chat-menu">
                                                     <ul>
@@ -445,7 +446,7 @@ function Log(){
                                 <label id="btn-color" className="voice-btn" htmlFor="input-file">파일 업로드</label>
                                 <input type="file" id="input-file" style={{display: "none"}}
                                        accept="audio/*"
-                                       onChange={(e)=>{onAudioHandler(e); addSpeaker(e);}}/>  
+                                       onChange={(e)=>{onAudioHandler(e); /*addSpeaker(e);*/}}/>  
                                 
                             </Modal.Footer>
                         </Modal>
