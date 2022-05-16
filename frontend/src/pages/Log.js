@@ -170,8 +170,8 @@ function Log(){
 
     const moveAudio = (current) => {//클릭시 시간으로 이동
         //playerInput.current.audio.current.currentTime = 3;    
-        let start = parseInt(current.slice(0,1))*3600 +  parseInt(current.slice(2,4)) * 60 + parseInt(current.slice(5,7)); //
-
+        //let start = parseInt(current.slice(0,1))*3600 +  parseInt(current.slice(2,4)) * 60 + parseInt(current.slice(5,7)); //
+        let start =current;
         playerInput.current.audio.current.currentTime = start;
         playerInput.current.audio.current.play();   //오디오객체에 접근해서 플레이 조작
 
@@ -179,8 +179,10 @@ function Log(){
 
     const bookmarkOperate = (current,current2) => {//클릭시 시간으로 이동
         //playerInput.current.audio.current.currentTime = 3;    
-        let start = parseInt(current.slice(0,1))*3600 +  parseInt(current.slice(2,4)) * 60 + parseInt(current.slice(5,7)); //
-        let end = parseInt(current2.slice(0,1))*3600 +  parseInt(current2.slice(2,4)) * 60 + parseInt(current2.slice(5,7));
+        //let start = parseInt(current.slice(0,1))*3600 +  parseInt(current.slice(2,4)) * 60 + parseInt(current.slice(5,7)); //
+        //let end = parseInt(current2.slice(0,1))*3600 +  parseInt(current2.slice(2,4)) * 60 + parseInt(current2.slice(5,7));
+        let start = current;
+        let end = current2;
         console.log(start);
         console.log(end);
         playerInput.current.audio.current.currentTime = start;
@@ -290,7 +292,16 @@ function Log(){
             })
     }
     
+    const changeTime =(time)=>{ //시간형식으로 변환
+        
+        let hour = Math.floor(parseInt(time)/3600);
+        let minute = Math.floor(parseInt(time)%3600/60);
+        let second =  Math.floor(parseInt(time)%60);
 
+        let result=hour.toString().padStart(2,0) + ':' + minute.toString().padStart(2,0)+ ':' +second.toString().padStart(2,0);
+
+        return result
+    }
 
     return (
         <div>
@@ -368,7 +379,7 @@ function Log(){
                                                     highlightClassName="YourHighlightClass"
                                                     searchWords={[search]}
                                                     autoEscape={true}
-                                                    textToHighlight={dialogue.vr_start.split(".")[0]}
+                                                    textToHighlight={changeTime(dialogue.vr_start.split(".")[0])}
                                                 /></span>
                                                 <div id="chat-menu">
                                                     <ul>
