@@ -119,18 +119,19 @@
 | /<int:speaker_seq > | DELETE |{}|                                                  |204 성공<br>401 실패(토큰 인증 실패)| 화자 삭제 |
 
 ### /voice/recognition
-> 음성 인식 관련 주소
+> 음성 인식 & 감정 인식 관련 주소
 
-| Path                            | Method | request                               | response  | code | 설명                            |
+| Path                            | Method | request                               | response  | code | 설명                           |
 |---------------------------------|--------|---------------------------------------|-----------|------|-------------------------------|
-| /lists/<int:mn_id>              | GET    | {}                                    | {__all__} |      | 특정 회의록 음성인식 전체 조회             |
-| /lists/<int:mn_id>              | POST   | {speaker_cnt}<br/>총 화자 수           | {__all__} |      | 음성 인식 생성                      |
-| /lists/<int:mn_id>              | DELETE | {}                                    | { }       |      | 특정 회의록 음성인식 결과 전체 삭제          |
-| /<int:mn_id>/<int:vr_seq>       | GET    | {}                                    |           |      | 특정 문장 조회                      |
-| /<int:mn_id>/<int:vr_seq>       | PUT    | {vr_text/vr_start/<br/>vr_end/speaker_seq} |           |      | 특정 문장 수정 (시간, 텍스트, 화자)        |
-| /<int:mn_id>/<int:vr_seq>       | DELETE | {}                                    |           |      | 특정 문장 삭제                      |
-| /<int:mn_id>/<int:vr_seq>       | POST   | {vr_text,vr_start,<br/>vr_end,speaker_seq} |           |      | 특정 문장 생성 되긴하는데 seq 안맞아서 일단 보류 |
-| /<int:mn_id>/search?keyword=검색어 | GET    | {}                                    | {}        |      | 음성인식 결과 검색                    |
+| /lists/<int:mn_id>              | GET    | {}                                    | {__all__} |      | 특정 회의록 음성인식 전체 조회   |
+| /lists/<int:mn_id>              | POST   | {speaker_cnt}<br/>총 화자 수           | {__all__} |      | 음성 인식 생성                 |
+| /lists/<int:mn_id>              | DELETE | {}                                    | { }       |      | 특정 회의록 음성인식 결과 전체 삭제|
+| /<int:mn_id>/<int:vr_seq>       | GET    | {}                                    |           |      | 특정 문장 조회                 |
+| /<int:mn_id>/<int:vr_seq>       | PUT    | {vr_text/vr_start/<br/>vr_end/speaker_seq}        |      |      | 특정 문장 수정 (시간, 텍스트, 화자)|
+| /<int:mn_id>/<int:vr_seq>       | DELETE | {}                                    |           |      | 특정 문장 삭제                 |
+| /<int:mn_id>/<int:vr_seq>       | POST   | {vr_text,vr_start,<br/>vr_end,speaker_seq} |      |      | 특정 문장 생성 되긴하는데 seq 안맞아서 일단 보류 |
+| /<int:mn_id>/search?keyword=검색어 | GET  | {}                                    | {}        |      | 음성인식 결과 검색             |
+| /emotion/<int:mn_id>            | POST   | {}                                    | {}        | 200 성공 | 감정인식 실행              |
 
 
 ### /keyword
