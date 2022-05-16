@@ -12,7 +12,7 @@ from .serializers import MinutesSerializer, SpeakerSerializer, BookmarkSerialize
 from voice_recognition.serializers import VoiceRecognitionSerializer
 from django.db.models import Q
 from django.forms.models import model_to_dict
-
+from pydub import AudioSegment
 from botocore.config import Config
 import boto3
 
@@ -216,6 +216,19 @@ def file_upload(request, mn_id):
     if request.method == 'POST':
         # 파일 정보 저장
         file_data = JSONParser().parse(request)
+        # AudioSegment.converter  = "D:/tool/ffmpeg-5.0.1-essentials_build/bin/ffmpeg"
+        # convert mp3 to wav
+        if file_data['file_extension']=='mp3' :
+            audSeg = AudioSegment.from_mp3('{}{}.mp3'.format(file_data['file_path'], file_data['file_name']), format='mp3')
+            audSeg.export('{}{}.wav'.format(file_data['file_path'], file_data['file_name']), format='wav')
+            file_data['file_extension']='wav'
+
+        # convert m4a to wav
+        if file_data['file_extension']=='m4a' :
+            audSeg = AudioSegment.from_file('{}{}.m4a'.format(file_data['file_path'], file_data['file_name']), format='m4a')
+            audSeg.export('{}{}.wav'.format(file_data['file_path'], file_data['file_name']), format='wav')
+            file_data['file_extension']='wav'
+
         file_serializer = FileSerializer(data=file_data)
         if file_serializer.is_valid():
             file_serializer.save()
