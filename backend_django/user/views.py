@@ -40,7 +40,8 @@ def user(request):
         return JsonResponse(serializer.data, safe=False)
 
     elif request.method == 'DELETE':
-        os.remove('./profile/' + str(request.user.user_profile))
+        if(str(request.user.user_profile)!="default.jpg"):
+            os.remove('./profile/' + str(request.user.user_profile))
         request.user.delete()
         return HttpResponse(status=204)
 
