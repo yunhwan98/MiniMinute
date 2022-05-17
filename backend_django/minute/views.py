@@ -19,8 +19,10 @@ import boto3
 import string
 import random
 
+
 def index(request):
     return HttpResponse("회의록 테스트")
+
 
 # 사용자별 회의록 전체 조회 (조회, 생성)
 @api_view(['GET', 'POST'])
@@ -41,8 +43,9 @@ def minute_list(request):
             return JsonResponse(serializer.data, status=201)
         return JsonResponse(serializer.errors, status=400)
 
+
 # 사용자별 특정 회의록 정보(조회, 수정, 삭제)
-@api_view(['GET','PUT','DELETE'])
+@api_view(['GET', 'PUT', 'DELETE'])
 @permission_classes((IsAuthenticated,))
 @authentication_classes((JSONWebTokenAuthentication,))
 def minute(request, mn_id):
@@ -69,13 +72,14 @@ def minute(request, mn_id):
         obj.delete()
         return HttpResponse(status=204)
 
+
 # 북마크 목록(조회, 생성)
 @api_view(['GET', 'POST'])
 @permission_classes((IsAuthenticated,))
 @authentication_classes((JSONWebTokenAuthentication,))
 def bookmark_list(request, mn_id):
     if request.method == 'GET':
-        bookmark = Bookmark.objects.filter(mn_id = mn_id)
+        bookmark = Bookmark.objects.filter(mn_id=mn_id)
         serializer = BookmarkSerializer(bookmark, many=True)
         return JsonResponse(serializer.data, safe=False)
 
@@ -88,6 +92,7 @@ def bookmark_list(request, mn_id):
             serializer.save()
             return JsonResponse(serializer.data, status=201)
         return JsonResponse(serializer.errors, status=400)
+
 
 # 북마크 (수정, 삭제)
 @api_view(['GET', 'PUT', 'DELETE'])
@@ -121,13 +126,14 @@ def bookmark(request, mn_id, bm_seq):
         obj.delete()
         return HttpResponse(status=204)
 
+
 # 화자 목록 조회, 추가
 @api_view(['GET', 'POST'])
 @permission_classes((IsAuthenticated,))
 @authentication_classes((JSONWebTokenAuthentication,))
 def speaker_list(request, mn_id):
     if request.method == 'GET':
-        speaker = Speaker.objects.filter(mn_id = mn_id)
+        speaker = Speaker.objects.filter(mn_id=mn_id)
         serializer = SpeakerSerializer(speaker, many=True)
         return JsonResponse(serializer.data, safe=False)
 
@@ -139,6 +145,7 @@ def speaker_list(request, mn_id):
             serializer.save()
             return JsonResponse(serializer.data, status=201)
         return JsonResponse(serializer.errors, status=400)
+
 
 # 화자 (조회, 수정, 삭제)
 @api_view(['GET', 'PUT', 'DELETE'])
@@ -165,6 +172,7 @@ def speaker(request, mn_id, speaker_seq):
         obj.delete()
         return HttpResponse(status=204)
 
+
 # 파일 전체 목록 조회
 # 관리자 계정만 가능
 @api_view(['GET'])
@@ -176,6 +184,7 @@ def file_list(request):
         serializer = FileSerializer(query_set, many=True)
         return JsonResponse(serializer.data, safe=False)
     return HttpResponse("관리자가 아닙니다.", status=400)
+
 
 # 파일 (조회, 수정, 삭제)
 @api_view(['GET', 'PUT', 'DELETE'])
@@ -207,6 +216,7 @@ def file(request, file_id):
         obj.delete()
         return HttpResponse(status=204)
 
+
 # 파일 업로드
 @api_view(['POST'])
 @permission_classes((IsAuthenticated,))
@@ -218,16 +228,18 @@ def file_upload(request, mn_id):
         file_data = JSONParser().parse(request)
         # AudioSegment.converter  = "D:/tool/ffmpeg-5.0.1-essentials_build/bin/ffmpeg"
         # convert mp3 to wav
-        if file_data['file_extension']=='mp3' :
-            audSeg = AudioSegment.from_mp3('{}{}.mp3'.format(file_data['file_path'], file_data['file_name']), format='mp3')
+        if file_data['file_extension'] == 'mp3':
+            audSeg = AudioSegment.from_mp3('{}{}.mp3'.format(file_data['file_path'], file_data['file_name']),
+                                           format='mp3')
             audSeg.export('{}{}.wav'.format(file_data['file_path'], file_data['file_name']), format='wav')
-            file_data['file_extension']='wav'
+            file_data['file_extension'] = 'wav'
 
         # convert m4a to wav
-        if file_data['file_extension']=='m4a' :
-            audSeg = AudioSegment.from_file('{}{}.m4a'.format(file_data['file_path'], file_data['file_name']), format='m4a')
+        if file_data['file_extension'] == 'm4a':
+            audSeg = AudioSegment.from_file('{}{}.m4a'.format(file_data['file_path'], file_data['file_name']),
+                                            format='m4a')
             audSeg.export('{}{}.wav'.format(file_data['file_path'], file_data['file_name']), format='wav')
-            file_data['file_extension']='wav'
+            file_data['file_extension'] = 'wav'
 
         file_serializer = FileSerializer(data=file_data)
         if file_serializer.is_valid():
@@ -236,16 +248,20 @@ def file_upload(request, mn_id):
             minutes.file_id = File.objects.get(file_id=file_serializer.data.get("file_id"))
             minutes.save()
             # 버킷에 업로드
-            try :
-                audio = open('{}{}.{}'.format(file_data.get('file_path'), file_data.get('file_name'), file_data.get('file_extension')),'rb')
+            try:
+                audio = open('{}{}.{}'.format(file_data.get('file_path'), file_data.get('file_name'),
+                                              file_data.get('file_extension')), 'rb')
             except FileNotFoundError:
                 return HttpResponse('FileNotFoundError')
-            else :
+            else:
                 s3 = boto3.resource('s3')
-                s3.Bucket('miniminute-bucket').put_object(Key='{}_{}.{}'.format(request.user.id,file_data.get('file_name'),file_data.get('file_extension')), Body=audio)
-                data = {'file':file_serializer.data,'minutes':model_to_dict(minutes)}
+                s3.Bucket('miniminute-bucket').put_object(
+                    Key='{}_{}.{}'.format(request.user.id, file_data.get('file_name'), file_data.get('file_extension')),
+                    Body=audio)
+                data = {'file': file_serializer.data, 'minutes': model_to_dict(minutes)}
                 return JsonResponse(data, status=201)
         return JsonResponse(file_serializer.errors, status=400)
+
 
 # 회의록 검색
 @api_view(['GET'])
@@ -254,15 +270,16 @@ def file_upload(request, mn_id):
 def minute_search(request):
     keyword = request.GET.get('keyword', None)
     minute_list = Minutes.objects.filter(user_id=request.user.id).order_by('-mn_make_date')
-    if keyword :
+    if keyword:
         minute_list = minute_list.filter(
             Q(mn_title__icontains=keyword) |
             Q(mn_date__icontains=keyword) |
             Q(mn_place__icontains=keyword) |
             Q(mn_memo__icontains=keyword)
         ).distinct().values()
-        context = {'minute_list':list(minute_list), 'keyword':keyword}
+        context = {'minute_list': list(minute_list), 'keyword': keyword}
         return JsonResponse(context)
+
 
 # 회의록 공유 코드 생성
 @api_view(['POST'])
@@ -275,16 +292,16 @@ def minute_share_link(request):
         print(share_str)
 
         data = {
-            'mn_id':minutes.mn_id,
-            'user_id':request.user.id,
-            'dr_id':minutes.dr_id.dr_id,
-            'mn_title':minutes.mn_title,
-            'mn_date':minutes.mn_date,
-            'mn_place':minutes.mn_place,
-            'mn_explanation':minutes.mn_explanation,
-            'mn_memo':minutes.mn_memo,
-            'mn_share_link':share_str,
-            'speaker_seq':minutes.speaker_seq.speaker_seq
+            'mn_id': minutes.mn_id,
+            'user_id': request.user.id,
+            'dr_id': minutes.dr_id.dr_id,
+            'mn_title': minutes.mn_title,
+            'mn_date': minutes.mn_date,
+            'mn_place': minutes.mn_place,
+            'mn_explanation': minutes.mn_explanation,
+            'mn_memo': minutes.mn_memo,
+            'mn_share_link': share_str,
+            'speaker_seq': minutes.speaker_seq.speaker_seq
         }
 
         serializer = MinutesSerializer(minutes, data=data)
@@ -293,12 +310,13 @@ def minute_share_link(request):
             return JsonResponse(data, status=201)
         return JsonResponse(serializer.errors, status=400)
 
+
 # 공유 코드로 회의록 생성
 @api_view(['GET', 'POST'])
 @permission_classes((IsAuthenticated,))
 @authentication_classes((JSONWebTokenAuthentication,))
 def create_minute_with_share_link(request, mn_share_link):
-    #회의록 정보 불러오기 > 화자 선택하기 > 회의록 생성
+    # 회의록 정보 불러오기 > 화자 선택하기 > 회의록 생성
     minutes = Minutes.objects.get(mn_share_link=mn_share_link)
     speaker = Speaker.objects.filter(mn_id=minutes.mn_id)
     file = File.objects.get(file_id=minutes.file_id.file_id)
@@ -322,23 +340,24 @@ def create_minute_with_share_link(request, mn_share_link):
         minutes.save()
 
         # 화자 생성
-        speaker_dic={}
+        speaker_dic = {}
         old_speaker_seq = 0
         for obj in speaker:
             old_speaker_seq = obj.speaker_seq
-            obj.speaker_seq=None
-            obj.mn_id=minutes
+            obj.speaker_seq = None
+            obj.mn_id = minutes
             obj.save()
-            speaker_dic[old_speaker_seq]=obj
+            speaker_dic[old_speaker_seq] = obj
         minutes.speaker_seq = speaker_dic[request.data['speaker_seq']]
         minutes.save()
 
         # vr 복사
-        voice_recognition = VoiceRecognition.objects.filter(mn_id=Minutes.objects.get(mn_share_link=mn_share_link).mn_id)
+        voice_recognition = VoiceRecognition.objects.filter(
+            mn_id=Minutes.objects.get(mn_share_link=mn_share_link).mn_id)
         for vr in voice_recognition:
-            vr.vr_id=None
-            vr.mn_id=minutes
-            vr.speaker_seq=speaker_dic[vr.speaker_seq.speaker_seq]
+            vr.vr_id = None
+            vr.mn_id = minutes
+            vr.speaker_seq = speaker_dic[vr.speaker_seq.speaker_seq]
             vr.save()
 
         # s3 작업
@@ -348,28 +367,38 @@ def create_minute_with_share_link(request, mn_share_link):
             'Bucket': bucket,
             'Key': file_key
         }
-        s3.meta.client.copy(copy_source, bucket, '{}_{}.{}'.format(request.user.id, file.file_name, file.file_extension))
+        s3.meta.client.copy(copy_source, bucket,
+                            '{}_{}.{}'.format(request.user.id, file.file_name, file.file_extension))
 
         minutes_serializer = MinutesSerializer(minutes)
-        file_serializer=FileSerializer(file)
-        speaker_serializer = SpeakerSerializer(speaker,many=True)
-        vr_serializer=VoiceRecognitionSerializer(voice_recognition,many=True)
-        response={'minutes':minutes_serializer.data,'file':file_serializer.data,'speaker':speaker_serializer.data,'voice_recognition':vr_serializer.data}
+        file_serializer = FileSerializer(file)
+        speaker_serializer = SpeakerSerializer(speaker, many=True)
+        vr_serializer = VoiceRecognitionSerializer(voice_recognition, many=True)
+        response = {'minutes': minutes_serializer.data, 'file': file_serializer.data,
+                    'speaker': speaker_serializer.data, 'voice_recognition': vr_serializer.data}
         return JsonResponse(response, status=201)
 
-#음성인식 후 화자 선택
+
+# 음성인식 후 화자 선택
 @api_view(['GET', 'POST'])
 @permission_classes((IsAuthenticated,))
 @authentication_classes((JSONWebTokenAuthentication,))
 def choice_speaker(request, mn_id):
     minutes = Minutes.objects.get(mn_id=mn_id)
-    if request.method=='GET':
+    if request.method == 'GET':
         speakers = Speaker.objects.filter(mn_id=mn_id)
         serializer = SpeakerSerializer(speakers, many=True)
         return JsonResponse(serializer.data, safe=False)
-    elif request.method=='POST':
+    elif request.method == 'POST':
         speaker = Speaker.objects.get(mn_id=mn_id, speaker_seq=request.data['speaker_seq'])
-        minutes.speaker_seq=speaker
+        minutes.speaker_seq = speaker
         minutes.save()
-        return JsonResponse({'minutes':model_to_dict(minutes)}, status=201)
+        return JsonResponse({'minutes': model_to_dict(minutes)}, status=201)
 
+
+# 피드백 페이지별로 모아서 조회
+@api_view(['GET', 'POST'])
+@permission_classes((IsAuthenticated,))
+@authentication_classes((JSONWebTokenAuthentication,))
+def feedback(request, page):
+    return None

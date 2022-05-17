@@ -1,13 +1,16 @@
 from django.db import models
 
+from minute.models import Minutes
+
+
 class Keyword(models.Model):
-    mn_id = models.OneToOneField(
+    kw_id = models.AutoField(primary_key=True)
+    mn_id = models.ForeignKey(
         "minute.Minutes",
         related_name="keywords",
         on_delete=models.CASCADE,
         db_column="mn_id",
-        primary_key=True,
-        default=""
+        unique=True,
     )
     keyword1 = models.CharField(
         verbose_name="minute's keyword1",

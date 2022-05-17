@@ -24,6 +24,8 @@ from django.conf import settings
 
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
+import backend_django
+
 urlpatterns = [
 
     path('admin/', admin.site.urls),
@@ -46,8 +48,6 @@ urlpatterns = [
     # 문서 요약 관련
     path('keyword/', include('text_keyword.urls')),
     path('summary/', include('summary.urls')),
-
-    # 감정 인식 & 피드백 관련
 
     # 토큰(발급, 인증, 갱신)
     path('api/token', obtain_jwt_token),
