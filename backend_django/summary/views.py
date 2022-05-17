@@ -65,7 +65,7 @@ def set_summary(mn_id):
 
     text=""
     for t in summaries:
-        text = text + " " + t
+        text = text + " " + t + "."
     text.strip()
 
     sm_data = {'mn_id':mn_id, 'summary':text}

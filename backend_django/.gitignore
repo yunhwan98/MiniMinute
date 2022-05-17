@@ -168,3 +168,7 @@ cython_debug/
 /minute/migrations/
 /audio_model.h5
 /text_model.pickle
+/summary/migrations/
+/text_keyword/migrations/
+/user/migrations/
+/voice_recognition/migrations/

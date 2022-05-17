@@ -1,23 +1,27 @@
-from django.shortcuts import render
+import json
+import random
+import string
+from collections import OrderedDict
+
+import boto3
+from django.db.models import Q
+from django.forms.models import model_to_dict
 from django.http import HttpResponse, JsonResponse
+from pydub import AudioSegment
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from rest_framework.parsers import JSONParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
-from .models import Minutes, Speaker, Bookmark, File
+from summary.models import Summary
+from summary.serializers import SummarySerializer
+from text_keyword.models import Keyword
+from text_keyword.serializers import KeywordSerializer
 from user.models import Directory
 from voice_recognition.models import VoiceRecognition
-from .serializers import MinutesSerializer, SpeakerSerializer, BookmarkSerializer, FileSerializer
 from voice_recognition.serializers import VoiceRecognitionSerializer
-from django.db.models import Q
-from django.forms.models import model_to_dict
-from pydub import AudioSegment
-from botocore.config import Config
-import boto3
-
-import string
-import random
+from .models import Minutes, Speaker, Bookmark, File
+from .serializers import MinutesSerializer, SpeakerSerializer, BookmarkSerializer, FileSerializer
 
 
 def index(request):
@@ -396,9 +400,17 @@ def choice_speaker(request, mn_id):
         return JsonResponse({'minutes': model_to_dict(minutes)}, status=201)
 
 
-# 피드백 페이지별로 모아서 조회
-@api_view(['GET', 'POST'])
+# 회의 결과 모아서 조회
+@api_view(['GET'])
 @permission_classes((IsAuthenticated,))
 @authentication_classes((JSONWebTokenAuthentication,))
-def feedback(request, page):
-    return None
+def result(request, mn_id):
+    obj = Keyword.objects.get(mn_id=mn_id)
+    kw = KeywordSerializer(obj).data
+    obj = Summary.objects.get(mn_id=mn_id)
+    sm = SummarySerializer(obj).data
+
+    fb = OrderedDict()
+    fb['keyword'] = {'keyword1': kw['keyword1'], 'keyword2': kw['keyword2'], 'keyword3': kw['keyword3']}
+    fb['summary'] = sm['summary']
+    return JsonResponse({'result': fb}, status=200)
