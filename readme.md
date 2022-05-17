@@ -95,6 +95,7 @@
 | /create/with/share/<br>link/<str:mn_share_link>         | GET    | {}                                                                                                  | {}       |      | 공유 링크로 회의록 화자 조회   |
 | /create/with/share/<br>link/<str:mn_share_link> | POST   | {dr_id,speaker_seq}                                                                                            | {}       |      | 화자 선택 후 회의록 복사     |
 | /search?keyword=검색어                                     | GET    | {}                                                                                                  | {}       |      | 내 회의록 제목,메모 등으로 검색 |
+| /result/< int:mn_id >                                     | GET    | {}                                                                                                  | {keyword, summary, feedback}   | 200 성공      | 회의 결과(키워드, 요약문, 피드백) 조회 |
 
 
 ### /minutes/<int:mn_id >/bookmark
@@ -141,6 +142,7 @@
 | Path                | Method | request                  | response                                         |code| 설명  |
 |---------------------|--------|--------------------------|--------------------------------------------------|----|-----|
 |/<int:mn_id >|GET|{}|{mn_id,keyword1,<br>keyword2,keyword3}|200 성공<br>401 실패(토큰 인증 실패)|회의 키워드 조회|
+|/<int:mn_id >|POST|{}|{{mn_id,keyword1,<br>keyword2,keyword3}}|201 성공<br>401 실패(토큰 인증 실패)|회의 키워드 갱신|
 
 ### /summary
 > 회의 요약문 관련 주소
@@ -148,3 +150,4 @@
 | Path                | Method | request                  | response                                         |code| 설명  |
 |---------------------|--------|--------------------------|--------------------------------------------------|----|-----|
 |/<int:mn_id >|GET|{}|{mn_id,summary}|200 성공<br>401 실패(토큰 인증 실패)| 회의 요약문 조회|
+|/<int:mn_id >|POST|{}|{mn_id,summary}|201 성공<br>401 실패(토큰 인증 실패)| 회의 요약문 |
