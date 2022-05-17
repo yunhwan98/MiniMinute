@@ -8,8 +8,49 @@ import NotFound from "./NotFound";
 import {alignPropType} from "react-bootstrap/types";
 import button from "bootstrap/js/src/button";
 import url from '../api/axios';
+import ApexChart from 'react-apexcharts'
 
 const Home = () => {
+
+    const series = [{
+        name: "공격&혐오 발언",
+        data: [10, 41, 35, 51, 49]
+      },
+      {
+        name: "발화 속도",
+        data: [1, 4, 15, 41, 69]
+      }];
+
+    const options= {
+        chart: {
+          height: 350,
+          type: 'line',
+          zoom: {
+            enabled: false
+          }
+        },
+        dataLabels: {
+          enabled: false
+        },
+        stroke: {
+          curve: 'straight'
+        },
+        title: {
+          text: '',
+          align: 'left'
+        },
+        grid: {
+          row: {
+            colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
+            opacity: 0.5
+          },
+        },
+        xaxis: {
+          categories: ['05-13', '05-14', '05-15', '05-16', '05-17'],
+        }
+      }
+    
+
     const [home,setHome]= useState(''); // 홈 디렉토리 번호 설정
     const navigate = useNavigate();
     const [isAuthenticated, setisAuthenticated] = useState(localStorage.getItem('token') ? true : false);   //인증여부 확인
@@ -68,7 +109,23 @@ const Home = () => {
             <div className="main">
                 <Sidebar />
                 <div className="article">
+                <div style={{marginBottom: '4em'}}>
+                            <div style={{display:"flex" ,alignItems: 'center'}}>
+                                    {/* <img src={emo_img} style={{width: '3.0rem'}}/> */}
+                                    <span style={{fontSize:'2.5em' ,margin:'1rem',fontWeight:'bold'}}>📊 회의태도 변화</span>
+                            </div>
+                            <div className='Speech-result' style={{ margin:'0px', display:"flex" ,alignItems: 'center'}}>
+                                    <ApexChart options={options} series={series} type="line"  height={500} width={800} />
+                                <div className='speech-analyse'>
+                                        <li>"<b>공격, 혐오발언</b>"이 증가하는 추세입니다.</li>
+                                        <li>"<b>발화 속도</b>"가 증가하는 추세입니다.</li>
+                                        <li style={{color: 'red'}}>"<b>공격, 혐오발언</b>","<b>발화 속도</b>"에 주의해주세요</li>                               
+                                    </div>                                 
+                            </div>
+                            
+                        </div>
                     <div className="log-list fade-in">
+                        
                         <div className="default">
                             <div className="directory-name">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"

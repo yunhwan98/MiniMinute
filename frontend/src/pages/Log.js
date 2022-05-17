@@ -9,7 +9,6 @@ import 'react-h5-audio-player/lib/styles.css';
 import url from '../api/axios';
 import {Modal, Nav} from "react-bootstrap";
 import chatProfile from '../images/profile.png';
-import happy from '../images/happy.png';
 import Add_bm from '../images/Add_bm2.png';
 import { createRoot } from "react-dom/client";
 import Highlighter from "react-highlight-words";
@@ -41,7 +40,7 @@ function Log(){
     const [vrSeq, setVrSeq] = useState("");
     const playerInput = useRef();
     const [search, setSearch] = useState('');   //검색어
-
+    const [Seq,setSeq] = useState();
 
     const onEditLogHandler =(event) => {//메모 수정
         event.preventDefault();
@@ -97,7 +96,7 @@ function Log(){
             .then((response) => {
                 console.log(response);
                 console.log("파일 조회 성공")
-                //setIsUpload(true);
+                setIsUpload(true);
                 //setPath("https://storage.cloud.google.com/miniminute_voice_file/testquiz.wav?authuser=1");
             })
             .catch((error) => {
@@ -114,6 +113,12 @@ function Log(){
         console.log(type);
         setParticipant(false);
 
+       
+        const reader = new FileReader();
+        reader.readAsDataURL(e.target.files[0]);
+        reader.onloadend = () => {
+            setPath(reader.result);
+        }
         //파일 전송
         // const formData = new FormData();
         // formData.append("file", file);
@@ -339,7 +344,7 @@ function Log(){
                                                             <li className="dropdown-item" onClick={setSpeaker}>'나'로 지정하기</li>
                                                         </ul>
                                                     </div>
-                                                    <span className='chat-user' onClick={() => {setNameModal(true); setSpkSeq(dialogue.speaker_seq)}}>
+                                                    <span className='chat-user' onClick={() => {setNameModal(dialogue.vr_id); setSpkSeq(dialogue.speaker_seq);}}>
                                                         <Highlighter
                                                             highlightClassName="YourHighlightClass"
                                                             searchWords={[search]}
@@ -347,7 +352,7 @@ function Log(){
                                                             textToHighlight={data.speaker_name ? data.speaker_name : "참가자"+data.speaker_seq}
                                                         />
                                                     </span>
-                                                    <Modal show={nameModal} onHide={() => setNameModal(false)}>
+                                                    <Modal show={nameModal===dialogue.vr_id} onHide={() => setNameModal()}>
                                                         <Modal.Header closeButton>
                                                             <Modal.Title>참가자 이름 변경</Modal.Title>
                                                         </Modal.Header>
@@ -383,10 +388,10 @@ function Log(){
                                                 /></span>
                                                 <div id="chat-menu">
                                                     <ul>
-                                                        <li className="dropdown-item" onClick={()=>setShowBm(true)}>북마크</li>
-                                                        <NewBm showBm={showBm} setShowBm ={setShowBm} mn_id={mnId} start={start} end={end}/>
-                                                        <li className="dropdown-item" onClick={() => setDialModal(true)}>대화 수정</li>
-                                                        <Modal show={dialModal} onHide={() => setDialModal(false)}>
+                                                        <li className="dropdown-item" onClick={()=>setShowBm(dialogue.vr_id)}>북마크</li>
+                                                        <NewBm showBm={showBm===dialogue.vr_id} setShowBm ={setShowBm} mn_id={mnId} start={start} end={end}/>
+                                                        <li className="dropdown-item" onClick={() => setDialModal(dialogue.vr_id)}>대화 수정</li>
+                                                        <Modal show={dialModal===dialogue.vr_id} onHide={() => setDialModal()}>
                                                         <Modal.Header closeButton>
                                                             <Modal.Title>대화 수정</Modal.Title>
                                                         </Modal.Header>
@@ -446,7 +451,7 @@ function Log(){
                                 <label id="btn-color" className="voice-btn" htmlFor="input-file">파일 업로드</label>
                                 <input type="file" id="input-file" style={{display: "none"}}
                                        accept="audio/*"
-                                       onChange={(e)=>{onAudioHandler(e); /*addSpeaker(e);*/}}/>  
+                                       onChange={(e)=>{onAudioHandler(e); }}/>  
                                 
                             </Modal.Footer>
                         </Modal>
@@ -467,3 +472,5 @@ function Log(){
 }
 
 export default Log;
+
+
