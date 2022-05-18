@@ -189,7 +189,7 @@ function Emotion (){
                                     </div>
                                 </div>
 
-                                <div>
+                                <div style={{marginLeft: "2.5em"}}>
                                     <h5>내 감정 현황</h5>
                                     <div className="chart">
                                         <PieChart
