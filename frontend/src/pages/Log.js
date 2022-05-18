@@ -41,6 +41,13 @@ function Log(){
     const playerInput = useRef();
     const [search, setSearch] = useState('');   //검색어
     const [Seq,setSeq] = useState();
+    const [dial2, setDial2] = useState([]);
+    const emotion = [
+        {id: 0, title: '😡'},
+        {id: 1, title: '😢'},
+        {id: 2, title: '😶'},
+        {id: 3, title: '😄'}
+    ]
 
     const onEditLogHandler =(event) => {//메모 수정
         event.preventDefault();
@@ -140,8 +147,6 @@ function Log(){
                 console.log("업로드 실패 "+ error);
             });
     }
-
-
     
     const voice_recog = () => {//stt 호출
         console.log("stt 호출");
@@ -164,14 +169,32 @@ function Log(){
                 console.log("stt 결과 조회 성공");
                 console.log(response.data);
                 setDialogue(response.data);
+                setDial2(response.data);
+                getSummary();
             })
             .catch((error) => {
                 console.log("stt 조회 실패 "+ error);
             })
     }, [isUpload, dialModal, nameModal])
-  
 
+    //키워드, 요약 생성
+    const getSummary = () => {
+        url.post(`/summary/${mnId}`)
+            .then((response)=> {
+                console.log("요약문 생성");
+            })
+            .catch((error)=>{
+                console.log("요약문 생성 실패: "+error);
+            })
 
+        url.post(`/keyword/${mnId}`)
+            .then((response)=> {
+                console.log("키워드 생성");
+            })
+            .catch((error)=>{
+                console.log("키워드 생성 실패: "+error);
+            })
+    }
 
     const moveAudio = (current) => {//클릭시 시간으로 이동
         //playerInput.current.audio.current.currentTime = 3;    
@@ -240,6 +263,7 @@ function Log(){
                 console.log("화자 list 조회");
                 console.log(response.data);
                 setNameList(response.data);
+                getEmotion();
             })
             .catch((error) => {
                 console.log("화자 list 조회 fail: "+error);
@@ -308,6 +332,32 @@ function Log(){
         return result
     }
 
+    const getEmotion = () => {
+        url.post(`/voice/recognition/emotion/${mnId}`)
+            .then((response) => {
+                console.log("감정인식 성공");
+                console.log(response);
+            })
+            .catch((error) => {
+                console.log("감정인식 실패: "+error);
+            })
+    }
+
+    const emotionFilter = (e, emo) => {
+        if (emo === "all") {
+            setDial2(dialogue.filter(dialogue => dialogue));
+        }
+        else if (emo === "happy") {
+            setDial2(dialogue.filter(dialogue => dialogue.emotion_type === 3));
+        }
+        else if (emo === "sad") {
+            setDial2(dialogue.filter(dialogue => dialogue.emotion_type === 1));
+        }
+        else if (emo === "anger") {
+            setDial2(dialogue.filter(dialogue => dialogue.emotion_type === 0));
+        }
+    }
+
     return (
         <div>
             <Header_log setSearch={setSearch}/>
@@ -319,25 +369,25 @@ function Log(){
                             <h5>회의 전문</h5>
                             <Nav justify id="nav-log" variant="tabs" defaultActiveKey="/home">
                                 <Nav.Item>
-                                    <Nav.Link id="nav-link" eventKey="link-1">전체</Nav.Link>
+                                    <Nav.Link id="nav-link" eventKey="link-1" onClick={(e)=>emotionFilter(e, "all")}>전체</Nav.Link>
                                 </Nav.Item>
                                 <Nav.Item>
-                                    <Nav.Link id="nav-link" eventKey="link-2">행복</Nav.Link>
+                                    <Nav.Link id="nav-link" eventKey="link-2" onClick={(e)=>emotionFilter(e, "happy")}>행복</Nav.Link>
                                 </Nav.Item>
                                 <Nav.Item>
-                                    <Nav.Link id="nav-link" eventKey="link-3">슬픔</Nav.Link>
+                                    <Nav.Link id="nav-link" eventKey="link-3" onClick={(e)=>emotionFilter(e, "sad")}>슬픔</Nav.Link>
                                 </Nav.Item>
                                 <Nav.Item>
-                                    <Nav.Link id="nav-link" eventKey="link-4">분노</Nav.Link>
+                                    <Nav.Link id="nav-link" eventKey="link-4" onClick={(e)=>emotionFilter(e, "anger")}>분노</Nav.Link>
                                 </Nav.Item>
                             </Nav>
                             <div className="dialogue"/*채팅 대화 구현*/>
                             <Element className='chat-wrapper' id="chat">
                                 <div className='display-container'>
                                     <ul className='chatting-list'>
-                                        {dialogue.map(dialogue =>
+                                        {dial2.map(dialogue =>
                                             <li className={dialogue.speaker_seq === minutes.speaker_seq ? "chat-mine" : "chat-other"} key={dialogue.vr_id}>
-                                                {nameList.filter(data => data.speaker_seq===dialogue.speaker_seq).map(data =>
+                                                {nameList && nameList.filter(data => data.speaker_seq===dialogue.speaker_seq).map(data =>
                                                 <span className='chat-profile' key={data.speaker_seq} onContextMenu={(e)=>{openCtxtProf(e); setSpkSeq(dialogue.speaker_seq)}}>
                                                     <div id="prof-menu">
                                                         <ul>
@@ -367,7 +417,7 @@ function Log(){
                                                         </Modal.Footer>
                                                     </Modal>
                                                             {/* <img src={chatProfile} alt='any' /> */}
-                                                            <span style={{fontSize: '2rem'}}>😄</span>
+                                                            <span style={{fontSize: '2rem'}}>{emotion[dialogue.emotion_type].title}</span>
                                                 </span>
                                                 )}
                                       
