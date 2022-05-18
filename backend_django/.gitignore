@@ -172,3 +172,4 @@ cython_debug/
 /text_keyword/migrations/
 /user/migrations/
 /voice_recognition/migrations/
+/feedback/migrations/

@@ -1,6 +1,6 @@
 from django.http import JsonResponse
 
-# 회의록 감정분석 결과 조회, 갱신
+# 회의록 감정분석 결과 갱신
 from feedback.models import Feedback
 from feedback.serializers import FeedbackSerializer
 from voice_recognition.models import VoiceRecognition

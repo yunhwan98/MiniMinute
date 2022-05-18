@@ -421,7 +421,9 @@ def result(request, mn_id):
     serializer = VoiceRecognitionSerializer(obj, many=True)
     data = serializer.data
 
-    # 감정분포
+    fb['one_line_review'] = "OO님의 이번 회의 스타일은 #행복형 #일반적 대화 #매우 빠름 입니다"
+
+    # 감정분포(수정중)
     for i in range(0, len(data)):
         total_emotion_count[data[i]['emotion_type']] += 1.0
 
@@ -435,9 +437,35 @@ def result(request, mn_id):
                            'happiness': total_emotion_count[3] / len(data)}}]
 
     # 공격발언(수정중)
-    fb['hate_speech_rate'] = {'hate_rate': 0.0, 'offensive_rate': 0.0, 'general_rate': 0.0, 'text': '텍스트 추가예정'}
+    hate_rate = 30
+    offensive_rate = 30
+    total_hate_speech_rate = hate_rate + offensive_rate
+    text = "분노 감정에서의 공격&차별 발언 비율이 " + str(total_hate_speech_rate)
+    if total_hate_speech_rate >= 50:
+        text = text + "%로 매우 높은 편이에요."\
+                      "\n화난 감정을 적절하게 다루기 위한 노력이 필요해보입니다!" \
+                      "\n회의중 감정이 격해졌다면 잠시 쉬어가는 것은 어떨까요?" \
+                      "\n최근 화가 자주 난다면, 회의가 끝난 후 스스로 왜 화가 났는지에 대해 생각해보는 것도 좋은 방법입니다."
+    elif total_hate_speech_rate >= 20:
+        text = text + "%로 높은 편이에요."
+    else:
+        text = text + "%예요."
+
+    fb['hate_speech_rate'] = {'hate_rate': 0.0, 'offensive_rate': 0.0, 'general_rate': 0.0, 'text': text}
 
     # 말 빠르기(수정중)
-    fb['speech'] = {'text':'텍스트 추가예정'}
+    speech_rate = 350
+    rate = 1.32
+    text = "OO님의 분당 음절 수는 약 "+str(speech_rate)+"음절/분 으로 정상 성인 평균 265음절/분 대비 약 " + str(rate) + "배입니다." \
+                                                                                              "전반적으로 "
+    if(rate >= 1.3):
+        text = text + "빠른 편이에요." \
+                      "\n다음에는 조금만 천천히 말해보는 건 어떨까요?"
+    elif(rate >0.7):
+        text = text + "평균 속도예요."
+    else:
+        text = text + "느린 편이에요." \
+                      "\n원활한 대화를 위해 좀 더 빠르게 말하는 연습을 해보는 건 어떨까요?"
+    fb['speech'] = {'text': text}
 
     return JsonResponse({'result': fb}, status=200)
