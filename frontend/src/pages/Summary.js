@@ -9,34 +9,19 @@ export default function Summary(){
      let params = useParams();  //url로 정보받아오기
     const dr_id = params.dr_id;
     const mn_id = params.mn_id;
-    const [keyword, setKeyword] = useState([]);
-    const [summary, setSummary] = useState("");
+    const [result, setResult] = useState([]);
 
     useEffect(() => {
         url.get(
-            `/keyword/${mn_id}`
+            `/minutes/result/${mn_id}`
         )
             .then((response) => {
-                console.log("keyword 조회 성공");
-                console.log(response.data);
-                setKeyword(response.data);
+                console.log("keyword+summry 조회 성공");
+                console.log(response.data.result);
+                setResult(response.data.result);
             })
             .catch((error) => {
-                console.log("keyword 실패 "+error);
-            })
-    }, [])
-
-    useEffect(() => {
-        url.get(
-            `/summary/${mn_id}`
-        )
-            .then((response) => {
-                console.log("summary 조회 성공");
-                console.log(response.data);
-                setSummary(response.data.summary);
-            })
-            .catch((error) => {
-                console.log("summary 실패 "+error);
+                console.log("keyword+summary 실패 "+error);
             })
     }, [])
 
@@ -54,9 +39,9 @@ export default function Summary(){
                             </div>
                             <div className="key-content">
                                 <ul>
-                                    <li>{keyword.keyword1}</li>
-                                    <li>{keyword.keyword2}</li>
-                                    <li>{keyword.keyword3}</li>
+                                    {result.keyword && <li>{result.keyword.keyword1}</li>}
+                                    {result.keyword && <li>{result.keyword.keyword2}</li>}
+                                    {result.keyword && <li>{result.keyword.keyword3}</li>}
                                 </ul>
                             </div>
                             <div className="sum-title">
@@ -64,7 +49,7 @@ export default function Summary(){
                                 <h5>요약</h5>
                             </div>
                             <div className="sum-content">
-                                {summary}
+                                {result.summary}
                             </div>
                         </div>
                     </div>

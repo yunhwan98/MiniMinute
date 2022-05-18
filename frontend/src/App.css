@@ -571,6 +571,7 @@ label input[type=radio]:checked{ /*안먹음*/
 #nav-link:focus {
   border: 1px solid #E0BFE6;
   border-bottom: none;
+  background-color: rgba(213, 219, 219, 0.4);
 }
 
 .dialogue{
@@ -986,8 +987,9 @@ li{
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  background-color: rgba(213, 219, 219, 0.46);
+  background-color: rgba(213, 219, 219, 0.45);
   overflow-y: scroll;
+  border-radius: 0;
 }
 
 .display-container {
@@ -1030,7 +1032,9 @@ li{
 }
 
 .chat-profile .chat-user{
-  font-size: 11px;
+  font-size: 12px;
+  font-weight: bold;
+  color: #212529;
 }
 
 .chat-msg{
@@ -1038,7 +1042,7 @@ li{
   padding: 0.5rem;
   font-size: 12px;
   margin: 0 5px;
-  box-shadow: 1px 1px 0 rgba(0,0,0,0.12);
+  box-shadow: 1px 1px 3px 0px rgba(0,0,0,0.12);
 }
 
 .chat-time{
