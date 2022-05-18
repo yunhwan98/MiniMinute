@@ -13,7 +13,7 @@ from .serializers import KeywordSerializer
 from collections import Counter
 
 
-# 회의록 키워드 불러오기, 회의록 키워드 갱신
+# 회의록 키워드 조회, 갱신
 @api_view(['GET', 'POST'])
 @permission_classes((IsAuthenticated,))
 @authentication_classes((JSONWebTokenAuthentication,))

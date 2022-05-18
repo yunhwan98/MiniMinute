@@ -4,6 +4,7 @@ import string
 from collections import OrderedDict
 
 import boto3
+import numpy as np
 from django.db.models import Q
 from django.forms.models import model_to_dict
 from django.http import HttpResponse, JsonResponse
@@ -410,7 +411,33 @@ def result(request, mn_id):
     obj = Summary.objects.get(mn_id=mn_id)
     sm = SummarySerializer(obj).data
 
+    # 키워드, 요약문
     fb = OrderedDict()
     fb['keyword'] = {'keyword1': kw['keyword1'], 'keyword2': kw['keyword2'], 'keyword3': kw['keyword3']}
     fb['summary'] = sm['summary']
+
+    total_emotion_count = [0.0, 0.0, 0.0, 0.0]
+    obj = VoiceRecognition.objects.filter(mn_id=mn_id)
+    serializer = VoiceRecognitionSerializer(obj, many=True)
+    data = serializer.data
+
+    # 감정분포
+    for i in range(0, len(data)):
+        total_emotion_count[data[i]['emotion_type']] += 1.0
+
+    fb['emotion'] = [{'total':
+                          {'angry': total_emotion_count[0] / len(data), 'sadness': total_emotion_count[1] / len(data),
+                           'neutral': total_emotion_count[2] / len(data),
+                           'happiness': total_emotion_count[3] / len(data)}},
+                     {'user':
+                          {'angry': total_emotion_count[0] / len(data), 'sadness': total_emotion_count[1] / len(data),
+                           'neutral': total_emotion_count[2] / len(data),
+                           'happiness': total_emotion_count[3] / len(data)}}]
+
+    # 공격발언(수정중)
+    fb['hate_speech_rate'] = {'hate_rate': 0.0, 'offensive_rate': 0.0, 'general_rate': 0.0, 'text': '텍스트 추가예정'}
+
+    # 말 빠르기(수정중)
+    fb['speech'] = {'text':'텍스트 추가예정'}
+
     return JsonResponse({'result': fb}, status=200)

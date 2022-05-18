@@ -29,6 +29,6 @@ urlpatterns = [
     # 음성인식 후 화자 선택
     path('<int:mn_id>/choice/speaker', views.choice_speaker),
 
-    # 피드백 모아서 조회
+    # 회의 결과 모아서 조회
     path('result/<int:mn_id>', views.result)
 ]

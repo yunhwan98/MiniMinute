@@ -13,7 +13,7 @@ from typing import List
 from konlpy.tag import Okt
 
 
-# 회의록 키워드 불러오기
+# 회의록 요약문 조회, 갱신
 @api_view(['GET', 'POST'])
 @permission_classes((IsAuthenticated,))
 @authentication_classes((JSONWebTokenAuthentication,))
