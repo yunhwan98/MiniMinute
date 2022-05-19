@@ -400,17 +400,18 @@ def result(request, mn_id):
 
     for data in user_data:
         user_emotion_count[data['emotion_type']] += 1.0
-        if (data['emotion_type'] == 0):
+        print(data['emotion_type'])
+        if data['emotion_type'] == 0:
             user_speech_count[data['speech_type']] += 1.0
-
+    print(user_speech_count)
     fb_data = {'mn_id': mn_id, 'user_id': request.user.id,
                'angry': user_emotion_count[0] / len(user_data),
                'sadness': user_emotion_count[1] / len(user_data),
                'neutral': user_emotion_count[2] / len(user_data),
                'happiness': user_emotion_count[3] / len(user_data),
-               'hate_rate': user_speech_count[2] / len(user_data),
-               'offensive_rate': user_speech_count[1] / len(user_data),
-               'general_rate': user_speech_count[0] / len(user_data),
+               'hate_rate': user_speech_count[2] / sum(user_speech_count),
+               'offensive_rate': user_speech_count[1] / sum(user_speech_count),
+               'general_rate': user_speech_count[0] / sum(user_speech_count),
                'speech_rate': 265}
     try:
         obj = Feedback.objects.get(mn_id=mn_id, user_id=request.user.id)
@@ -522,7 +523,7 @@ def result(request, mn_id):
     else:
         text = text + "%예요."
 
-    fb['hate_speech_rate'] = {'hate_rate': 0.0, 'offensive_rate': 0.0, 'general_rate': 0.0, 'text': text}
+    fb['hate_speech_rate'] = {'hate_rate': round(hate_rate, 2), 'offensive_rate': round(offensive_rate, 2), 'general_rate': round(general_rate, 2), 'text': text}
 
     # 말 빠르기(수정중)
     speech_rate = 350
