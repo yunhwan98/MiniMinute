@@ -1,6 +1,6 @@
 from ast import literal_eval
 from io import BytesIO
-from urllib import request
+from urllib import request as urllib_request
 
 import boto3
 import numpy as np
