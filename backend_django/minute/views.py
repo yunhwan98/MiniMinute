@@ -14,6 +14,8 @@ from rest_framework.parsers import JSONParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
+from feedback.models import Feedback
+from feedback.serializers import FeedbackSerializer
 from summary.models import Summary
 from summary.serializers import SummarySerializer
 from text_keyword.models import Keyword
@@ -417,32 +419,140 @@ def result(request, mn_id):
     fb['summary'] = sm['summary']
 
     total_emotion_count = [0.0, 0.0, 0.0, 0.0]
+    user_emotion_count = [0.0, 0.0, 0.0, 0.0]
+    user_speech_count = [0.0, 0.0, 0.0]
+
     obj = VoiceRecognition.objects.filter(mn_id=mn_id)
     serializer = VoiceRecognitionSerializer(obj, many=True)
-    data = serializer.data
+    total_data = serializer.data
 
-    fb['one_line_review'] = "OO님의 이번 회의 스타일은 #행복형 #일반적 대화 #매우 빠름 입니다"
+    obj = Minutes.objects.get(user_id=request.user.id)
+    serializer = MinutesSerializer(obj)
+    spk_seq = serializer.data['speaker_seq']
+    obj = VoiceRecognition.objects.filter(mn_id=mn_id, speaker_seq=spk_seq)
+    serializer = VoiceRecognitionSerializer(obj, many=True)
+    user_data = serializer.data
+
+    obj = Speaker.objects.get(speaker_seq=spk_seq)
+    serializer = SpeakerSerializer(obj)
+    username = serializer.data['speaker_name']
+
+    for data in user_data:
+        user_emotion_count[data['emotion_type']] += 1.0
+        if (data['emotion_type'] == 0):
+            user_speech_count[data['speech_type']] += 1.0
+
+    fb_data = {'mn_id': mn_id, 'user_id': request.user.id,
+               'angry': user_emotion_count[0] / len(user_data),
+               'sadness': user_emotion_count[1] / len(user_data),
+               'neutral': user_emotion_count[2] / len(user_data),
+               'happiness': user_emotion_count[3] / len(user_data),
+               'hate_rate': user_speech_count[2] / len(user_data),
+               'offensive_rate': user_speech_count[1] / len(user_data),
+               'general_rate': user_speech_count[0] / len(user_data),
+               'speech_rate': 265}
+    try:
+        obj = Feedback.objects.get(mn_id=mn_id, user_id=request.user.id)
+        obj.delete()
+    except:
+        print("")
+    serializer = FeedbackSerializer(data=fb_data)
+
+    if serializer.is_valid():
+        serializer.save()
+
+    one_line_review = username + "님의 이번 회의 스타일은 "
+    for i in range(len(user_emotion_count)):
+        if max(user_emotion_count) == user_emotion_count[i]:
+            if i == 0:
+                one_line_review += "#분노형 "
+                break
+            elif i == 3:
+                one_line_review += "#행복형 "
+                break
+            elif i == 2:
+                one_line_review += "#슬픔형 "
+                break
+            else:
+                one_line_review += "#일반형 "
+                break
+    hate_rate = fb_data['hate_rate']
+    offensive_rate = fb_data['offensive_rate']
+    general_rate = fb_data['general_rate']
+    total_hate_speech_rate = round((hate_rate + offensive_rate) * 100.0, 2)
+    if offensive_rate >= hate_rate and offensive_rate >= general_rate:
+        one_line_review += "#공격적 언행 "
+    elif hate_rate >= offensive_rate and hate_rate >= general_rate:
+        one_line_review += "#증오적 언행 "
+    elif general_rate >= offensive_rate and general_rate >= hate_rate:
+        one_line_review += "#일상적 대화 "
+
+    speech_rate = fb_data['speech_rate']
+    if speech_rate > 265 * 1.3:
+        one_line_review += "#빠름 입니다."
+    elif speech_rate < 265 * 0.6:
+        one_line_review += "#느림 입니다."
+    else:
+        one_line_review += "#보통 입니다."
+
+    fb['one_line_review'] = one_line_review
 
     # 감정분포(수정중)
-    for i in range(0, len(data)):
-        total_emotion_count[data[i]['emotion_type']] += 1.0
+    for data in total_data:
+        total_emotion_count[data['emotion_type']] += 1.0
 
+    total_emotion_rate_feedback = "이번 회의는 전반적으로 "
+    for i in range(0, len(total_emotion_count)):
+        if (max(total_emotion_count) == total_emotion_count[i]):
+            if i == 0:
+                total_emotion_rate_feedback += "격앙된 분위기였네요." \
+                                               "분노는 전염된답니다. 너무 흥분하지 않도록 조심!"
+                break
+            elif i == 3:
+                total_emotion_rate_feedback += "행복한 분위기였네요."
+                break
+            elif i == 1:
+                total_emotion_rate_feedback += "다운된 분위기였네요." \
+                                               "다음에는 좀 더 활기차게 진행해보는게 어때요?"
+                break
+            else:
+                total_emotion_rate_feedback += "평온한 분위기 였네요."
+                break
+
+    user_emotion_rate_feedback = "이번 회의의 " + username + "님의 주된 감정은 "
+    for i in range(0, len(user_emotion_count)):
+        if (max(user_emotion_count) == user_emotion_count[i]):
+            if i == 0:
+                user_emotion_rate_feedback += "분노예요.\n" \
+                                              "화가 났을 때는 감정적으로 행동하지 않도록 조심!"
+                break
+            elif i == 3:
+                user_emotion_rate_feedback += "행복이에요."
+                break
+            elif i == 1:
+                user_emotion_rate_feedback += "슬픔이에요.\n" \
+                                              "슬프더라도 좀 더 힘을 내봐요. 화이팅!"
+                break
+            else:
+                user_emotion_rate_feedback += "일반이에요."
+                break
     fb['emotion'] = [{'total':
-                          {'angry': total_emotion_count[0] / len(data), 'sadness': total_emotion_count[1] / len(data),
-                           'neutral': total_emotion_count[2] / len(data),
-                           'happiness': total_emotion_count[3] / len(data)}},
+                          {'angry': round(total_emotion_count[0] / len(total_data), 2),
+                           'sadness': round(total_emotion_count[1] / len(total_data), 2),
+                           'neutral': round(total_emotion_count[2] / len(total_data), 2),
+                           'happiness': round(total_emotion_count[3] / len(total_data), 2),
+                           'text': total_emotion_rate_feedback}},
                      {'user':
-                          {'angry': total_emotion_count[0] / len(data), 'sadness': total_emotion_count[1] / len(data),
-                           'neutral': total_emotion_count[2] / len(data),
-                           'happiness': total_emotion_count[3] / len(data)}}]
+                          {'angry': round(user_emotion_count[0] / len(user_data), 2),
+                           'sadness': round(user_emotion_count[1] / len(user_data), 2),
+                           'neutral': round(user_emotion_count[2] / len(user_data), 2),
+                           'happiness': round(user_emotion_count[3] / len(user_data), 2),
+                           'text': user_emotion_rate_feedback}}]
 
     # 공격발언(수정중)
-    hate_rate = 30
-    offensive_rate = 30
-    total_hate_speech_rate = hate_rate + offensive_rate
     text = "분노 감정에서의 공격&차별 발언 비율이 " + str(total_hate_speech_rate)
     if total_hate_speech_rate >= 50:
-        text = text + "%로 매우 높은 편이에요."\
+        text = text + "%로 매우 높은 편이에요." \
                       "\n화난 감정을 적절하게 다루기 위한 노력이 필요해보입니다!" \
                       "\n회의중 감정이 격해졌다면 잠시 쉬어가는 것은 어떨까요?" \
                       "\n최근 화가 자주 난다면, 회의가 끝난 후 스스로 왜 화가 났는지에 대해 생각해보는 것도 좋은 방법입니다."
@@ -456,12 +566,13 @@ def result(request, mn_id):
     # 말 빠르기(수정중)
     speech_rate = 350
     rate = 1.32
-    text = "OO님의 분당 음절 수는 약 "+str(speech_rate)+"음절/분 으로 정상 성인 평균 265음절/분 대비 약 " + str(rate) + "배입니다." \
-                                                                                              "전반적으로 "
-    if(rate >= 1.3):
+    text = username + "님의 분당 음절 수는 약 " + str(round(speech_rate, 2)) + "음절/분 으로 정상 성인 평균 265음절/분 대비 약 " + str(
+        rate) + "배입니다." \
+                "\n전반적으로 "
+    if (rate >= 1.3):
         text = text + "빠른 편이에요." \
                       "\n다음에는 조금만 천천히 말해보는 건 어떨까요?"
-    elif(rate >0.7):
+    elif (rate > 0.7):
         text = text + "평균 속도예요."
     else:
         text = text + "느린 편이에요." \
