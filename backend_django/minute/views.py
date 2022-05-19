@@ -1,6 +1,7 @@
 import json
 import random
 import string
+import os
 from collections import OrderedDict
 
 import boto3
@@ -232,41 +233,21 @@ def file_upload(request, mn_id):
     minutes = Minutes.objects.get(mn_id=mn_id)
     if request.method == 'POST':
         # 파일 정보 저장
-        file_data = JSONParser().parse(request)
-        # AudioSegment.converter  = "D:/tool/ffmpeg-5.0.1-essentials_build/bin/ffmpeg"
-        # convert mp3 to wav
-        if file_data['file_extension'] == 'mp3':
-            audSeg = AudioSegment.from_mp3('{}{}.mp3'.format(file_data['file_path'], file_data['file_name']),
-                                           format='mp3')
-            audSeg.export('{}{}.wav'.format(file_data['file_path'], file_data['file_name']), format='wav')
-            file_data['file_extension'] = 'wav'
-
-        # convert m4a to wav
-        if file_data['file_extension'] == 'm4a':
-            audSeg = AudioSegment.from_file('{}{}.m4a'.format(file_data['file_path'], file_data['file_name']),
-                                            format='m4a')
-            audSeg.export('{}{}.wav'.format(file_data['file_path'], file_data['file_name']), format='wav')
-            file_data['file_extension'] = 'wav'
-
+        print(os.path.splitext(request.FILES['file'].name))
+        file_data = {'file_name':os.path.splitext(request.FILES['file'].name)[0], 'file_extension':os.path.splitext(request.FILES['file'].name)[1][1:]}
+        file_data['file_path'] = 'test'
         file_serializer = FileSerializer(data=file_data)
         if file_serializer.is_valid():
             file_serializer.save()
             # 회의록 정보 수정
             minutes.file_id = File.objects.get(file_id=file_serializer.data.get("file_id"))
             minutes.save()
+            file = File.objects.get(file_id=minutes.file_id.file_id)
             # 버킷에 업로드
-            try:
-                audio = open('{}{}.{}'.format(file_data.get('file_path'), file_data.get('file_name'),
-                                              file_data.get('file_extension')), 'rb')
-            except FileNotFoundError:
-                return HttpResponse('FileNotFoundError')
-            else:
-                s3 = boto3.resource('s3')
-                s3.Bucket('miniminute-bucket').put_object(
-                    Key='{}_{}.{}'.format(request.user.id, file_data.get('file_name'), file_data.get('file_extension')),
-                    Body=audio)
-                data = {'file': file_serializer.data, 'minutes': model_to_dict(minutes)}
-                return JsonResponse(data, status=201)
+            s3 = boto3.resource('s3')
+            s3.Bucket('miniminute-bucket').put_object(Key='{}_{}.{}'.format(file.file_id, file.file_name, file.file_extension), Body=request.FILES['file'])
+            data = {'file': file_serializer.data, 'minutes': model_to_dict(minutes)}
+            return JsonResponse(data, status=201)
         return JsonResponse(file_serializer.errors, status=400)
 
 
@@ -296,26 +277,9 @@ def minute_share_link(request):
     minutes = Minutes.objects.get(mn_id=request.data['mn_id'])
     if request.method == 'POST':
         share_str = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(8))
-        print(share_str)
-
-        data = {
-            'mn_id': minutes.mn_id,
-            'user_id': request.user.id,
-            'dr_id': minutes.dr_id.dr_id,
-            'mn_title': minutes.mn_title,
-            'mn_date': minutes.mn_date,
-            'mn_place': minutes.mn_place,
-            'mn_explanation': minutes.mn_explanation,
-            'mn_memo': minutes.mn_memo,
-            'mn_share_link': share_str,
-            'speaker_seq': minutes.speaker_seq.speaker_seq
-        }
-
-        serializer = MinutesSerializer(minutes, data=data)
-        if serializer.is_valid():
-            serializer.save()
-            return JsonResponse(data, status=201)
-        return JsonResponse(serializer.errors, status=400)
+        minutes.mn_share_link = share_str
+        minutes.save()
+        return JsonResponse(model_to_dict(minutes), status=201)
 
 
 # 공유 코드로 회의록 생성
@@ -334,7 +298,7 @@ def create_minute_with_share_link(request, mn_share_link):
 
     elif request.method == 'POST':
         # file 업로드
-        file_key = '{}_{}.{}'.format(minutes.user_id.id, minutes.file_id.file_name, minutes.file_id.file_extension)
+        file_key = '{}_{}.{}'.format(file.file_id, file.file_name, file.file_extension)
         file.file_id = None
         file.save()
         minutes.mn_id = None
@@ -348,7 +312,6 @@ def create_minute_with_share_link(request, mn_share_link):
 
         # 화자 생성
         speaker_dic = {}
-        old_speaker_seq = 0
         for obj in speaker:
             old_speaker_seq = obj.speaker_seq
             obj.speaker_seq = None
@@ -374,15 +337,13 @@ def create_minute_with_share_link(request, mn_share_link):
             'Bucket': bucket,
             'Key': file_key
         }
-        s3.meta.client.copy(copy_source, bucket,
-                            '{}_{}.{}'.format(request.user.id, file.file_name, file.file_extension))
+        s3.meta.client.copy(copy_source, bucket, '{}_{}.{}'.format(file.file_id, file.file_name, file.file_extension))
 
         minutes_serializer = MinutesSerializer(minutes)
         file_serializer = FileSerializer(file)
-        speaker_serializer = SpeakerSerializer(speaker, many=True)
-        vr_serializer = VoiceRecognitionSerializer(voice_recognition, many=True)
-        response = {'minutes': minutes_serializer.data, 'file': file_serializer.data,
-                    'speaker': speaker_serializer.data, 'voice_recognition': vr_serializer.data}
+        speaker_serializer = SpeakerSerializer(speaker,many=True)
+        vr_serializer = VoiceRecognitionSerializer(voice_recognition,many=True)
+        response = {'minutes': minutes_serializer.data, 'file': file_serializer.data, 'speaker': speaker_serializer.data, 'voice_recognition': vr_serializer.data}
         return JsonResponse(response, status=201)
 
 
