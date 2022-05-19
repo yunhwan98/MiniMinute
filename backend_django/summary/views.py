@@ -50,25 +50,22 @@ def set_summary(mn_id):
     for idx in range(0, num):
         text = text + " " + data[idx]['vr_text'] + "."
     text.strip()
-    print(text)
 
     mytokenizer: OktTokenizer = OktTokenizer()
     textrank: TextRank = TextRank(mytokenizer)
 
-    k: int = int(num/2)  # num sentences in the resulting summary
+    k: int = int(num / 2)  # num sentences in the resulting summary
 
     summarized: str = textrank.summarize(text, k)
 
     summaries: List[str] = textrank.summarize(text, k, verbose=False)
-    for summary in summaries:
-        print(summary)
 
-    text=""
+    text = ""
     for t in summaries:
         text = text + " " + t + "."
     text.strip()
 
-    sm_data = {'mn_id':mn_id, 'summary':text}
+    sm_data = {'mn_id': mn_id, 'summary': text}
     try:
         obj = Summary.objects.get(mn_id=mn_id)
         obj.delete()

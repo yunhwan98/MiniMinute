@@ -400,18 +400,24 @@ def result(request, mn_id):
 
     for data in user_data:
         user_emotion_count[data['emotion_type']] += 1.0
-        print(data['emotion_type'])
         if data['emotion_type'] == 0:
             user_speech_count[data['speech_type']] += 1.0
-    print(user_speech_count)
+        if sum(user_speech_count) == 0:
+            hate = 0.0
+            offensive = 0.0
+            general = 0.0
+        else:
+            hate = user_speech_count[2]/sum(user_speech_count)
+            offensive = user_speech_count[1]/sum(user_speech_count)
+            general = user_speech_count[0]/sum(user_speech_count)
     fb_data = {'mn_id': mn_id, 'user_id': request.user.id,
                'angry': user_emotion_count[0] / len(user_data),
                'sadness': user_emotion_count[1] / len(user_data),
                'neutral': user_emotion_count[2] / len(user_data),
                'happiness': user_emotion_count[3] / len(user_data),
-               'hate_rate': user_speech_count[2] / sum(user_speech_count),
-               'offensive_rate': user_speech_count[1] / sum(user_speech_count),
-               'general_rate': user_speech_count[0] / sum(user_speech_count),
+               'hate_rate': hate,
+               'offensive_rate': offensive,
+               'general_rate': general,
                'speech_rate': 265}
     try:
         obj = Feedback.objects.get(mn_id=mn_id, user_id=request.user.id)
@@ -419,10 +425,10 @@ def result(request, mn_id):
     except:
         print("")
     serializer = FeedbackSerializer(data=fb_data)
-
     if serializer.is_valid():
         serializer.save()
-
+    else:
+        print(serializer.errors)
     one_line_review = username + "님의 이번 회의 스타일은 "
     for i in range(len(user_emotion_count)):
         if max(user_emotion_count) == user_emotion_count[i]:
@@ -436,15 +442,15 @@ def result(request, mn_id):
                 one_line_review += "#슬픔형 "
                 break
             else:
-                one_line_review += "#일반형 "
+                one_line_review += "#무감정형 "
                 break
     hate_rate = fb_data['hate_rate']
     offensive_rate = fb_data['offensive_rate']
     general_rate = fb_data['general_rate']
     total_hate_speech_rate = round((hate_rate + offensive_rate) * 100.0, 2)
-    if offensive_rate >= hate_rate and offensive_rate >= general_rate:
+    if offensive_rate >= hate_rate and offensive_rate >= general_rate and offensive_rate!=0:
         one_line_review += "#공격적 언행 "
-    elif hate_rate >= offensive_rate and hate_rate >= general_rate:
+    elif hate_rate >= offensive_rate and hate_rate >= general_rate and hate_rate != 0:
         one_line_review += "#증오적 언행 "
     elif general_rate >= offensive_rate and general_rate >= hate_rate:
         one_line_review += "#일상적 대화 "
@@ -455,7 +461,7 @@ def result(request, mn_id):
     elif speech_rate < 265 * 0.6:
         one_line_review += "#느림 입니다."
     else:
-        one_line_review += "#보통 입니다."
+        one_line_review += "#보통 빠르기 입니다."
 
     fb['one_line_review'] = one_line_review
 
@@ -513,15 +519,23 @@ def result(request, mn_id):
 
     # 공격발언(수정중)
     text = "분노 감정에서의 공격&차별 발언 비율이 " + str(total_hate_speech_rate)
-    if total_hate_speech_rate >= 50:
+
+    if user_emotion_count[0]==0:
+        text = "감지된 분노 감정 발화가 없습니다."
+    elif total_hate_speech_rate >= 50:
         text = text + "%로 매우 높은 편이에요." \
                       "\n화난 감정을 적절하게 다루기 위한 노력이 필요해보입니다!" \
                       "\n회의중 감정이 격해졌다면 잠시 쉬어가는 것은 어떨까요?" \
                       "\n최근 화가 자주 난다면, 회의가 끝난 후 스스로 왜 화가 났는지에 대해 생각해보는 것도 좋은 방법입니다."
     elif total_hate_speech_rate >= 20:
-        text = text + "%로 높은 편이에요."
+        text = text + "%로 높은 편이에요." \
+                      "\n분노라는 감정은 행동 유발력이 가장 강한 감정으로, 마음에 품고 있는 것을 너머 실제 행동으로 이어지기에 가장 쉬운 감정 중 하나입니다." \
+                      "\n이러한 장점을 잘 이용하기 위해서는 화가 났을 때 이것을 제대로 표출하는 방식을 택하는 것이 중요합니다." \
+                      "\n화가 났다면, 내가 어떤 감정을 느끼고 있는지 똑바로 인지한 후에, 다음 행동을 결정하는 것이 좋습니다."
     else:
-        text = text + "%예요."
+        text = text + "%로 보통인 편이에요." \
+                      "\n감정 조절을 잘 하고 계신 것으로 보입니다!"
+
 
     fb['hate_speech_rate'] = {'hate_rate': round(hate_rate, 2), 'offensive_rate': round(offensive_rate, 2), 'general_rate': round(general_rate, 2), 'text': text}
 
@@ -542,3 +556,11 @@ def result(request, mn_id):
     fb['speech'] = {'text': text}
 
     return JsonResponse({'result': fb}, status=200)
+
+
+# 최근 5개의 회의록 결과 조회
+@api_view(['GET'])
+@permission_classes((IsAuthenticated,))
+@authentication_classes((JSONWebTokenAuthentication,))
+def recent_result(request, mn_id):
+    return None

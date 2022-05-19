@@ -17,10 +17,10 @@ class Feedback(models.Model):
         on_delete=models.CASCADE,
         db_column="user_id",
     )
-    angry = models.IntegerField(default=0)
-    sadness = models.IntegerField(default=0)
-    neutral = models.IntegerField(default=0)
-    happiness = models.IntegerField(default=0)
+    angry = models.FloatField(default=0)
+    sadness = models.FloatField(default=0)
+    neutral = models.FloatField(default=0)
+    happiness = models.FloatField(default=0)
     hate_rate = models.FloatField(default=0.0)
     offensive_rate = models.FloatField(default=0.0)
     general_rate = models.FloatField(default=0.0)
