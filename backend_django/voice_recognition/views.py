@@ -1,30 +1,25 @@
-import json
+from ast import literal_eval
+from io import BytesIO
+from urllib import request
 
-from django.shortcuts import render
+import boto3
+import numpy as np
+import scipy.io.wavfile as sciwav
+import torch
+from botocore.config import Config
+from django.db.models import Q
 from django.http import HttpResponse, JsonResponse
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from rest_framework.parsers import JSONParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
+from transformers import AutoTokenizer, AutoModelForSequenceClassification
 
-from .models import VoiceRecognition
 from minute.models import Minutes, File
-from .serializers import VoiceRecognitionSerializer
 from minute.serializers import SpeakerSerializer
-from django.db.models import Q
-from requests_toolbelt.multipart.encoder import MultipartEncoder
-
-from urllib import request
-from ast import literal_eval
-from botocore.config import Config
-import boto3
-
-import librosa
-import numpy as np
-import scipy.io.wavfile as sciwav
-from io import BytesIO
-
 from voice_recognition import emotion
+from .models import VoiceRecognition
+from .serializers import VoiceRecognitionSerializer
 
 
 def index(request):
@@ -254,4 +249,33 @@ def emotion_recognition(request, mn_id):
         item = VoiceRecognition.objects.get(vr_id=vr_id)
         item.emotion_type = label
         item.save()
+    hate_speech(mn_id)
     return HttpResponse(status=200)
+
+
+# 언어 유형 인식
+def hate_speech(mn_id):
+    tokenizer = AutoTokenizer.from_pretrained("jason9693/SoongsilBERT-base-beep")
+
+    model = AutoModelForSequenceClassification.from_pretrained("jason9693/SoongsilBERT-base-beep")
+
+    obj = VoiceRecognition.objects.filter(mn_id=mn_id)
+    serializer = VoiceRecognitionSerializer(obj, many=True)
+    count = len(serializer.data)
+
+    data = serializer.data
+
+    for idx in range(0,count):
+        vr_id = data[idx]['vr_id']
+        text = data[idx]['vr_text']
+        inputs = tokenizer(text, return_tensors='pt')
+        with torch.no_grad():
+            logits = model(**inputs).logits
+        label = logits.argmax().item()
+
+        item = VoiceRecognition.objects.get(vr_id=vr_id)
+        item.speech_type = label
+        item.save()
+    return None
+
+

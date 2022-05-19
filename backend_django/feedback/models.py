@@ -1,5 +1,6 @@
 from django.db import models
 
+
 # 유저의 회의록별 맞춤 피드백 정보 저장
 class Feedback(models.Model):
     fb_id = models.AutoField(primary_key=True)
