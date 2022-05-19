@@ -114,16 +114,17 @@ const Home = () => {
                                     {/* <img src={emo_img} style={{width: '3.0rem'}}/> */}
                                     <span style={{fontSize:'2.5em' ,margin:'1rem',fontWeight:'bold'}}>📊 회의태도 변화</span>
                             </div>
-                            <div className='Speech-result' style={{ margin:'0px', display:"flex" ,alignItems: 'center'}}>
-                                    <ApexChart options={options} series={series} type="line"  height={500} width={800} />
-                                <div className='speech-analyse'>
-                                        <li>"<b>공격, 혐오발언</b>"이 증가하는 추세입니다.</li>
-                                        <li>"<b>발화 속도</b>"가 증가하는 추세입니다.</li>
-                                        <li style={{color: 'red'}}>"<b>공격, 혐오발언</b>","<b>발화 속도</b>"에 주의해주세요</li>                               
-                                    </div>                                 
-                            </div>
                             
-                        </div>
+                                <div className='Speech-result' style={{ margin:'0px', display:"flex" ,alignItems: 'center'}}>
+                                        <ApexChart options={options} series={series} type="line"  height={500} width={1200} />                                
+                                </div>
+                                <div className='speech-analyse' >
+                                            <li><b>공격,차별 발언 비율이 매우 높습니다. 회의에 부적절한 태도입니다, 스스로를 돌아볼 필요가 있어요.</b></li>
+                                            <li><b>말의 속도가 너무 빨라요, 전달력이 떨어질 수 있습니다. 조금 천천히 말해주세요.</b></li>
+                                            <li style={{color: 'red'}}>"<b>공격, 혐오발언</b>","<b>발화 속도</b>"에 주의해주세요</li>                               
+                                </div>    
+                            </div>                         
+                        
                     <div className="log-list fade-in">
                         
                         <div className="default">
