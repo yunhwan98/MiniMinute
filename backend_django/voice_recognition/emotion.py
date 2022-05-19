@@ -55,9 +55,9 @@ def text_predict(predict_sentence):
 
 
 def split_wav(data, sample_rate, start, end):
-#    start *= sample_rate
-#    end *= sample_rate
-    return data[start:end]
+    start *= sample_rate
+    end *= sample_rate
+    return data[int(start):int(end)]
 
 
 audio_model = tf.keras.models.load_model('./audio_model.h5')

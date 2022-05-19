@@ -438,7 +438,7 @@ def result(request, mn_id):
             elif i == 3:
                 one_line_review += "#행복형 "
                 break
-            elif i == 2:
+            elif i == 1:
                 one_line_review += "#슬픔형 "
                 break
             else:

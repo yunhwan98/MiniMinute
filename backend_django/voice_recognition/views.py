@@ -1,6 +1,6 @@
 from ast import literal_eval
 from io import BytesIO
-from urllib import request
+from urllib import request as urllib_request
 
 import boto3
 import numpy as np
@@ -20,7 +20,8 @@ from minute.serializers import SpeakerSerializer
 from voice_recognition import emotion
 from .models import VoiceRecognition
 from .serializers import VoiceRecognitionSerializer
-
+from text_keyword.views import set_keyword
+from summary.views import set_summary
 
 def index(request):
     return HttpResponse("음성인식 테스트")
@@ -249,9 +250,11 @@ def voice_recognition_search(request, mn_id):
 @authentication_classes((JSONWebTokenAuthentication,))
 def emotion_recognition(request, mn_id):
     obj = Minutes.objects.get(mn_id=mn_id)
+    file_id = str(obj.file_id.file_id)
     file_name = str(obj.file_id.file_name)
     file_extension = str(obj.file_id.file_extension)
-    file = file_name + "." + file_extension
+    file = file_id + "_" + file_name + "." + file_extension
+    print(file)
     data = VoiceRecognition.objects.filter(mn_id=mn_id)
     serializer = VoiceRecognitionSerializer(data, many=True)
 
@@ -273,8 +276,8 @@ def emotion_recognition(request, mn_id):
     for idx in range(0, count):
         vr_id = data[idx]['vr_id']
         text = data[idx]['vr_text']
-        start = int(data[idx]['vr_start'])
-        end = int(data[idx]['vr_end'])
+        start = float(data[idx]['vr_start'])
+        end = float(data[idx]['vr_end'])
 
         label = emotion.multi_modal_predict(text, audio, sr, start, end)
 
@@ -282,6 +285,8 @@ def emotion_recognition(request, mn_id):
         item.emotion_type = label
         item.save()
     hate_speech(mn_id)
+    set_summary(mn_id)
+    set_keyword(mn_id)
     return HttpResponse(status=200)
 
 
