@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'voice_recognition',
     'text_keyword',
     'summary',
+    'feedback',
 ]
 
 AUTH_USER_MODEL = 'user.User'
