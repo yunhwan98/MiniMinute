@@ -5,14 +5,14 @@ class Feedback(models.Model):
     fb_id = models.AutoField(primary_key=True)
     mn_id = models.ForeignKey(
         "minute.Minutes",
-        related_name="keywords",
+        related_name="feedbacks",
         on_delete=models.CASCADE,
         db_column="mn_id",
         unique=True,
     )
     user_id = models.ForeignKey(
         "user.User",
-        related_name="minutes",
+        related_name="feedbacks",
         on_delete=models.CASCADE,
         db_column="user_id",
     )
