@@ -13,7 +13,7 @@ import Add_bm from '../images/Add_bm2.png';
 import { createRoot } from "react-dom/client";
 import Highlighter from "react-highlight-words";
 import Scroll from 'react-scroll';
-
+import Spinner from 'react-bootstrap/Spinner'
 function Log(){
     let Element = Scroll.Element;
     let params = useParams();  //url로 정보받아오기
@@ -41,7 +41,8 @@ function Log(){
     const playerInput = useRef();
     const [search, setSearch] = useState('');   //검색어
     const [dial2, setDial2] = useState([]);
-    
+    const [spinner,setSpinner] =useState(false);    //스피너 보여주기
+
     const emotion = [
         {id: 0, title: '😡'},
         {id: 1, title: '😢'},
@@ -104,6 +105,7 @@ function Log(){
                 console.log(response.data);
                 console.log("파일 조회 성공")
                 setIsUpload(true);
+
                 //setPath("https://storage.cloud.google.com/miniminute_voice_file/testquiz.wav?authuser=1");
             })
             .catch((error) => {
@@ -127,7 +129,7 @@ function Log(){
         reader.onloadend = () => {
             setPath(reader.result);
         }
-        
+        setSpinner(true);
         //setPath("https://miniminute-bucket.s3.ap-northeast-2.amazonaws.com/1_1_test0510.wav");
 
         url.post(`/minutes/${mnId}/file/upload`, formdata)
@@ -331,6 +333,7 @@ function Log(){
                 console.log("감정인식 성공");
                 console.log(response);
                 setIsUpload(true);
+                setSpinner(false);
             })
             .catch((error) => {
                 console.log("감정인식 실패: "+error);
@@ -356,6 +359,7 @@ function Log(){
         <div>
             <Header_log setSearch={setSearch}/>
             <div className="main">
+               
                 <SidebarLog dr_id={dr_id} mn_id={mnId} memo={memo}/>
                 <div className="article">
                     <div style={{display: "flex"}} className="fade-in">
@@ -377,84 +381,88 @@ function Log(){
                             </Nav>
                             <div className="dialogue"/*채팅 대화 구현*/>
                             <Element className='chat-wrapper' id="chat">
-                                <div className='display-container'>
-                                    <ul className='chatting-list'>
-                                        {dial2.map(dialogue =>
-                                            <li className={dialogue.speaker_seq === minutes.speaker_seq ? "chat-mine" : "chat-other"} key={dialogue.vr_id}>
-                                                {nameList && nameList.filter(data => data.speaker_seq===dialogue.speaker_seq).map(data =>
-                                                <span className='chat-profile' key={data.speaker_seq} onContextMenu={(e)=>{openCtxtProf(e); setSpkSeq(dialogue.speaker_seq)}}>
-                                                    <div id="prof-menu">
-                                                        <ul>
-                                                            <li className="dropdown-item" onClick={setSpeaker}>'나'로 지정하기</li>
-                                                        </ul>
-                                                    </div>
-                                                    <span className='chat-user' onClick={() => {setNameModal(dialogue.vr_id); setSpkSeq(dialogue.speaker_seq);}}>
+                                    {spinner  ? 
+                                         (<div style={{display:'flex',alignItems: 'center',justifyContent: 'center',height:"100%"}}>                      
+                                            <Spinner animation="border" size="m" />
+                                        </div>):
+                                    (<div className='display-container'>        
+                                        <ul className='chatting-list'>
+                                            {dial2.map(dialogue =>
+                                                <li className={dialogue.speaker_seq === minutes.speaker_seq ? "chat-mine" : "chat-other"} key={dialogue.vr_id}>
+                                                    {nameList && nameList.filter(data => data.speaker_seq === dialogue.speaker_seq).map(data =>
+                                                        <span className='chat-profile' key={data.speaker_seq} onContextMenu={(e) => { openCtxtProf(e); setSpkSeq(dialogue.speaker_seq) }}>
+                                                            <div id="prof-menu">
+                                                                <ul>
+                                                                    <li className="dropdown-item" onClick={setSpeaker}>'나'로 지정하기</li>
+                                                                </ul>
+                                                            </div>
+                                                            <span className='chat-user' onClick={() => { setNameModal(dialogue.vr_id); setSpkSeq(dialogue.speaker_seq); }}>
+                                                                <Highlighter
+                                                                    highlightClassName="YourHighlightClass"
+                                                                    searchWords={[search]}
+                                                                    autoEscape={true}
+                                                                    textToHighlight={data.speaker_name ? data.speaker_name : "참가자" + data.speaker_seq}
+                                                                />
+                                                            </span>
+                                                            <Modal show={nameModal === dialogue.vr_id} onHide={() => setNameModal()}>
+                                                                <Modal.Header closeButton>
+                                                                    <Modal.Title>참가자 이름 변경</Modal.Title>
+                                                                </Modal.Header>
+                                                                <Modal.Body>
+                                                                    <h6>참가자 이름</h6>
+                                                                    <input type="text" className="form-control" id="name" value={name} onChange={(e) => setName(e.target.value)} />
+                                                                </Modal.Body>
+                                                                <Modal.Footer>
+                                                                    <button type="button" id="btn-color" className="btn-override modal-btn" onClick={(e) => changeName(e, spkSeq)} >
+                                                                        변경
+                                                                    </button>
+                                                                </Modal.Footer>
+                                                            </Modal>
+                                                            {/* <img src={chatProfile} alt='any' /> */}
+                                                            <span style={{ fontSize: '2rem' }}>{emotion[dialogue.emotion_type] && emotion[dialogue.emotion_type].title}</span>
+                                                        </span>
+                                                    )}
+
+                                                    <Element name={dialogue.vr_start.split(".")[0]} className='chat-msg' onClick={() => moveAudio(dialogue.vr_start.split(".")[0])}
+                                                        onContextMenu={(e) => { openCtxt(e); setStart(dialogue.vr_start.split(".")[0]); setEnd(dialogue.vr_end.split(".")[0]); setDial(dialogue.vr_text); setVrSeq(dialogue.vr_seq) }}>
                                                         <Highlighter
                                                             highlightClassName="YourHighlightClass"
                                                             searchWords={[search]}
                                                             autoEscape={true}
-                                                            textToHighlight={data.speaker_name ? data.speaker_name : "참가자"+data.speaker_seq}
+                                                            textToHighlight={dialogue.vr_text}
                                                         />
-                                                    </span>
-                                                    <Modal show={nameModal===dialogue.vr_id} onHide={() => setNameModal()}>
-                                                        <Modal.Header closeButton>
-                                                            <Modal.Title>참가자 이름 변경</Modal.Title>
-                                                        </Modal.Header>
-                                                        <Modal.Body>
-                                                            <h6>참가자 이름</h6>
-                                                            <input type="text" className="form-control" id="name" value={name} onChange={(e) => setName(e.target.value)} />
-                                                        </Modal.Body>
-                                                        <Modal.Footer>
-                                                            <button type="button" id="btn-color" className="btn-override modal-btn" onClick={(e)=>changeName(e,spkSeq)} >
-                                                                변경
-                                                            </button>
-                                                        </Modal.Footer>
-                                                    </Modal>
-                                                            {/* <img src={chatProfile} alt='any' /> */}
-                                                            <span style={{fontSize: '2rem'}}>{emotion[dialogue.emotion_type] && emotion[dialogue.emotion_type].title}</span>
-                                                </span>
-                                                )}
-                                      
-                                                <Element name={dialogue.vr_start.split(".")[0]} className='chat-msg' onClick={()=>moveAudio(dialogue.vr_start.split(".")[0])}
-                                                      onContextMenu={(e)=>{openCtxt(e); setStart(dialogue.vr_start.split(".")[0]); setEnd(dialogue.vr_end.split(".")[0]); setDial(dialogue.vr_text); setVrSeq(dialogue.vr_seq)}}>
-                                                    <Highlighter
-                                                    highlightClassName="YourHighlightClass"
-                                                    searchWords={[search]}
-                                                    autoEscape={true}
-                                                    textToHighlight={dialogue.vr_text}
-                                                />
-                                                </Element>
-                                                <span className='chat-time'><Highlighter
-                                                    highlightClassName="YourHighlightClass"
-                                                    searchWords={[search]}
-                                                    autoEscape={true}
-                                                    textToHighlight={changeTime(dialogue.vr_start.split(".")[0])}
-                                                /></span>
-                                                <div id="chat-menu">
-                                                    <ul>
-                                                        <li className="dropdown-item" onClick={()=>setShowBm(dialogue.vr_id)}>북마크</li>
-                                                        <NewBm showBm={showBm===dialogue.vr_id} setShowBm ={setShowBm} mn_id={mnId} start={start} end={end}/>
-                                                        <li className="dropdown-item" onClick={() => setDialModal(dialogue.vr_id)}>대화 수정</li>
-                                                        <Modal show={dialModal===dialogue.vr_id} onHide={() => setDialModal()}>
-                                                        <Modal.Header closeButton>
-                                                            <Modal.Title>대화 수정</Modal.Title>
-                                                        </Modal.Header>
-                                                        <Modal.Body>
-                                                            <h6>변경할 내용을 입력해주세요</h6>
-                                                            <textarea className="chat-txtarea" placeholder="" cols="60" rows="10" value={dial ? dial : ""} onChange={(e)=>setDial(e.target.value)}></textarea>
-                                                        </Modal.Body>
-                                                        <Modal.Footer>
-                                                            <button type="button" id="btn-color" className="btn-override modal-btn" onClick={(e)=>changeDial(e, vrSeq)} >
-                                                                저장
-                                                            </button>
-                                                        </Modal.Footer>
-                                                    </Modal>
-                                                    </ul>
-                                                </div>
-                                            </li>
-                                        )}
-                                    </ul>                     
-                                </div>
+                                                    </Element>
+                                                    <span className='chat-time'><Highlighter
+                                                        highlightClassName="YourHighlightClass"
+                                                        searchWords={[search]}
+                                                        autoEscape={true}
+                                                        textToHighlight={changeTime(dialogue.vr_start.split(".")[0])}
+                                                    /></span>
+                                                    <div id="chat-menu">
+                                                        <ul>
+                                                            <li className="dropdown-item" onClick={() => setShowBm(dialogue.vr_id)}>북마크</li>
+                                                            <NewBm showBm={showBm === dialogue.vr_id} setShowBm={setShowBm} mn_id={mnId} start={start} end={end} />
+                                                            <li className="dropdown-item" onClick={() => setDialModal(dialogue.vr_id)}>대화 수정</li>
+                                                            <Modal show={dialModal === dialogue.vr_id} onHide={() => setDialModal()}>
+                                                                <Modal.Header closeButton>
+                                                                    <Modal.Title>대화 수정</Modal.Title>
+                                                                </Modal.Header>
+                                                                <Modal.Body>
+                                                                    <h6>변경할 내용을 입력해주세요</h6>
+                                                                    <textarea className="chat-txtarea" placeholder="" cols="60" rows="10" value={dial ? dial : ""} onChange={(e) => setDial(e.target.value)}></textarea>
+                                                                </Modal.Body>
+                                                                <Modal.Footer>
+                                                                    <button type="button" id="btn-color" className="btn-override modal-btn" onClick={(e) => changeDial(e, vrSeq)} >
+                                                                        저장
+                                                                    </button>
+                                                                </Modal.Footer>
+                                                            </Modal>
+                                                        </ul>
+                                                    </div>
+                                                </li>
+                                            )}
+                                        </ul>
+                                    </div>) }
                             </Element>
                         </div>
                         </div>
