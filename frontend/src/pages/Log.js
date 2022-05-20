@@ -101,7 +101,7 @@ function Log(){
         url.get(
             `/files/${file}`)   //이상한 데이터 return
             .then((response) => {
-                console.log(response);
+                console.log(response.data);
                 console.log("파일 조회 성공")
                 setIsUpload(true);
                 //setPath("https://storage.cloud.google.com/miniminute_voice_file/testquiz.wav?authuser=1");
@@ -122,23 +122,18 @@ function Log(){
         const formdata =new FormData();     
         formdata.append('file',e.target.files[0]);
        
-        // const reader = new FileReader();
-        // reader.readAsDataURL(e.target.files[0]);
-        // reader.onloadend = () => {
-        //     setPath(reader.result);
-        // }
-        
-        //파일 전송
-        // const formData = new FormData();
-        // formData.append("file", file);
+        const reader = new FileReader();
+        reader.readAsDataURL(e.target.files[0]);
+        reader.onloadend = () => {
+            setPath(reader.result);
+        }
         
         //setPath("https://miniminute-bucket.s3.ap-northeast-2.amazonaws.com/1_1_test0510.wav");
 
         url.post(`/minutes/${mnId}/file/upload`, formdata)
             .then((response) => {
                 console.log(response.data);
-                console.log("업로드 성공");
-               
+                alert("업로드 성공!\n텍스트 변환까지 시간이 걸릴 수 있습니다.");
                 voice_recog();
             })
             .catch((error) => {
@@ -153,7 +148,7 @@ function Log(){
         .then((response) => {
             console.log("stt 성공");
             console.log(response);
-            setIsUpload(true);
+            getEmotion();
         })
         .catch((error) => {
             console.log("stt 실패 "+ error.response);
@@ -261,7 +256,7 @@ function Log(){
                 console.log("화자 list 조회");
                 console.log(response.data);
                 setNameList(response.data);
-                getEmotion();
+                // getEmotion();
             })
             .catch((error) => {
                 console.log("화자 list 조회 fail: "+error);
@@ -335,6 +330,7 @@ function Log(){
             .then((response) => {
                 console.log("감정인식 성공");
                 console.log(response);
+                setIsUpload(true);
             })
             .catch((error) => {
                 console.log("감정인식 실패: "+error);
@@ -415,7 +411,7 @@ function Log(){
                                                         </Modal.Footer>
                                                     </Modal>
                                                             {/* <img src={chatProfile} alt='any' /> */}
-                                                            <span style={{fontSize: '2rem'}}>{emotion[dialogue.emotion_type].title}</span>
+                                                            <span style={{fontSize: '2rem'}}>{emotion[dialogue.emotion_type] && emotion[dialogue.emotion_type].title}</span>
                                                 </span>
                                                 )}
                                       

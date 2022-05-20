@@ -748,7 +748,6 @@ label input[type=radio]:checked{ /*안먹음*/
   margin: 30px;
   font-weight: bold;
   background-color: #E0BFE6;
-  background-image: linear-gradient(90deg, #E0BFE6, #B5E61D, #FFF200);
 }
 
 .sum-content {

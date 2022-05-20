@@ -159,7 +159,7 @@ function Emotion (){
                                             style={{width: "300px", margin: "0 80px 20px 0"}}
                                             segmentsShift={0.5}
                                             viewBoxSize={[105, 105]}
-                                            label={({dataEntry}) => dataEntry.value+"%"}
+                                            label={({dataEntry}) => dataEntry.value === 0 ? "" : dataEntry.value+"%"}
                                             labelStyle={{fontSize: "5px", fontWeight: "bold", opacity: "0.8"}}
                                             animate
                                         />
@@ -250,7 +250,7 @@ function Emotion (){
                                             style={{width: "300px", margin: "0 80px 20px 10px"}}
                                             segmentsShift={0.5}
                                             viewBoxSize={[105, 105]}
-                                            label={({dataEntry}) => dataEntry.value+"%"}
+                                            label={({dataEntry}) => dataEntry.value === 0 ? "" : dataEntry.value+"%"}
                                             labelStyle={{fontSize: "5px", fontWeight: "bold", opacity: "0.8"}}
                                             animate
                                         />
