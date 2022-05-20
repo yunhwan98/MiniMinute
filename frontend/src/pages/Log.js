@@ -33,15 +33,15 @@ function Log(){
     const [end,setEnd] = useState("");
     const [nameModal, setNameModal] = useState(false);
     const [name, setName] = useState("");   //참가자 이름
-    const [nameList, setNameList] = useState("");
+    const [nameList, setNameList] = useState([]);
     const [spkSeq, setSpkSeq] = useState([]);
     const [dialModal, setDialModal] = useState(false);  //대화 수정
     const [dial, setDial] = useState("");
     const [vrSeq, setVrSeq] = useState("");
     const playerInput = useRef();
     const [search, setSearch] = useState('');   //검색어
-    const [Seq,setSeq] = useState();
     const [dial2, setDial2] = useState([]);
+    
     const emotion = [
         {id: 0, title: '😡'},
         {id: 1, title: '😢'},
@@ -119,24 +119,22 @@ function Log(){
         console.log(name);
         console.log(type);
         setParticipant(false);
-
+        const formdata =new FormData();     
+        formdata.append('file',e.target.files[0]);
        
-        const reader = new FileReader();
-        reader.readAsDataURL(e.target.files[0]);
-        reader.onloadend = () => {
-            setPath(reader.result);
-        }
+        // const reader = new FileReader();
+        // reader.readAsDataURL(e.target.files[0]);
+        // reader.onloadend = () => {
+        //     setPath(reader.result);
+        // }
+        
         //파일 전송
         // const formData = new FormData();
         // formData.append("file", file);
         
         //setPath("https://miniminute-bucket.s3.ap-northeast-2.amazonaws.com/1_1_test0510.wav");
 
-        url.post(`/minutes/${mnId}/file/upload`, {
-            "file_name": name,
-            "file_extension": type,
-            "file_path": "C:\\Users\\yunhwan\\Desktop\\"
-        })
+        url.post(`/minutes/${mnId}/file/upload`, formdata)
             .then((response) => {
                 console.log(response.data);
                 console.log("업로드 성공");
