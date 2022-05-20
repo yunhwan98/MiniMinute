@@ -196,48 +196,8 @@ function Emotion (){
                                             
                                         </div>
                                     </div>
-                                    <div style={{width:'90%'}}>
+                                    <div style={{width:'90%', whiteSpace: 'pre-wrap'}}>
                                         <h5>MINI MINUTE 감정분석</h5>
-                                        {/* <div className="analyse">
-                                            <div className="emotion-label">
-                                                😶
-                                                <h6>무감정</h6>
-                                            </div>
-                                            <p>일반적인 발언이 다수 발견되었습니다. (offensive: 5% hate: 5% default: 90%)
-                                                <br/>OO님의 “일반” 구간 분당 음절 수는 약 “265음절/분” 입니다.
-                                                <br/>말의 빠르기가 보통입니다. “잘하고 있어요!”
-                                            </p>
-                                        </div>
-                                        <div className="analyse">
-                                            <div className="emotion-label">
-                                                😄
-                                                <h6>행복</h6>
-                                            </div>
-                                            <p>일반적인 발언이 다수 발견되었습니다. (offensive: 5% hate: 5% default: 90%)
-                                                <br/>OO님의 “일반” 구간 분당 음절 수는 약 “265음절/분” 입니다.
-                                                <br/>말의 빠르기가 보통입니다. “잘하고 있어요!”
-                                            </p>
-                                        </div>
-                                        <div className="analyse">
-                                            <div className="emotion-label">
-                                                😡
-                                                <h6>분노</h6>
-                                            </div>
-                                            <p>일반적인 발언이 다수 발견되었습니다. (offensive: 5% hate: 5% default: 90%)
-                                                <br/>OO님의 “일반” 구간 분당 음절 수는 약 “265음절/분” 입니다.
-                                                <br/>말의 빠르기가 보통입니다. “잘하고 있어요!”
-                                            </p>
-                                        </div>
-                                        <div className="analyse">
-                                            <div className="emotion-label">
-                                                😢
-                                                <h6>슬픔</h6>
-                                            </div>
-                                            <p>일반적인 발언이 다수 발견되었습니다. (offensive: 5% hate: 5% default: 90%)
-                                                <br/>OO님의 “일반” 구간 분당 음절 수는 약 “265음절/분” 입니다.
-                                                <br/>말의 빠르기가 보통입니다. “잘하고 있어요!”
-                                            </p>
-                                        </div> */}
                                         {totaldata.text}
                                     </div>
                                 </div>
@@ -286,7 +246,7 @@ function Emotion (){
                                             
                                         </div>
                                     </div>
-                                    <div style={{width:'90%'}}>
+                                    <div style={{width:'90%',whiteSpace:'pre-wrap'}}>
                                         <h5>MINI MINUTE 감정분석</h5>
                                         {/* <div className="analyse">
                                             <div className="emotion-label">

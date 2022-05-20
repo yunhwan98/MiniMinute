@@ -89,7 +89,7 @@ function Log_list(props) {
                                 </Modal>
                             </div>
                             {searchResult.map(minute => //일단 회의참가자 말고 메모 보이게 만듦
-                                <Log_card key={minute.mn_id} dr_id={dr_id} mn_id={minute.mn_id} mn_title={minute.mn_title} mn_date={minute.mn_date} mn_explanation={minute.mn_explanation}/>
+                                <Log_card key={minute.mn_id} dr_id={dr_id} mn_id={minute.mn_id} mn_title={minute.mn_title} mn_date={minute.mn_date} mn_explanation={minute.mn_explanation} like={result.is_like}/>
                             )}
                             </div>
                         </div>  

@@ -39,9 +39,9 @@ export default function Summary(){
                             </div>
                             <div className="key-content">
                                 <ul>
-                                    {result.keyword && <li>{result.keyword.keyword1}</li>}
-                                    {result.keyword && <li>{result.keyword.keyword2}</li>}
-                                    {result.keyword && <li>{result.keyword.keyword3}</li>}
+                                    {result.keyword && <li>#{result.keyword.keyword1}</li>}
+                                    {result.keyword && <li>#{result.keyword.keyword2}</li>}
+                                    {result.keyword && <li>#{result.keyword.keyword3}</li>}
                                 </ul>
                             </div>
                             <div className="sum-title">

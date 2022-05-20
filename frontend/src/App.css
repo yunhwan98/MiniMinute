@@ -742,12 +742,15 @@ label input[type=radio]:checked{ /*안먹음*/
   margin-bottom: 3em;
 }
 
+.key-content ul {
+  padding: 0;
+}
+
 .key-content li {
   float: left;
   font-size: 4em;
   margin: 30px;
   font-weight: bold;
-  background-color: #E0BFE6;
 }
 
 .sum-content {
@@ -1113,6 +1116,7 @@ li{
   flex-direction: column;
   justify-content: center;
   padding: 3rem;
+  white-space: pre-wrap;
 }
 
 .speech-analyse li{
