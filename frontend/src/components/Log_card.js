@@ -3,13 +3,13 @@ import {Link} from 'react-router-dom';
 import {Modal} from "react-bootstrap";
 import url from '../api/axios';
 
-export default function Log_card({dr_id, dr_name, mn_id, mn_title, mn_date, mn_explanation}) {
+export default function Log_card({dr_id, dr_name, mn_id, mn_title, mn_date, mn_explanation, like}) {
     const drId = dr_id ? dr_id : "1";
     const drName = dr_name ? dr_name : "home";
     const [move, setMove] = useState(false);
     const [dr_info, setDr_info] = useState([]);
     const [checked, setChecked] = useState(""); //체크된 디렉토리 id
-    const [fav, setFav] = useState(false);
+    let fav=like;
 
     //회의록 삭제
     const delMn = (e) => {
@@ -61,12 +61,28 @@ export default function Log_card({dr_id, dr_name, mn_id, mn_title, mn_date, mn_e
 
     const favorite = () => {
         if (fav) {  //이미 즐겨찾기
-            setFav(false);
-            alert("즐겨찾기에서 제외됐습니다!");
+            url.put(`/minutes/${mn_id}`, {
+                "is_like": false
+            }).then((response) => {
+                fav=false;
+                console.log("즐겨찾기에서 제외됐습니다!");
+                window.location.reload();
+                })
+                .catch((error)=>{
+                    console.log("즐겨찾기에서 제외 fail: "+error);
+                })
         }
         else {
-            setFav(true);
-            alert("즐겨찾기 되었습니다!");
+            url.put(`/minutes/${mn_id}`, {
+                "is_like": true
+            }).then((response) => {
+                fav=true;
+                console.log("즐겨찾기됐습니다!");
+                window.location.reload();
+                })
+                .catch((error)=>{
+                    console.log("즐겨찾기 추가 fail: "+error);
+                })
         }
     }
 

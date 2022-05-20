@@ -90,7 +90,7 @@ const Home = () => {
 
     const defaultMin = minutes.filter(minutes => minutes.dr_id === parseInt(home)); //home 디렉토리
     const defaultDir = dr_info.filter(dr_info => dr_info.dr_id > home); //home 디렉토리 제외
-    const favMin = minutes.filter(minutes => `${minutes}`); //즐겨찾기
+    const favMin = minutes.filter(minutes => minutes.is_like === true); //즐겨찾기
     
     const minResult = defaultMin.filter(minute => ( //search 검색어가 포함되는 회의록만 filter(search가 공백시에는 전부 보임)
         `${minute.mn_title}`.toLowerCase().includes(search) || `${minute.mn_date}`.toLowerCase().includes(search)
@@ -137,8 +137,8 @@ const Home = () => {
                                 <p>회의록</p>
                             </div>
                             <div className="log-card">
-                                {minResult.map(result =>
-                                    <Log_card key={result.mn_title} dr_id={result.dr_id} mn_id={result.mn_id} mn_title={result.mn_title} mn_date={result.mn_date} mn_explanation={result.mn_explanation}/>
+                                {minResult.map(min =>
+                                    <Log_card key={min.mn_title} dr_id={min.dr_id} mn_id={min.mn_id} mn_title={min.mn_title} mn_date={min.mn_date} mn_explanation={min.mn_explanation} like={min.is_like}/>
                                 )}
                             </div>
                         </div>
@@ -154,7 +154,7 @@ const Home = () => {
                             </div>
                             <div className="log-card">
                                 {favResult.map(result =>
-                                    <Log_card key={result.mn_title} dr_id={result.dr_id} mn_id={result.mn_id} mn_title={result.mn_title} mn_date={result.mn_date} mn_explanation={result.mn_explanation}/>
+                                    <Log_card key={result.mn_title} dr_id={result.dr_id} mn_id={result.mn_id} mn_title={result.mn_title} mn_date={result.mn_date} mn_explanation={result.mn_explanation} like={result.is_like}/>
                                 )}
                             </div>
                         </div>

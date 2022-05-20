@@ -478,14 +478,14 @@ def result(request, mn_id):
     for i in range(0, len(total_emotion_count)):
         if (max(total_emotion_count) == total_emotion_count[i]):
             if i == 0:
-                total_emotion_rate_feedback += "격앙된 분위기였네요." \
+                total_emotion_rate_feedback += "격앙된 분위기였네요.\n" \
                                                "분노는 전염된답니다. 너무 흥분하지 않도록 조심!"
                 break
             elif i == 3:
-                total_emotion_rate_feedback += "행복한 분위기였네요."
+                total_emotion_rate_feedback += "행복한 분위기였네요.\n"
                 break
             elif i == 1:
-                total_emotion_rate_feedback += "다운된 분위기였네요." \
+                total_emotion_rate_feedback += "다운된 분위기였네요.\n" \
                                                "다음에는 좀 더 활기차게 진행해보는게 어때요?"
                 break
             else:
