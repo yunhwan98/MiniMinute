@@ -53,6 +53,7 @@ class Minutes(models.Model):
         db_column="file_id",
         null=True,
     )
+    is_like=models.BooleanField(default=False)
 
     class Meta:
         db_table = 'minutes'

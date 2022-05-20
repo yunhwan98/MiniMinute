@@ -32,4 +32,7 @@ urlpatterns = [
     # 회의 결과 모아서 조회
     path('result/<int:mn_id>', views.result),
     path('result/recent', views.get_recent_result),
+
+    # 즐겨찾기 회의록 조회
+    path('lists/like', views.get_like_minute)
 ]

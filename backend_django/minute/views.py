@@ -660,3 +660,12 @@ def get_recent_result(request):
                                        'speech_rate': data[idx]['speech_rate']}
 
     return JsonResponse({'result': recent_result}, status=200)
+
+# 즐겨찾기된 회의록 조회
+@api_view(['GET'])
+@permission_classes((IsAuthenticated,))
+@authentication_classes((JSONWebTokenAuthentication,))
+def get_like_minute(request):
+    obj = Minutes.objects.filter(user_id=request.user.id, is_like=True)
+    serializer = MinutesSerializer(obj, many=True)
+    return JsonResponse(serializer.data, safe=False)
