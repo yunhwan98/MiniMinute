@@ -30,5 +30,6 @@ urlpatterns = [
     path('<int:mn_id>/choice/speaker', views.choice_speaker),
 
     # 회의 결과 모아서 조회
-    path('result/<int:mn_id>', views.result)
+    path('result/<int:mn_id>', views.result),
+    path('result/recent', views.get_recent_result),
 ]

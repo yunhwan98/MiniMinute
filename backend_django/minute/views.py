@@ -234,7 +234,8 @@ def file_upload(request, mn_id):
     if request.method == 'POST':
         # 파일 정보 저장
         print(os.path.splitext(request.FILES['file'].name))
-        file_data = {'file_name':os.path.splitext(request.FILES['file'].name)[0], 'file_extension':os.path.splitext(request.FILES['file'].name)[1][1:]}
+        file_data = {'file_name': os.path.splitext(request.FILES['file'].name)[0],
+                     'file_extension': os.path.splitext(request.FILES['file'].name)[1][1:]}
         file_data['file_path'] = 'test'
         file_serializer = FileSerializer(data=file_data)
         if file_serializer.is_valid():
@@ -245,7 +246,8 @@ def file_upload(request, mn_id):
             file = File.objects.get(file_id=minutes.file_id.file_id)
             # 버킷에 업로드
             s3 = boto3.resource('s3')
-            s3.Bucket('miniminute-bucket').put_object(Key='{}_{}.{}'.format(file.file_id, file.file_name, file.file_extension), Body=request.FILES['file'])
+            s3.Bucket('miniminute-bucket').put_object(
+                Key='{}_{}.{}'.format(file.file_id, file.file_name, file.file_extension), Body=request.FILES['file'])
             data = {'file': file_serializer.data, 'minutes': model_to_dict(minutes)}
             return JsonResponse(data, status=201)
         return JsonResponse(file_serializer.errors, status=400)
@@ -341,9 +343,10 @@ def create_minute_with_share_link(request, mn_share_link):
 
         minutes_serializer = MinutesSerializer(minutes)
         file_serializer = FileSerializer(file)
-        speaker_serializer = SpeakerSerializer(speaker,many=True)
-        vr_serializer = VoiceRecognitionSerializer(voice_recognition,many=True)
-        response = {'minutes': minutes_serializer.data, 'file': file_serializer.data, 'speaker': speaker_serializer.data, 'voice_recognition': vr_serializer.data}
+        speaker_serializer = SpeakerSerializer(speaker, many=True)
+        vr_serializer = VoiceRecognitionSerializer(voice_recognition, many=True)
+        response = {'minutes': minutes_serializer.data, 'file': file_serializer.data,
+                    'speaker': speaker_serializer.data, 'voice_recognition': vr_serializer.data}
         return JsonResponse(response, status=201)
 
 
@@ -387,7 +390,7 @@ def result(request, mn_id):
     serializer = VoiceRecognitionSerializer(obj, many=True)
     total_data = serializer.data
 
-    obj = Minutes.objects.get(user_id=request.user.id)
+    obj = Minutes.objects.get(mn_id=mn_id, user_id=request.user.id)
     serializer = MinutesSerializer(obj)
     spk_seq = serializer.data['speaker_seq']
     obj = VoiceRecognition.objects.filter(mn_id=mn_id, speaker_seq=spk_seq)
@@ -407,9 +410,12 @@ def result(request, mn_id):
             offensive = 0.0
             general = 0.0
         else:
-            hate = user_speech_count[2]/sum(user_speech_count)
-            offensive = user_speech_count[1]/sum(user_speech_count)
-            general = user_speech_count[0]/sum(user_speech_count)
+            hate = user_speech_count[2] / sum(user_speech_count)
+            offensive = user_speech_count[1] / sum(user_speech_count)
+            general = user_speech_count[0] / sum(user_speech_count)
+
+    speech_rate = get_speech_rate(request, mn_id)
+
     fb_data = {'mn_id': mn_id, 'user_id': request.user.id,
                'angry': user_emotion_count[0] / len(user_data),
                'sadness': user_emotion_count[1] / len(user_data),
@@ -418,7 +424,7 @@ def result(request, mn_id):
                'hate_rate': hate,
                'offensive_rate': offensive,
                'general_rate': general,
-               'speech_rate': 265}
+               'speech_rate': speech_rate['total']}
     try:
         obj = Feedback.objects.get(mn_id=mn_id, user_id=request.user.id)
         obj.delete()
@@ -448,17 +454,16 @@ def result(request, mn_id):
     offensive_rate = fb_data['offensive_rate']
     general_rate = fb_data['general_rate']
     total_hate_speech_rate = round((hate_rate + offensive_rate) * 100.0, 2)
-    if offensive_rate >= hate_rate and offensive_rate >= general_rate and offensive_rate!=0:
+    if offensive_rate >= hate_rate and offensive_rate >= general_rate and offensive_rate != 0:
         one_line_review += "#공격적 언행 "
     elif hate_rate >= offensive_rate and hate_rate >= general_rate and hate_rate != 0:
         one_line_review += "#증오적 언행 "
     elif general_rate >= offensive_rate and general_rate >= hate_rate:
-        one_line_review += "#일상적 대화 "
+        one_line_review += "#일반적 대화 "
 
-    speech_rate = fb_data['speech_rate']
-    if speech_rate > 265 * 1.3:
+    if speech_rate['total'] > 265 * 1.3:
         one_line_review += "#빠름 입니다."
-    elif speech_rate < 265 * 0.6:
+    elif speech_rate['total'] < 265 * 0.6:
         one_line_review += "#느림 입니다."
     else:
         one_line_review += "#보통 빠르기 입니다."
@@ -520,7 +525,7 @@ def result(request, mn_id):
     # 공격발언(수정중)
     text = "분노 감정에서의 공격&차별 발언 비율이 " + str(total_hate_speech_rate)
 
-    if user_emotion_count[0]==0:
+    if user_emotion_count[0] == 0:
         text = "감지된 분노 감정 발화가 없습니다."
     elif total_hate_speech_rate >= 50:
         text = text + "%로 매우 높은 편이에요." \
@@ -536,13 +541,12 @@ def result(request, mn_id):
         text = text + "%로 보통인 편이에요." \
                       "\n감정 조절을 잘 하고 계신 것으로 보입니다!"
 
-
-    fb['hate_speech_rate'] = {'hate_rate': round(hate_rate, 2), 'offensive_rate': round(offensive_rate, 2), 'general_rate': round(general_rate, 2), 'text': text}
+    fb['hate_speech_rate'] = {'hate_rate': round(hate_rate, 2), 'offensive_rate': round(offensive_rate, 2),
+                              'general_rate': round(general_rate, 2), 'text': text}
 
     # 말 빠르기(수정중)
-    speech_rate = 350
-    rate = 1.32
-    text = username + "님의 분당 음절 수는 약 " + str(round(speech_rate, 2)) + "음절/분 으로 정상 성인 평균 265음절/분 대비 약 " + str(
+    rate = round(speech_rate['total'] / (265.0), 2)
+    text = username + "님의 분당 음절 수는 약 " + str(round(speech_rate['total'], 2)) + "음절/분 으로 정상 성인 평균 265음절/분 대비 약 " + str(
         rate) + "배입니다." \
                 "\n전반적으로 "
     if (rate >= 1.3):
@@ -558,9 +562,68 @@ def result(request, mn_id):
     return JsonResponse({'result': fb}, status=200)
 
 
+# 분당 음절 수 계산
+def get_speech_rate(request, mn_id):
+    obj = Minutes.objects.get(mn_id=mn_id, user_id=request.user.id)
+    serializer = MinutesSerializer(obj)
+    speaker_seq = serializer.data['speaker_seq']
+    obj = VoiceRecognition.objects.filter(mn_id=mn_id, speaker_seq=speaker_seq)
+    serializer = VoiceRecognitionSerializer(obj, many=True)
+
+    speech_rate = OrderedDict()
+    time = 0.0
+    text = ""
+    data = serializer.data
+    for idx in range(0, len(data)):
+        time = time + (float(data[idx]['vr_end']) - float(data[idx]['vr_start']))
+        text += data[idx]['vr_text']
+    text = text.replace(" ", "")
+    text = text.replace(".", "")
+
+    total_speech_rate = (len(text) / time) * 60
+
+    emotion_speech_rate = [0.0, 0.0, 0.0, 0.0]
+    for type in range(0, 4):
+        obj = VoiceRecognition.objects.filter(mn_id=mn_id, speaker_seq=speaker_seq, emotion_type=type)
+        serializer = VoiceRecognitionSerializer(obj, many=True)
+        text = ""
+        time = 0
+        data = serializer.data
+        for idx in range(0, len(data)):
+            time = time + (float(data[idx]['vr_end']) - float(data[idx]['vr_start']))
+            text += data[idx]['vr_text']
+        text = text.replace(" ", "")
+        text = text.replace(".", "")
+        if time == 0:
+            emotion_speech_rate[type] = 0.0
+        else:
+            emotion_speech_rate[type] = (len(text) / time) * 60
+    speech_rate['total'] = total_speech_rate
+    speech_rate['angry'] = emotion_speech_rate[0]
+    speech_rate['sadness'] = emotion_speech_rate[1]
+    speech_rate['neutral'] = emotion_speech_rate[2]
+    speech_rate['happiness'] = emotion_speech_rate[3]
+    return speech_rate
+
+
 # 최근 5개의 회의록 결과 조회
 @api_view(['GET'])
 @permission_classes((IsAuthenticated,))
 @authentication_classes((JSONWebTokenAuthentication,))
-def recent_result(request, mn_id):
-    return None
+def get_recent_result(request):
+    obj = Feedback.objects.filter(user_id=request.user.id).order_by('-mn_id')
+    serializer = FeedbackSerializer(obj, many=True)
+    data = serializer.data
+
+    recent_result = OrderedDict()
+
+    if len(recent_result) > 5:
+        for idx in range(0, 5):
+            recent_result[str(idx)] = {'hate_speech_rate': data[idx]['hate_rate'] + data[idx]['offensive_rate'],
+                                       'speech_rate': data[idx]['speech_rate']}
+    else:
+        for idx in range(0, len(data)):
+            recent_result[str(idx)] = {'hate_speech_rate': data[idx]['hate_rate'] + data[idx]['offensive_rate'],
+                                       'speech_rate': data[idx]['speech_rate']}
+
+    return JsonResponse({'result': recent_result}, status=200)
