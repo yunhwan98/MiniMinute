@@ -557,6 +557,39 @@ def result(request, mn_id):
     else:
         text = text + "느린 편이에요." \
                       "\n원활한 대화를 위해 좀 더 빠르게 말하는 연습을 해보는 건 어떨까요?"
+    l = []
+    l.append(speech_rate['angry'])
+    l.append(speech_rate['sadness'])
+    l.append(speech_rate['neutral'])
+    l.append(speech_rate['happiness'])
+    for i in range(0,4):
+        if(max(l) == l[i]):
+            if i==0:
+                text += "\n분노"
+            elif i==1:
+                text += "\n슬픔"
+            elif i==2:
+                text += "\n무감정"
+            else:
+                text += "\n행복"
+    text += "일 때 가장 말이 빨랐어요. 평균 대비 약 " + str(round(max(l)/265, 2))+"배의 속도예요."
+    print(l)
+    min=10000
+    for i in range(0,4):
+        if(l[i]!=0.0 and l[i]<min):
+            min = l[i]
+    print(min)
+    for i in range(0,4):
+        if(min == l[i]):
+            if i==0:
+                text += "\n분노"
+            elif i==1:
+                text += "\n슬픔"
+            elif i==2:
+                text += "\n무감정"
+            else:
+                text += "\n행복"
+    text += "일 때 가장 말이 느렸어요. 평균 대비 약 " + str(round(min/265, 2))+"배의 속도예요."
     fb['speech'] = {'text': text}
 
     return JsonResponse({'result': fb}, status=200)
