@@ -147,7 +147,7 @@ function Sidebar() {
             </div>
             <div className="profile">
                 <div className="profile-box" style={{height: "140px" ,width:"140px"}}>
-                    <img className="profile-image" src={img} />
+                    {img && <img className="profile-image" src={img} />}
                 </div>
 
                 {/* <img src={preview} style={{height: "140px"}}/> */}
