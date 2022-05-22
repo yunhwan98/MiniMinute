@@ -120,11 +120,6 @@ function Emotion (){
 
     }
 
-
-    
-   
-
-
     return(
         <div>
             <Header_log/>
@@ -150,8 +145,8 @@ function Emotion (){
                                 <img src={emo_img} style={{width: '3.0rem'}}/>
                                 <span style={{fontSize:'1.2rem' ,margin:'1rem',fontWeight:'bold'}}>감정분포</span>
                             </div>
-                            <div className="emotion" style={{border: 'solid',margin: '0px 50px', padding: '4rem', display:"flex"}}>
-                                <div>
+                            <div className="emotion" style={{boxShadow: '1px 1px 5px grey',margin: '0px 50px', padding: '4rem', display:"flex"}}>
+                                <div style={{flex: 1}}>
                                     <h5>회의 전체 감정 현황</h5>
                                     <div className="chart">
                                         <PieChart
@@ -159,7 +154,7 @@ function Emotion (){
                                             style={{width: "300px", margin: "0 80px 20px 0"}}
                                             segmentsShift={0.5}
                                             viewBoxSize={[105, 105]}
-                                            label={({dataEntry}) => dataEntry.value === 0 ? "" : dataEntry.value+"%"}
+                                            label={({dataEntry}) => dataEntry.value === 0 ? "" : Math.round(dataEntry.value)+"%"}
                                             labelStyle={{fontSize: "5px", fontWeight: "bold", opacity: "0.8"}}
                                             animate
                                         />
@@ -202,7 +197,7 @@ function Emotion (){
                                     </div>
                                 </div>
 
-                                <div style={{marginLeft: "2.5em"}}>
+                                <div style={{flex: 1}}>
                                     <h5>내 감정 현황</h5>
                                     <div className="chart">
                                         <PieChart
@@ -210,7 +205,7 @@ function Emotion (){
                                             style={{width: "300px", margin: "0 80px 20px 10px"}}
                                             segmentsShift={0.5}
                                             viewBoxSize={[105, 105]}
-                                            label={({dataEntry}) => dataEntry.value === 0 ? "" : dataEntry.value+"%"}
+                                            label={({dataEntry}) => dataEntry.value === 0 ? "" : Math.round(dataEntry.value)+"%"}
                                             labelStyle={{fontSize: "5px", fontWeight: "bold", opacity: "0.8"}}
                                             animate
                                         />
@@ -248,46 +243,6 @@ function Emotion (){
                                     </div>
                                     <div style={{width:'90%',whiteSpace:'pre-wrap'}}>
                                         <h5>MINI MINUTE 감정분석</h5>
-                                        {/* <div className="analyse">
-                                            <div className="emotion-label">
-                                                😶
-                                                <h6>무감정</h6>
-                                            </div>
-                                            <p>일반적인 발언이 다수 발견되었습니다. (offensive: 5% hate: 5% default: 90%)
-                                                <br/>OO님의 “일반” 구간 분당 음절 수는 약 “265음절/분” 입니다.
-                                                <br/>말의 빠르기가 보통입니다. “잘하고 있어요!”
-                                            </p>
-                                        </div>
-                                        <div className="analyse">
-                                            <div className="emotion-label">
-                                                😄
-                                                <h6>행복</h6>
-                                            </div>
-                                            <p>일반적인 발언이 다수 발견되었습니다. (offensive: 5% hate: 5% default: 90%)
-                                                <br/>OO님의 “일반” 구간 분당 음절 수는 약 “265음절/분” 입니다.
-                                                <br/>말의 빠르기가 보통입니다. “잘하고 있어요!”
-                                            </p>
-                                        </div>
-                                        <div className="analyse">
-                                            <div className="emotion-label">
-                                                😡
-                                                <h6>분노</h6>
-                                            </div>
-                                            <p>일반적인 발언이 다수 발견되었습니다. (offensive: 5% hate: 5% default: 90%)
-                                                <br/>OO님의 “일반” 구간 분당 음절 수는 약 “265음절/분” 입니다.
-                                                <br/>말의 빠르기가 보통입니다. “잘하고 있어요!”
-                                            </p>
-                                        </div>
-                                        <div className="analyse">
-                                            <div className="emotion-label">
-                                                😢
-                                                <h6>슬픔</h6>
-                                            </div>
-                                            <p>일반적인 발언이 다수 발견되었습니다. (offensive: 5% hate: 5% default: 90%)
-                                                <br/>OO님의 “일반” 구간 분당 음절 수는 약 “265음절/분” 입니다.
-                                                <br/>말의 빠르기가 보통입니다. “잘하고 있어요!”
-                                            </p>
-                                        </div> */}
                                         {userdata.text}
                                     </div>
                                 </div>
@@ -298,13 +253,10 @@ function Emotion (){
                                     <img src={emo_img} style={{width: '3.0rem'}}/>
                                     <span style={{fontSize:'1.2rem' ,margin:'1rem',fontWeight:'bold'}}>발언유형감지</span>
                             </div>
-                            <div className='Speech-result' style={{border: 'solid'}}>
+                            <div className='Speech-result'>
                                 <ApexChart options={options} series={series} type="bar" height={300} width={500} />                 
                                     <div className='speech-analyse'>
                                         <li><b>{hatespeech.text}</b></li>
-                                        {/* <li>"<b>공격 발언</b>"은 화가 났을 때, 가장 많이 발견되었어요.</li>
-                                        <li>"<b>차별 발언</b>"은 슬플 때, 가장 많이 발견되었어요.</li>
-                                        <li> 올바른 언어 사용에 좀 더 신경써주세요!</li>                                */}
                                     </div>            
                             </div>
                         </div>
@@ -314,24 +266,12 @@ function Emotion (){
                                     <img src={emo_img} style={{width: '3.0rem'}}/>
                                     <span style={{fontSize:'1.2rem' ,margin:'1rem',fontWeight:'bold'}}>말 빠르기</span>
                             </div>
-                            <div className='Speech-result' style={{border: 'solid'}}>
+                            <div className='Speech-result'>
                                            
                                     <div className='speech-analyse'>
                                         <li>
                                             <b>{speed}</b>
                                         </li>
-
-                                        {/* <li>
-                                            OO님의 분당 음절 수는 약 "350 음절/분"으로 정상 성인 평균 "265 음절/분 대비 약 "<b>1.32배</b> 입니다."
-                                            전반적으로 "빠른 편"이에요.
-                                            다음에는 조금만 천천히 말해보는 건 어떨까요?
-                                        </li> */}
-                                        {/* <li>
-                                        행복할 때 가장 말이 빨라졌어요. 평균 대비 약 <b>1.5배</b>만큼 빨랐어요.
-                                        </li>
-                                        <li>
-                                        슬플 때 말이 가장 느려졌어요. 평균 대비 약 <b>1.4배</b>만큼 느렸어요.
-                                        </li>                       */}
                                     </div>            
                             </div>
                         </div>
