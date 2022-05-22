@@ -53,10 +53,11 @@ function Sidebar() {
         .then((res) => {
             setImg( window.URL.createObjectURL(new Blob([res.data], { type: res.headers['content-type'] } )));
             localStorage.setItem('img', window.URL.createObjectURL(new Blob([res.data], { type: res.headers['content-type'] } )));
-            console.log('성공!!!!')
+            console.log('프로필 불러오기 성공');
         })
         .catch(e => {
-            console.log(`error === ${e}`)
+            console.log('프로필 불러오기 실패');
+            console.log(e.res);
         })     
       },[user]);
 

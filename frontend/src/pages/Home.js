@@ -114,8 +114,8 @@ const Home = () => {
                                     {/* <img src={emo_img} style={{width: '3.0rem'}}/> */}
                                     <span style={{fontSize:'1.5em' ,margin:'1rem',fontWeight:'bold'}}>📊 회의태도 변화</span>
                             </div>
-                            <div className='home_feedback' style={{ display:"flex",borderRadius:'10px', margin: '1em',boxShadow: '1px 1px 5px grey'}}>
-                                <div className='Speech-result' >
+                            <div className='Speech-result' style={{ display:"flex",borderRadius:'10px', margin: '1em',boxShadow: '1px 1px 5px grey'}}>
+                                <div>
                                         <ApexChart options={options} series={series} type="line"  height={400} width={600} />                                
                                 </div>
                                 <div className='speech-analyse' /*style={{backgroundColor: 'rgba( 185, 107, 198, 0.1 )'}}*/ >
