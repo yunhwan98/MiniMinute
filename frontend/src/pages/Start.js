@@ -5,7 +5,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import LoginModal from '../components/Login/LoginModal';
 import SignupModal from '../components/Signup/SignupModal';
 import miniminute_logo from '../images/logo.png';
-import axios from 'axios';
 import LogoutGoogle from '../components/Login/LogoutGoogle';
 import start1 from '../images/start1.png';
 import start2 from '../images/start2.png';
@@ -13,6 +12,7 @@ import start3 from '../images/start3.png';
 import background from '../images/start_background.png';
 import Carousel from 'react-bootstrap/Carousel'
 import url from '../api/axios';
+import svg from "../images/start-bg.svg";
 
 const Start_page = () => {
     const [user, setUser] = useState([]);  //유저 정보 저장
@@ -24,8 +24,8 @@ const Start_page = () => {
         localStorage.setItem('user',JSON.stringify(userinfo));
         setisAuthenticated(authenticated);
         window.location.reload();   //새로고침
-       
-        
+
+
         /*setUser(username);*/
     }
     //로그아웃
@@ -49,25 +49,24 @@ const Start_page = () => {
                     console.log(error.response)
                 });
         }
-      },[isAuthenticated]);
+    },[isAuthenticated]);
 
     return (
-        <div className = "Start" >
+        <div className="start-bg">
             <Start_nav  isAuthenticated ={isAuthenticated} userHasAuthenticated={userHasAuthenticated} userLogout={userLogout}/>
-            <div style={{ padding: '5% 10%'}}>
-            <Carousel variant="dark">
-            <Carousel.Item >
+            <div style={{ padding: '5% 10% 0 10%'}}>
+                <Carousel variant="dark">
+                    <Carousel.Item >
                         <div className="start-div"
-                            style={{
-                                height: "500px", borderRadius: '50px', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundImage:
-                                    `url(${background})`, backgroundSize: '100%'
-                            }}
+                             style={{
+                                 height: "500px", borderRadius: '50px', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundImage:
+                                     `url(${background})`, backgroundSize: '100%'
+                             }}
                         >
-                            <div></div>
                             <div style={{ height: "100%", display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'start' }}>
-                                <div style={{ display: 'flex', width: '70%', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-                                    <p style={{ padding: '1rem', fontSize: '2rem', fontWeight: 'bold', color: 'white' }}>회의시간에는 회의에만 집중하세요!</p>
-                                    <p style={{ padding: '1rem', fontSize: '1.3rem', color: 'white' }}>미니미닛이 회의 내용을 대신 기록해줄게요</p>
+                                <div style={{ display: 'flex', width: '90%', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                                    <p style={{ padding: '1rem', fontSize: '2.5rem', fontWeight: 'bold', color: 'white' }}>회의시간에는 회의에만 집중하세요!</p>
+                                    <p style={{ padding: '1rem', fontSize: '1.5rem', color: 'white' }}>미니미닛이 회의 내용을 대신 기록해줄게요</p>
                                 </div>
                                 <div style={{ display: 'flex', width: '30%', height: "50%", flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
                                     <img src={start1} style={{height:'100%'  }} />
@@ -75,49 +74,48 @@ const Start_page = () => {
                             </div>
                         </div>
 
-                </Carousel.Item>
-                <Carousel.Item>
-                
+                    </Carousel.Item>
+                    <Carousel.Item>
+
                         <div className="start-div"
-                            style={{
-                                height: "500px", borderRadius: '50px', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundImage:
-                                    `url(${background})`, backgroundSize: '100%'
-                            }}
+                             style={{
+                                 height: "500px", borderRadius: '50px', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundImage:
+                                     `url(${background})`, backgroundSize: '100%'
+                             }}
                         >
                             <div style={{ height: "100%", display: 'flex', flexDirection: 'row-reverse', alignItems: 'center', justifyContent: 'start' }}>
-                                <div style={{ display: 'flex', width: '70%', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-                                    <p style={{ padding: '1rem', fontSize: '2rem', fontWeight: 'bold', color: 'white' }}>회의의 분위기를 떠올리고 싶나요?</p>
-                                    <p style={{ padding: '1rem', fontSize: '1.3rem', color: 'white' }}>참가자들의 감정을 대화형식으로 한 눈에 볼 수 있어요</p>
+                                <div style={{ display: 'flex', width: '90%', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                                    <p style={{ padding: '1rem', fontSize: '2.5rem', fontWeight: 'bold', color: 'white' }}>회의의 분위기를 떠올리고 싶나요?</p>
+                                    <p style={{ padding: '1rem', fontSize: '1.5rem', color: 'white' }}>참가자들의 감정을 대화형식으로 한 눈에 볼 수 있어요</p>
                                 </div>
                                 <div style={{ display: 'flex', width: '30%', height: '50%', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
                                     <img src={start2} style={{ height: "100%" }} />
                                 </div>
                             </div>
                         </div>
-                </Carousel.Item>
-                <Carousel.Item>
+                    </Carousel.Item>
+                    <Carousel.Item>
                         <div className="start-div"
-                            style={{
-                                height: "500px", borderRadius: '50px', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundImage:
-                                    `url(${background})`, backgroundSize: '100%'
-                            }}
+                             style={{
+                                 height: "500px", borderRadius: '50px', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundImage:
+                                     `url(${background})`, backgroundSize: '100%'
+                             }}
                         >
                             <div style={{ height: "100%", display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'start' }}>
-                                <div style={{ display: 'flex', width: '70%', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-                                    <p style={{ padding: '1rem', fontSize: '2rem', fontWeight: 'bold', color: 'white' }}>회의에서 나는 어땠을까?</p>
-                                    <p style={{ padding: '1rem', fontSize: '1.3rem', color: 'white' }}>감정분석을 기반하여 문제점을 파악해봐요</p>
+                                <div style={{ display: 'flex', width: '90%', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                                    <p style={{ padding: '1rem', fontSize: '2.5rem', fontWeight: 'bold', color: 'white' }}>회의에서 나는 어땠을까?</p>
+                                    <p style={{ padding: '1rem', fontSize: '1.5rem', color: 'white' }}>감정분석을 기반하여 문제점을 파악해봐요</p>
                                 </div>
                                 <div style={{ display: 'flex', width: '30%',height: '50%', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
                                     <img src={start3} style={{ height: "100%" }} />
                                 </div>
                             </div>
                         </div>
-                </Carousel.Item>
-            </Carousel>
+                    </Carousel.Item>
+                </Carousel>
             </div>
             <Start_footer/>
         </div>
-
     );
 
 };
