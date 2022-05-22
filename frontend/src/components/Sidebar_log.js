@@ -153,7 +153,7 @@ function Sidebar_log(props) {
                     <li><Link className="dropdown-item" to="/profile">프로필 수정</Link></li>
                     <li><Link className="dropdown-item" to="/" onClick={userLogout}>로그아웃</Link></li>
                     <li><button className="dropdown-item none-btn" onClick={delMinute}>회의록 삭제</button></li>
-                    <li><Link className="dropdown-item" to="" onClick={onEditLogHandler}>회의록 수정</Link></li>
+                    {/*<li><Link className="dropdown-item" to="" onClick={onEditLogHandler}>회의록 수정</Link></li>*/}
                 </ul>
             </div>
 

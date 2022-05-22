@@ -154,9 +154,6 @@ function Profile() {
 
                     </div>
 
-                
-        
-
                     {/*<hr style={{width: "800px", color: "inherit", opacity: "0.7"}}/>*/}
                     <form style={{width: "430px"}}>
                         <div className="nickname">

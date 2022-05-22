@@ -16,7 +16,6 @@
   color: #ffffff;
   border: 2px solid #B96BC6;
   background-color: #B96BC6;
-  border-radius: 0.25rem;
   transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
 }
 
@@ -30,6 +29,7 @@
   width: fit-content;
   height: 38px;
   padding: 0 13px;
+  border-radius: 5px;
 }
 
 /*버튼 테두리, 배경 제거*/
@@ -230,6 +230,7 @@
   width: 150px;
   height: 35px;
   font-weight: 550;
+  border-radius: 2rem;
 }
 
 .directory {
@@ -267,12 +268,21 @@
 }
 
 .article{
-  padding: 25px 0 0 260px;
+  padding: 25px 40px 0 260px;
   width: 100%;
   min-height: 635px;
 }
 
 /*Home.js*/
+.home-chart{
+  margin-bottom: 4em;
+  border: 1px solid white;
+  background: white;
+  border-radius: 5px;
+  box-shadow: 0px 1px 4px 0.5px rgb(0 0 0 / 8%);
+  /*box-shadow: -1px 0px 1px -1px rgb(0 0 0 / 20%), 0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%);*/
+}
+
 .log-list {
   margin-bottom: 15px;
   min-height: 500px;
@@ -280,9 +290,9 @@
 
 .directory-name {
   display: flex;
+  color: #212529;
+  font-size: 21px;
   font-weight: bold;
-  text-decoration: underline;
-  text-underline-position: under;
 }
 
 .log-card {
@@ -303,7 +313,8 @@
 }
 
 #card-override {
-  border: 1px solid #212529;
+  box-shadow: 0px 1px 4px 0.5px rgb(0 0 0 / 8%);
+  border: 1px solid white;
   height: 232px;
   width: 248px;
   margin: 0 10px 10px 0;
@@ -313,7 +324,7 @@
   -ms-transform: scale(1);
   -o-transform: scale(1);
   transition: all 0.3s ease-in-out;
-  border-radius: 0;
+  border-radius: 5px;
   font-weight: lighter;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -338,7 +349,7 @@
 .favorite {
   position: absolute;
   right: 3px;
-  bottom: 10px;
+  bottom: 7px;
 }
 
 .del-mn:hover, .move-mn:hover, .favorite:hover {
@@ -375,6 +386,8 @@
   margin-right: 10px;
   width: 100px;
   height: 35px;
+  border-radius: 5px;
+  box-shadow: 0px 1px 4px 0.5px rgb(0 0 0 / 8%);
 }
 
 /*footer*/
@@ -448,7 +461,7 @@
   margin-top: 10px;
   font-size: 16px;
   padding: 5px 47px;
-
+  border-radius: 5px;
 }
 
 #prof-hr {
@@ -470,6 +483,7 @@
   width: 65px;
   height: 38px;
   margin-top: 5px;
+  border-radius: 5px;
 }
 
 .quit-btn {
@@ -766,11 +780,17 @@ label input[type=radio]:checked{ /*안먹음*/
 }
 
 /*Start_page.css*/
+.start-bg{
+  background-image: linear-gradient(rgba(0,0,0,0.02), rgba(0,0,0,0.1)), url("./images/start-bg.svg");
+  background-repeat: no-repeat;
+  background-size: 100%;
+}
+
 .navbar {
   height: 100px;
   padding: 0px 30px;
-
 }
+
 #main .hero-header {
   text-align: center;
   background-color: whitesmoke;
