@@ -42,6 +42,8 @@ function Log(){
     const [search, setSearch] = useState('');   //검색어
     const [dial2, setDial2] = useState([]);
     const [spinner,setSpinner] =useState(false);    //스피너 보여주기
+    const [speakerModal, setSpeakerModal] =useState(false);//화자 선택 모달
+    const [checked, setChecked] = useState("");
 
     const emotion = [
         {id: 0, title: '😡'},
@@ -165,31 +167,11 @@ function Log(){
                 console.log(response.data);
                 setDialogue(response.data);
                 setDial2(response.data);
-                getSummary();
             })
             .catch((error) => {
                 console.log("stt 조회 실패 "+ error);
             })
-    }, [isUpload, dialModal, nameModal])
-
-    //키워드, 요약 생성
-    const getSummary = () => {
-        url.post(`/summary/${mnId}`)
-            .then((response)=> {
-                console.log("요약문 생성");
-            })
-            .catch((error)=>{
-                console.log("요약문 생성 실패: "+error);
-            })
-
-        url.post(`/keyword/${mnId}`)
-            .then((response)=> {
-                console.log("키워드 생성");
-            })
-            .catch((error)=>{
-                console.log("키워드 생성 실패: "+error);
-            })
-    }
+    }, [isUpload, dialModal, nameModal, speakerModal])
 
     const moveAudio = (current) => {//클릭시 시간으로 이동
         //playerInput.current.audio.current.currentTime = 3;    
@@ -258,7 +240,6 @@ function Log(){
                 console.log("화자 list 조회");
                 console.log(response.data);
                 setNameList(response.data);
-                // getEmotion();
             })
             .catch((error) => {
                 console.log("화자 list 조회 fail: "+error);
@@ -274,10 +255,30 @@ function Log(){
             .then((response) => {
                 console.log("화자 설정 성공");
                 console.log(response);
-                window.location.reload();
+                getSummary();
             })
             .catch((error) => {
                 console.log("화자 설정 실패: "+error);
+            })
+    }
+
+    //키워드, 요약 생성
+    const getSummary = () => {
+        url.post(`/summary/${mnId}`)
+            .then((response)=> {
+                console.log("요약문 생성");
+            })
+            .catch((error)=>{
+                console.log("요약문 생성 실패: "+error);
+            })
+
+        url.post(`/keyword/${mnId}`)
+            .then((response)=> {
+                console.log("키워드 생성");
+                window.location.reload();
+            })
+            .catch((error)=>{
+                console.log("키워드 생성 실패: "+error);
             })
     }
 
@@ -295,6 +296,25 @@ function Log(){
             })
             .catch((error)=>{
                 console.log("참가자 이름 변경 실패: "+error);
+            })
+    }
+
+    const changeSpeaker = (e, vr_seq) => {  //이 대화의 화자만 변경
+        e.preventDefault();
+        let spk = parseInt(checked);
+        console.log(vr_seq);
+
+        url.put(
+            `/voice/recognition/${mnId}/${vr_seq}`, {
+                "speaker_seq": spk
+            })
+            .then((response) => {
+                console.log("화자 변경 성공");
+                console.log(response);
+                setSpeakerModal(false);
+            })
+            .catch((error)=>{
+                console.log("화자 변경 실패: "+error);
             })
     }
 
@@ -363,7 +383,7 @@ function Log(){
                 <div className="article">
                     <div style={{ display: "flex" }} className="fade-in">
                         <div style={{ flex: 2 }}>
-                            <h5>회의 전문</h5>
+                            <h5><b>회의 전문</b></h5>
                             <Nav justify id="nav-log" variant="tabs" defaultActiveKey="/home">
                                 <Nav.Item>
                                     <Nav.Link id="nav-link" eventKey="link-1" onClick={(e) => emotionFilter(e, "all")}>전체</Nav.Link>
@@ -389,10 +409,36 @@ function Log(){
                                                 {dial2.map(dialogue =>
                                                     <li className={dialogue.speaker_seq === minutes.speaker_seq ? "chat-mine" : "chat-other"} key={dialogue.vr_id}>
                                                         {nameList && nameList.filter(data => data.speaker_seq === dialogue.speaker_seq).map(data =>
-                                                            <span className='chat-profile' key={data.speaker_seq} onContextMenu={(e) => { openCtxtProf(e); setSpkSeq(dialogue.speaker_seq) }}>
+                                                            <span className='chat-profile' key={data.speaker_seq} onContextMenu={(e) => { openCtxtProf(e); setSpkSeq(dialogue.speaker_seq); setVrSeq(dialogue.vr_seq) }}>
                                                                 <div id="prof-menu">
                                                                     <ul>
                                                                         <li className="dropdown-item" onClick={setSpeaker}>'나'로 지정하기</li>
+                                                                        <li className="dropdown-item" onClick={()=>setSpeakerModal(dialogue.vr_seq)}>화자 변경</li>
+                                                                        <Modal show={speakerModal === dialogue.vr_seq} onHide={() => setSpeakerModal(false)}>
+                                                                            <Modal.Header closeButton>
+                                                                                <Modal.Title>화자 선택하기</Modal.Title>
+                                                                            </Modal.Header>
+                                                                            <Modal.Body>
+                                                                            <h5>화자 목록</h5>
+                                                                                <div className="radio-dr">
+                                                                                    {nameList.map(result =>
+                                                                                        <label className="radio-label" key={result.speaker_seq}>
+                                                                                            <input type="radio"
+                                                                                                   value={result.speaker_seq}
+                                                                                                   checked={checked === `${result.speaker_seq}`}
+                                                                                                   onChange={(e)=>setChecked(e.target.value)}
+                                                                                            />
+                                                                                        {result.speaker_name}</label>
+                                                                                    )}
+                                                                                </div>
+                                                                            </Modal.Body>
+                                                                            <Modal.Footer>
+                                                                                <button type="button" id="btn-color" className="modal-btn"
+                                                                                        onClick={(e)=>changeSpeaker(e, vrSeq)}>
+                                                                                    변경
+                                                                                </button>
+                                                                        </Modal.Footer>
+                                                                    </Modal>
                                                                     </ul>
                                                                 </div>
                                                                 <span className='chat-user' onClick={() => { setNameModal(dialogue.vr_id); setSpkSeq(dialogue.speaker_seq); }}>
@@ -489,7 +535,7 @@ function Log(){
                                 src={path}   //test audio
                                 ref={playerInput}
                                 volume={0.5}
-                                style={{ marginBottom: "40px", width: "100%", border: "1px solid #E0BFE6", boxShadow: "none", borderRadius: "0" }}
+                                style={{ marginBottom: "40px", width: "100%", boxShadow: "0px 1px 4px 0.5px rgb(0 0 0 / 8%)", borderRadius: "0" }}
                                 customAdditionalControls={[]}
                             />
                             }
