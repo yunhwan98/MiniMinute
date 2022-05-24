@@ -69,6 +69,11 @@ n_channels = 1
 
 def audio_predict(predict_audio, sr, start, end):
     audio_data = split_wav(predict_audio, sr, start, end)
+    if audio_data.ndim == 2:
+        temp = []
+        for i in audio_data:
+            temp.append(i[0])
+        audio_data = np.array(temp).astype(np.float64)
     mfccs = librosa.feature.mfcc(y=audio_data, sr=sr, n_mfcc=40)
     padded_mfccs = pad_sequences(mfccs, padding='post', maxlen=max_pad_len)
     audio_data = tf.reshape(padded_mfccs, [-1, n_row, n_columns, n_channels])
