@@ -2,13 +2,8 @@ import React, {useState, useEffect} from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Modal, Button} from 'react-bootstrap';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
-import Find_pwModal from '../Find_pwModal';
-import axios from 'axios';
-import LoginGoogle from './LoginGoogle';
-import LogoutGoogle from './LogoutGoogle';
 import url from '../../api/axios';
-import {gapi} from 'gapi-script';
-import URL from "../../api/axios";
+
 
 //로그인 모달 창
 export default function LoginModal(props) {
@@ -66,15 +61,6 @@ export default function LoginModal(props) {
                         <div><input type="password" name="password"  placeholder="비밀번호" value={password} onChange={(e)=>setPassword(e.currentTarget.value)}className="login-text"/></div>
                         {/* <div className="remember-email"><input type="checkbox" onChange={onClick} checked/>이메일 기억하기</div> */}
                         <button type="submit"  onSubmit={onSubmit} className="submit-btn" >로그인</button>
-                        <div className="links">
-                            {/* <Find_pwModal name="비밀번호를 잊으셨나요?" /> */}
-                        </div>
-                        {/* <hr className="login-hr"/>
-                        <div id="google-title">구글 아이디로 로그인</div>
-                        <div className ="google-login">
-                            <LoginGoogle setaccessToken={setaccessToken} handleClose={handleClose} />
-                            <LogoutGoogle setaccessToken={setaccessToken} />
-                        </div> */}
                     </form>
                 </div>
             </Modal>

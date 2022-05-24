@@ -3,7 +3,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import {Modal, Button} from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import LoginGoogle from '../Login/LoginGoogle';
 import url from '../../api/axios';
 
 export default function SignupModal(props) {

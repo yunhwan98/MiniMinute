@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react";
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import Header_log from "../components/Header_log";
 import SidebarLog from "../components/Sidebar_log";
 import {PieChart} from "react-minimal-pie-chart";
@@ -19,6 +19,7 @@ function Emotion (){
     const [hatespeech,setHatespeech] =useState([]); //공격 발언비율 
     const [speed,setSpeed] = useState("");        //발화 속도
     const [loading,setLoading]= useState(false);
+    const navigate = useNavigate();
 
     let data_total = [];    //전체 감정비율 데이터
     let data_user = [];     // 회원 감정비율 데이터
@@ -71,6 +72,10 @@ function Emotion (){
             console.log("회의록 정보 불러오기");
             console.log(response.data);
             setMinutes(response.data);
+            if(!response.data.speaker_seq){ //speaker_seq 지정이 안되있을 때 이전페이지 이동
+                alert(`'나'를 지정해주세요`);
+                navigate(-1);
+            }
             })
             .catch((error) => { //오류메시지 보이게 함
             console.log(error.response);

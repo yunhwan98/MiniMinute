@@ -5,7 +5,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import LoginModal from '../components/Login/LoginModal';
 import SignupModal from '../components/Signup/SignupModal';
 import miniminute_logo from '../images/logo.png';
-import LogoutGoogle from '../components/Login/LogoutGoogle';
 import start1 from '../images/start1.png';
 import start2 from '../images/start2.png';
 import start3 from '../images/start3.png';
