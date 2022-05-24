@@ -1,10 +1,8 @@
 import React, { useState } from "react";
 import {Modal} from "react-bootstrap";
-import DatePicker, { registerLocale } from "react-datepicker";
-import { Link, Navigate, useNavigate } from 'react-router-dom';
+import DatePicker from "react-datepicker";
+import { useNavigate } from 'react-router-dom';
 import "react-datepicker/dist/react-datepicker.css";
-import AddParticipant from "./AddParticipant";
-import axios from 'axios';
 import url from '../api/axios';
 
 export default function EditLog_modal(props) {

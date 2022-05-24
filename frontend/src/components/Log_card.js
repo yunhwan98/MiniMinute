@@ -32,7 +32,6 @@ export default function Log_card({dr_id, dr_name, mn_id, mn_title, mn_date, mn_e
         url.get(
             "/directorys/lists")
             .then((response) => {
-                console.log(response.data);
                 setDr_info(response.data);
             })
             .catch((error) => {
@@ -52,7 +51,7 @@ export default function Log_card({dr_id, dr_name, mn_id, mn_title, mn_date, mn_e
             `/minutes/${mn_id}`,
             {"dr_id": checked})
             .then((response) =>{
-                console.log(response);
+                console.log("회의록 이동");
                 setMove(false);
                 alert("회의록이 이동되었습니다!");
                 window.location.reload();   //새로고침
@@ -159,7 +158,7 @@ export default function Log_card({dr_id, dr_name, mn_id, mn_title, mn_date, mn_e
                         </svg>}
                         {fav && <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#F46EAF"
                                      className="bi bi-heart-fill" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd"
+                            <path fillRule="evenodd"
                                   d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
                         </svg>}
                     </button>

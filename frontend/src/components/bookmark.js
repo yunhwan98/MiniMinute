@@ -14,9 +14,6 @@ const Demo = styled('div')(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
 }));
 
-
-
-
 export default function InteractiveList({bm_seq, mn_id, bm_name, bm_start, bm_end, bookmarkOperate}) {
     let scroller = Scroll.scroller;
     const [editModal, setEditModal] = useState(false);

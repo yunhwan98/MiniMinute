@@ -1,8 +1,6 @@
 import React, { useState } from "react";
-import { Link } from 'react-router-dom';
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import profile from '../images/profile.png';
 import {Modal} from "react-bootstrap";
 import url from '../api/axios';
 import {useNavigate } from 'react-router-dom';
@@ -56,7 +54,6 @@ function Profile() {
     //     setPreview(profile);
         
     // };
-
 
     const changeName = async(event) => {    //이름변경
         console.log("실행");

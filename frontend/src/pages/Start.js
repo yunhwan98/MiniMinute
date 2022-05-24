@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import Start_nav from "../components/Start_nav";
 import Start_footer from "../components/Start_footer";
-import { Link, useNavigate } from 'react-router-dom';
 import LoginModal from '../components/Login/LoginModal';
 import SignupModal from '../components/Signup/SignupModal';
 import miniminute_logo from '../images/logo.png';
@@ -11,7 +10,6 @@ import start3 from '../images/start3.png';
 import background from '../images/start_background.png';
 import Carousel from 'react-bootstrap/Carousel'
 import url from '../api/axios';
-import svg from "../images/start-bg.svg";
 
 const Start_page = () => {
     const [user, setUser] = useState([]);  //유저 정보 저장

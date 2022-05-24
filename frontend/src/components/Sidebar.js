@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import {Link, useNavigate, useParams} from 'react-router-dom';
 import {Modal} from "react-bootstrap";
-import profile from '../images/profile.png';
 import setting from '../images/setting.png';
 import NewLog_modal from "./NewLog_modal";
 import url from '../api/axios';
@@ -67,7 +66,6 @@ function Sidebar() {
         url.get(
             "/directorys/lists")
             .then((response) => {
-                console.log(response.data);
                 setDr_info(response.data);
                 setHome(response.data[0].dr_id);
             })
@@ -102,7 +100,7 @@ function Sidebar() {
             `/directorys/${id}`,
             {"dr_name": newDrName},)
             .then((response) => {
-                console.log(response);
+                console.log("디렉토리 이름 변경 성공");
                 alert("디렉토리 이름이 변경되었습니다!");
                 setNewDrName("");
                 setEditDr(false);
