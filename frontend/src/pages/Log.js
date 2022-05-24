@@ -546,16 +546,18 @@ function Log(){
                                     <h5 style={{ flexGrow: 1 }}>북마크</h5>
                                 </div>
                                 <hr id="log-hr" />
+                                <div className="bookmark-result" style={{height: '80%'}}>
                                 <div className="bookmark-detail">
                                     {bookmarkList = bookmark.map((bookmark) =>
                                         <Bookmark key={bookmark.bm_seq} bm_seq={bookmark.bm_seq} bm_name={bookmark.bm_name} bm_start={bookmark.bm_start} bm_end={bookmark.bm_end} mn_id={bookmark.mn_id} bookmarkOperate={bookmarkOperate} />
                                     )}
                                 </div>
+                                </div>
                             </div>
                             <div className="memo">
                                 <h5>메모</h5>
                                 <hr id="log-hr" />
-                                <textarea placeholder="여기에 메모하세요" cols="35" rows="10" value={memo ? memo : ""} onChange={(e) => setMemo(e.currentTarget.value)}></textarea>
+                                <textarea className="memo-result" placeholder="여기에 메모하세요" cols="35" rows="10" value={memo ? memo : ""} onChange={(e) => setMemo(e.currentTarget.value)}></textarea>
                                 <button type="submit" id="btn-color" onClick={onEditLogHandler} className="memo-btn" >저장</button>
                             </div>
                         </div>

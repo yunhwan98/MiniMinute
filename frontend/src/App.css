@@ -602,6 +602,8 @@ label input[type=radio]:checked{ /*안먹음*/
 
 .side-func {
   margin-left: 7em;
+  display: flex;
+  flex-direction: column;
 }
 
 .side-func h5{
@@ -614,16 +616,19 @@ label input[type=radio]:checked{ /*안먹음*/
 .bookmark, .memo {
   min-height: 150px;
   margin-bottom: 25px;
+  flex: 1;
 }
 
 .bookmark-detail {
   width: 300px;
   max-height: 205px;
   overflow: scroll;
+ 
 }
 
 .bookmark-detail li {
   cursor: pointer;
+  text-align: center;
 }
 
 #bm-edit{
@@ -636,10 +641,10 @@ label input[type=radio]:checked{ /*안먹음*/
 }
 
 .memo textarea{
-  width:300px;
+  width:100%;
   height: 205px;
   resize: none;
-  border: 1px solid transparent;
+  /* border: 1px solid transparent; */
   background: transparent;
 }
 
@@ -648,7 +653,7 @@ label input[type=radio]:checked{ /*안먹음*/
   height: 38px;
   position: relative;
   top: 35px;
-  right: 60px;
+  left: 80%;
   border-radius: 5px;
 }
 
@@ -1008,7 +1013,14 @@ li{
 
 
 
-/*Log.js 채팅 부분*/
+/*Log.js */
+.bookmark-result, .memo-result{
+  border-radius: 10px;
+  box-shadow: 1px 1px 5px grey;
+
+}
+
+
 .chat-wrapper ::-webkit-scrollbar {
    display: visible;
 }
