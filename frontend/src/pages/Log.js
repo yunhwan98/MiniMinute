@@ -8,12 +8,10 @@ import AudioPlayer from 'react-h5-audio-player';
 import 'react-h5-audio-player/lib/styles.css';
 import url from '../api/axios';
 import {Modal, Nav} from "react-bootstrap";
-import chatProfile from '../images/profile.png';
-import Add_bm from '../images/Add_bm2.png';
-import { createRoot } from "react-dom/client";
 import Highlighter from "react-highlight-words";
 import Scroll from 'react-scroll';
 import Spinner from 'react-bootstrap/Spinner'
+
 function Log(){
     let Element = Scroll.Element;
     let params = useParams();  //url로 정보받아오기
@@ -516,10 +514,10 @@ function Log(){
                                 </button>
                                 <Modal show={participant} onHide={() => setParticipant(false)}>
                                     <Modal.Header closeButton>
-                                        <Modal.Title>참가자 수를 입력해주세요</Modal.Title>
+                                        <Modal.Title>참가자 수</Modal.Title>
                                     </Modal.Header>
                                     <Modal.Body>
-                                        <h6>참가자 수</h6>
+                                        <h6>회의 참가자 수를 입력해주세요</h6>
                                         <input type="number" className="form-control" id="directory-name" value={pNum} onChange={(e) => setPNum(e.target.value)} />
                                     </Modal.Body>
                                     <Modal.Footer>
@@ -535,7 +533,7 @@ function Log(){
                                 src={path}   //test audio
                                 ref={playerInput}
                                 volume={0.5}
-                                style={{ marginBottom: "40px", width: "100%", boxShadow: "0px 1px 4px 0.5px rgb(0 0 0 / 8%)", borderRadius: "0" }}
+                                style={{ marginBottom: "40px", width: "100%", boxShadow: "0px 1px 4px 0.5px rgb(0 0 0 / 8%)", borderRadius: "5px" }}
                                 customAdditionalControls={[]}
                             />
                             }

@@ -1,16 +1,10 @@
 import React, { useState } from "react";
 import {Modal} from "react-bootstrap";
-import { Link, Navigate, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import url from '../api/axios';
-import { Start } from "@mui/icons-material";
-import { optionGroupUnstyledClasses } from "@mui/base";
 
 export default function New_Bookmark(props) {
     
     const [name, setName] = useState("");
-    // const [start, setStart] = useState("");
-    // const [end, setEnd] = useState("");
 
     //클릭시 회의록 생성
     const onSubmit = async(event) => {

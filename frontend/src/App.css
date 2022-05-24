@@ -577,22 +577,20 @@ label input[type=radio]:checked{ /*안먹음*/
 
 #nav-link {
   color: #212529;
-  border-radius: 0;
+  border-radius: 5px 5px 0 0;
   border: none;
   /*border-bottom: 1px solid #E0BFE6;*/
   background: transparent;
 }
 
 #nav-link:focus{
-  /*border: 1px solid #E0BFE6;*/
-  border-bottom: none;
   /*background-color: rgba(213, 219, 219, 0.4);*/
   background-color: #E6EBF6;
 }
 
 .dialogue{
   border-top: none;
-  border-radius: 0;
+  border-radius: 5px;
   /* width: 560px; */
   width: 100%;
   height: 575px;
@@ -623,7 +621,6 @@ label input[type=radio]:checked{ /*안먹음*/
   width: 300px;
   max-height: 205px;
   overflow: scroll;
- 
 }
 
 .bookmark-detail li {
@@ -644,7 +641,7 @@ label input[type=radio]:checked{ /*안먹음*/
   width:100%;
   height: 205px;
   resize: none;
-  /* border: 1px solid transparent; */
+  border: 1px solid transparent;
   background: transparent;
 }
 
@@ -652,8 +649,8 @@ label input[type=radio]:checked{ /*안먹음*/
   width: 60px;
   height: 38px;
   position: relative;
-  top: 35px;
-  left: 80%;
+  top: 10px;
+  left: 82%;
   border-radius: 5px;
 }
 
@@ -664,7 +661,7 @@ label input[type=radio]:checked{ /*안먹음*/
 .voice-btn {
   width: 140px;
   height: 40px;
-  padding: 7px 22px;
+  padding: 6px 25px;
   font-size: 16px;
   cursor: pointer;
 }
@@ -672,6 +669,7 @@ label input[type=radio]:checked{ /*안먹음*/
 .participant-btn {
   width: 190px;
   height: 50px;
+  border-radius: 5px;
 }
 
 #log-hr {
@@ -1015,8 +1013,8 @@ li{
 
 /*Log.js */
 .bookmark-result, .memo-result{
-  border-radius: 10px;
-  box-shadow: 1px 1px 5px grey;
+  border-radius: 5px;
+  box-shadow: 1px 1px 5px rgba(0 0 0 / 20%);
 
 }
 
@@ -1062,13 +1060,7 @@ li{
   flex-direction: column;
   align-items: center;
   justify-content: center;
-}
-
-.chat-profile img{
-  border-radius: 50%;
-  object-fit: cover;
-  width: 30px;
-  height: 30px;
+  min-width: 50px;
 }
 
 .chat-user:hover{

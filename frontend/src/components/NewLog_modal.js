@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import {Modal} from "react-bootstrap";
-import DatePicker, { registerLocale } from "react-datepicker";
-import { Link, Navigate, useNavigate } from 'react-router-dom';
+import DatePicker from "react-datepicker";
+import { useNavigate } from 'react-router-dom';
 import "react-datepicker/dist/react-datepicker.css";
 import url from '../api/axios';
-import { CompressOutlined } from "@mui/icons-material";
 
 function NewLog_modal(props) {
     const drId = props.dr_id ? props.dr_id : 1;   //home.js에서 만들면 1

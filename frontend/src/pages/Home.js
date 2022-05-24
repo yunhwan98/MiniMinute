@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import Sidebar from "../components/Sidebar";
 import Log_card from "../components/Log_card";
 import NotFound from "./NotFound";
-import { alignPropType } from "react-bootstrap/types";
 import button from "bootstrap/js/src/button";
 import url from '../api/axios';
 import ApexChart from 'react-apexcharts'
@@ -57,11 +56,10 @@ const Home = () => {
         colors: ['#0080D2', '#FFCF62']
     }
 
-
     const [home, setHome] = useState(''); // 홈 디렉토리 번호 설정
     const navigate = useNavigate();
     const [isAuthenticated, setisAuthenticated] = useState(localStorage.getItem('token') ? true : false);   //인증여부 확인
-    const [user, setUser] = useState(localStorage.getItem('token') ? JSON.parse(localStorage.getItem('user')) : []); //유저 정보
+    // const [user, setUser] = useState(localStorage.getItem('token') ? JSON.parse(localStorage.getItem('user')) : []); //유저 정보
     const [minutes, setMinutes] = useState([]);
     const [dr_info, setDr_info] = useState([]);
     const [search, setSearch] = useState("");
@@ -71,7 +69,6 @@ const Home = () => {
             "/minutes/lists"
         )
             .then((response) => {
-                console.log(response.data);
                 setMinutes(response.data);
                 console.log('회의록을 불러왔습니다.');
             })
@@ -85,7 +82,6 @@ const Home = () => {
             "/directorys/lists"
         )
             .then((response) => {
-                console.log(response.data);
                 setDr_info(response.data);
                 setHome(response.data[0].dr_id);
                 console.log('디렉토리 목록 조회');
