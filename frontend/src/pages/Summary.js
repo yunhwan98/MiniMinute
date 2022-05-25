@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import Header_log from "../components/Header_log";
 import SidebarLog from "../components/Sidebar_log";
 import url from '../api/axios';
@@ -10,6 +10,7 @@ export default function Summary(){
     const dr_id = params.dr_id;
     const mn_id = params.mn_id;
     const [result, setResult] = useState([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         url.get(
@@ -22,6 +23,8 @@ export default function Summary(){
             })
             .catch((error) => {
                 console.log("keyword+summary 실패 "+error);
+                alert(`'나'를 지정해주세요!`);
+                navigate(-1);
             })
     }, [])
 
