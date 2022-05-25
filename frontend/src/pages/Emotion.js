@@ -61,7 +61,8 @@ function Emotion (){
               fontSize: '12px'
             }
           }
-        }
+        },
+        colors: ['#88ADE1', '#FF4D4D', '#00AD6B']
       };
 
     useEffect(() => { // 처음에만 정보 받아옴
@@ -136,21 +137,21 @@ function Emotion (){
                         <div style={{margin: '50px 0px'}}>
                             <div style={{display:"flex" ,padding: '0rem 4rem' , alignItems: 'center'}}>
                                     <img src={emo_img} style={{width: '3.0rem'}}/>
-                                    <span style={{fontSize:'1.2rem' ,margin:'1rem',fontWeight:'bold'}}>미니미닛 감정분석</span>
+                                    <span style={{fontSize:'1.2rem' ,margin:'1rem',fontWeight:'bold'}}>MINI MINUTE 감정분석</span>
                             </div>
-                            <div className='Speech-result' style={{fontSize:"1.4em" , textDecoration: 'underline'}}>                                         
+                            <div className='Speech-result' style={{fontSize:"1.4em" , textDecoration: 'underline', textUnderlinePosition: 'under'}}>
                                     {/* <b>"{user.username}님의 {minutes.mn_title} 회의 스타일은 #행복형 #일반적 대화 #매우 빠름 입니다."</b> */}
                                     <b>{result.one_line_review}</b>
                             </div>
                         </div>
 
 
-                        <div>
+                        <div style={{margin: '50px 0'}}>
                             <div style={{display:"flex" ,padding: '0rem 4rem' , alignItems: 'center'}}>
                                 <img src={emo_img} style={{width: '3.0rem'}}/>
                                 <span style={{fontSize:'1.2rem' ,margin:'1rem',fontWeight:'bold'}}>감정분포</span>
                             </div>
-                            <div className="emotion" style={{boxShadow: '1px 1px 5px grey',margin: '0px 50px', padding: '4rem', display:"flex"}}>
+                            <div className="emotion" style={{boxShadow: '1px 1px 5px grey',margin: '1em', padding: '4rem', display:"flex", borderRadius: '10px'}}>
                                 <div style={{flex: 1}}>
                                     <h5>회의 전체 감정 현황</h5>
                                     <div className="chart">

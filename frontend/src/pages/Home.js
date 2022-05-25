@@ -10,52 +10,6 @@ import url from '../api/axios';
 import ApexChart from 'react-apexcharts'
 
 const Home = () => {
-
-    const series = [{
-        name: "공격&혐오 발언",
-        data: [10, 41, 35, 51, 49]
-    },
-    {
-        name: "발화 속도",
-        data: [1, 4, 15, 41, 69]
-    }];
-
-    const options = {
-        chart: {
-            height: 350,
-            type: 'line',
-            zoom: {
-                enabled: false
-            }
-        },
-        dataLabels: {
-            enabled: false
-        },
-        stroke: {
-            curve: 'straight',
-            width: 8
-        },
-        title: {
-            text: '',
-            align: 'left'
-        },
-        grid: {
-
-            row: {
-                colors: ['#B96BC6', 'transparent'], // takes an array which will be repeated on columns
-                opacity: 0.1
-              },
-
-        },
-        xaxis: {
-            categories: ['05-13', '05-14', '05-15', '05-16', '05-17'],
-        },
-        markers: {
-            size: 7
-        },
-        colors: ['#0080D2', '#FFCF62']
-    }
-
     const [home, setHome] = useState(''); // 홈 디렉토리 번호 설정
     const navigate = useNavigate();
     const [isAuthenticated, setisAuthenticated] = useState(localStorage.getItem('token') ? true : false);   //인증여부 확인
@@ -63,6 +17,8 @@ const Home = () => {
     const [minutes, setMinutes] = useState([]);
     const [dr_info, setDr_info] = useState([]);
     const [search, setSearch] = useState("");
+    const [minGraph, setMinGraph] = useState([]);
+    const [recent, setRecent] = useState([]);
 
     useEffect(() => { // 처음에만 정보 받아옴
         url.get(
@@ -70,12 +26,120 @@ const Home = () => {
         )
             .then((response) => {
                 setMinutes(response.data);
+                setMinGraph(response.data);
                 console.log('회의록을 불러왔습니다.');
             })
             .catch((error) => { //오류메시지 보이게 함
                 console.log(error.response);
             });
     }, []);
+
+    let byId = minGraph.sort((a, b) => { //회의 id 역순
+        return new Date(b.mn_id) - new Date(a.mn_id);
+    })
+
+    byId = byId.filter(result => (result.speaker_seq != null)); //감정분석 결과 있는 회의록만
+
+    useEffect(()=> {
+        url.get(
+            "/minutes/result/recent"
+        )
+            .then((response) => {
+                setRecent(response.data.result);
+                console.log(recent);
+            })
+            .catch((error) => {
+                console.log("최근 5개 조회 실패: "+error);
+            });
+    },[]);
+
+    const series = [{
+        name: "공격&혐오 발언",
+        data: [parseFloat(`${recent[4]?.hate_speech_rate}`).toFixed(1), parseFloat(`${recent[3]?.hate_speech_rate}`).toFixed(1), parseFloat(`${recent[2]?.hate_speech_rate}`).toFixed(1), parseFloat(`${recent[1]?.hate_speech_rate}`).toFixed(1), parseFloat(`${recent[0]?.hate_speech_rate}`).toFixed(1)]
+    },
+    {
+        name: "발화 속도",
+        data: [parseFloat(`${recent[4]?.speech_rate}`).toFixed(1), parseFloat(`${recent[3]?.speech_rate}`).toFixed(1), parseFloat(`${recent[2]?.speech_rate}`).toFixed(1), parseFloat(`${recent[1]?.speech_rate}`).toFixed(1), parseFloat(`${recent[0]?.speech_rate}`).toFixed(1)]
+    }];
+
+    const options = {
+            chart: {
+                height: 350,
+                type: 'line',
+                zoom: {
+                    enabled: false
+                }
+            },
+            dataLabels: {
+                enabled: false
+            },
+            stroke: {
+                curve: 'straight',
+                width: 8
+            },
+            title: {
+                text: '',
+                align: 'left'
+            },
+            grid: {
+
+                row: {
+                    colors: ['#B96BC6', 'transparent'], // takes an array which will be repeated on columns
+                    opacity: 0.1
+                },
+
+            },
+            xaxis: {
+                categories: [`${byId[4]?.mn_title}`, `${byId[3]?.mn_title}`, `${byId[2]?.mn_title}`, `${byId[1]?.mn_title}`, `${byId[0]?.mn_title}`],
+            },
+            yaxis: [
+            {
+                axisTicks: {
+                    show: true
+                },
+                axisBorder: {
+                    show: true,
+                    color: "#0080D2"
+                },
+                labels: {
+                    style: {
+                        colors: "#0080D2"
+                    }
+                },
+                title: {
+                    text: "공격&혐오 발언",
+                    style: {
+                        color: "#0080D2"
+                    }
+                }
+            },
+            {
+                opposite: true,
+                axisTicks: {
+                    show: true
+                },
+                axisBorder: {
+                    show: true,
+                    color: "#FFCF62"
+                },
+                labels: {
+                    style: {
+                        colors: "#FFCF62"
+                    }
+                },
+                title: {
+                    text: "발화 속도",
+                    style: {
+                        color: "#FFCF62"
+                    }
+                }
+            }
+        ],
+            markers: {
+                size: 7
+            },
+            colors: ['#0080D2', '#FFCF62']
+        }
 
     useEffect(() => { // 처음에만 정보 받아옴
         url.get(
@@ -125,7 +189,7 @@ const Home = () => {
                                 <div className='speech-analyse' /*style={{backgroundColor: 'rgba( 185, 107, 198, 0.1 )'}}*/ >
                                     <li><b>공격,차별 발언 비율이 매우 높습니다. 회의에 부적절한 태도입니다, 스스로를 돌아볼 필요가 있어요.</b></li>
                                     <li><b>말의 속도가 너무 빨라요, 전달력이 떨어질 수 있습니다. 조금 천천히 말해주세요.</b></li>
-                                    <li style={{ color: 'red' }}>"<b>공격, 혐오발언</b>","<b>발화 속도</b>"에 주의해주세요</li>
+                                    <li style={{ color: 'red' }}>"<b>공격/차별 발언</b>","<b>발화 속도</b>"에 주의해주세요</li>
                                 </div>
                             </div>
                         </div>
