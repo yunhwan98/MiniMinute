@@ -227,7 +227,7 @@ def file(request, file_id):
         s3 = boto3.client('s3')
         s3.delete_object(Bucket='miniminute-bucket', Key='{}_{}.{}'.format(obj.file_id, obj.file_name, obj.file_extension))
         # 파일 삭제
-        os.remove('profile/{}_{}.{}'.format(obj.file_id, obj.file_name, obj.file_extension))
+        os.remove('profile/audio_file/{}_{}.{}'.format(obj.file_id, obj.file_name, obj.file_extension))
         # DB 삭제
         obj.delete()
         return HttpResponse(status=204)
@@ -256,7 +256,7 @@ def file_upload(request, mn_id):
             s3.Bucket('miniminute-bucket').put_object(
                 Key='{}_{}.{}'.format(file.file_id, file.file_name, file.file_extension), Body=request_file)
             # 파일 저장
-            FileSystemStorage().save('{}_{}.{}'.format(file.file_id, file.file_name, file.file_extension), request_file)
+            FileSystemStorage().save('./audio_file/{}_{}.{}'.format(file.file_id, file.file_name, file.file_extension), request_file)
             data = {'file': file_serializer.data, 'minutes': model_to_dict(minutes)}
             return JsonResponse(data, status=201)
         return JsonResponse(file_serializer.errors, status=400)
@@ -342,7 +342,7 @@ def create_minute_with_share_link(request, mn_share_link):
             vr.save()
 
         # 파일 복사
-        shutil.copy('../profile/'+file_key, '../profile/{}_{}.{}'.format(file.file_id, file.file_name, file.file_extension))
+        shutil.copy('profile/audio_file/'+file_key, 'profile/audio_file/{}_{}.{}'.format(file.file_id, file.file_name, file.file_extension))
 
         # s3 작업
         s3 = boto3.resource('s3')
