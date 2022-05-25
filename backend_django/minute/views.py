@@ -2,6 +2,7 @@ import json
 import random
 import string
 import os
+import shutil
 from collections import OrderedDict
 
 import boto3
@@ -9,6 +10,7 @@ import numpy as np
 from django.db.models import Q
 from django.forms.models import model_to_dict
 from django.http import HttpResponse, JsonResponse
+from django.core.files.storage import FileSystemStorage
 from pydub import AudioSegment
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from rest_framework.parsers import JSONParser
@@ -221,6 +223,12 @@ def file(request, file_id):
         return JsonResponse(serializer.errors, status=400)
 
     elif request.method == 'DELETE':
+        # s3 작업
+        s3 = boto3.client('s3')
+        s3.delete_object(Bucket='miniminute-bucket', Key='{}_{}.{}'.format(obj.file_id, obj.file_name, obj.file_extension))
+        # 파일 삭제
+        os.remove('profile/{}_{}.{}'.format(obj.file_id, obj.file_name, obj.file_extension))
+        # DB 삭제
         obj.delete()
         return HttpResponse(status=204)
 
@@ -233,9 +241,7 @@ def file_upload(request, mn_id):
     minutes = Minutes.objects.get(mn_id=mn_id)
     if request.method == 'POST':
         # 파일 정보 저장
-        print(os.path.splitext(request.FILES['file'].name))
-        file_data = {'file_name': os.path.splitext(request.FILES['file'].name)[0],
-                     'file_extension': os.path.splitext(request.FILES['file'].name)[1][1:]}
+        file_data = {'file_name': os.path.splitext(request.FILES['file'].name)[0], 'file_extension': os.path.splitext(request.FILES['file'].name)[1][1:]}
         file_data['file_path'] = 'test'
         file_serializer = FileSerializer(data=file_data)
         if file_serializer.is_valid():
@@ -244,10 +250,13 @@ def file_upload(request, mn_id):
             minutes.file_id = File.objects.get(file_id=file_serializer.data.get("file_id"))
             minutes.save()
             file = File.objects.get(file_id=minutes.file_id.file_id)
+            request_file = request.FILES['file']
             # 버킷에 업로드
             s3 = boto3.resource('s3')
             s3.Bucket('miniminute-bucket').put_object(
-                Key='{}_{}.{}'.format(file.file_id, file.file_name, file.file_extension), Body=request.FILES['file'])
+                Key='{}_{}.{}'.format(file.file_id, file.file_name, file.file_extension), Body=request_file)
+            # 파일 저장
+            FileSystemStorage().save('{}_{}.{}'.format(file.file_id, file.file_name, file.file_extension), request_file)
             data = {'file': file_serializer.data, 'minutes': model_to_dict(minutes)}
             return JsonResponse(data, status=201)
         return JsonResponse(file_serializer.errors, status=400)
@@ -331,6 +340,9 @@ def create_minute_with_share_link(request, mn_share_link):
             vr.mn_id = minutes
             vr.speaker_seq = speaker_dic[vr.speaker_seq.speaker_seq]
             vr.save()
+
+        # 파일 복사
+        shutil.copy('../profile/'+file_key, '../profile/{}_{}.{}'.format(file.file_id, file.file_name, file.file_extension))
 
         # s3 작업
         s3 = boto3.resource('s3')
