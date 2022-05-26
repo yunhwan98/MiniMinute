@@ -30,6 +30,7 @@ function Log(){
     const [start,setStart] = useState("");
     const [end,setEnd] = useState("");
     const [nameModal, setNameModal] = useState(false);
+    const [addnameModal, setAddNameModal] = useState(false);
     const [name, setName] = useState("");   //참가자 이름
     const [nameList, setNameList] = useState([]);
     const [spkSeq, setSpkSeq] = useState([]);
@@ -172,8 +173,6 @@ function Log(){
     }, [isUpload, dialModal, nameModal, speakerModal])
 
     const moveAudio = (current) => {//클릭시 시간으로 이동
-        //playerInput.current.audio.current.currentTime = 3;    
-        //let start = parseInt(current.slice(0,1))*3600 +  parseInt(current.slice(2,4)) * 60 + parseInt(current.slice(5,7)); //
         let start =current;
         playerInput.current.audio.current.currentTime = start;
         playerInput.current.audio.current.play();   //오디오객체에 접근해서 플레이 조작
@@ -181,9 +180,6 @@ function Log(){
     }
 
     const bookmarkOperate = (current,current2) => {//클릭시 시간으로 이동
-        //playerInput.current.audio.current.currentTime = 3;    
-        //let start = parseInt(current.slice(0,1))*3600 +  parseInt(current.slice(2,4)) * 60 + parseInt(current.slice(5,7)); //
-        //let end = parseInt(current2.slice(0,1))*3600 +  parseInt(current2.slice(2,4)) * 60 + parseInt(current2.slice(5,7));
         let start = current;
         let end = current2;
         console.log(start);
@@ -244,7 +240,7 @@ function Log(){
             })
     }, [nameModal,dialogue])
 
-    const setSpeaker = (e) => {
+    const setSpeaker = (e) => { //회의록 화자 설정
         e.preventDefault();
 
         url.put( `/minutes/${mnId}`, {
@@ -291,6 +287,7 @@ function Log(){
                 console.log("참가자 이름 변경 성공");
                 console.log(response);
                 setNameModal(false);
+                setAddNameModal(false);
             })
             .catch((error)=>{
                 console.log("참가자 이름 변경 실패: "+error);
@@ -310,11 +307,31 @@ function Log(){
                 console.log("화자 변경 성공");
                 console.log(response);
                 setSpeakerModal(false);
+
             })
             .catch((error)=>{
                 console.log("화자 변경 실패: "+error);
             })
     }
+
+    const addSpeaker = (e) => { //화자 추가
+        url.post(
+            `/minutes/${mnId}/speaker/lists`, {
+
+            })
+            .then((response) => {
+                console.log(response.data);
+                
+                alert('화자가 추가되었습니다.');
+                changeName(e, response.data.speaker_seq);//참가자 이름변경
+            
+            })
+            .catch((error) => {
+                console.log("실패 " + error);
+                alert('화자 추가실패')
+            })
+    }
+
 
     const changeDial = (e, vr_seq) => {
         e.preventDefault();
@@ -419,7 +436,8 @@ function Log(){
                                                                 <div id="prof-menu">
                                                                     <ul>
                                                                         <li className="dropdown-item" onClick={setSpeaker}>'나'로 지정하기</li>
-                                                                        <li className="dropdown-item" onClick={()=>setSpeakerModal(dialogue.vr_seq)}>화자 변경</li>
+                                                                        <li className="dropdown-item" onClick={()=>setSpeakerModal(dialogue.vr_seq)}>화자 변경</li>        
+                                                                        <li className="dropdown-item" onClick={()=>setAddNameModal(dialogue.vr_id)}>화자 추가</li>
                                                                         <Modal show={speakerModal === dialogue.vr_seq} onHide={() => setSpeakerModal(false)}>
                                                                             <Modal.Header closeButton>
                                                                                 <Modal.Title>화자 선택하기</Modal.Title>
@@ -465,6 +483,20 @@ function Log(){
                                                                     </Modal.Body>
                                                                     <Modal.Footer>
                                                                         <button type="button" id="btn-color" className="btn-override modal-btn" onClick={(e) => changeName(e, spkSeq)} >
+                                                                            변경
+                                                                        </button>
+                                                                    </Modal.Footer>
+                                                                </Modal>
+                                                                <Modal show={addnameModal === dialogue.vr_id} onHide={() => setAddNameModal()}> 
+                                                                    <Modal.Header closeButton>
+                                                                        <Modal.Title>참가자 이름 추가</Modal.Title>
+                                                                    </Modal.Header>
+                                                                    <Modal.Body>
+                                                                        <h6>참가자 이름</h6>
+                                                                        <input type="text" className="form-control" id="name" value={name} onChange={(e) => setName(e.target.value)} />
+                                                                    </Modal.Body>
+                                                                    <Modal.Footer>
+                                                                        <button type="button" id="btn-color" className="btn-override modal-btn" onClick={(e) => addSpeaker(e)} >
                                                                             변경
                                                                         </button>
                                                                     </Modal.Footer>
