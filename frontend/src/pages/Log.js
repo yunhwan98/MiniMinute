@@ -11,7 +11,7 @@ import {Modal, Nav} from "react-bootstrap";
 import Highlighter from "react-highlight-words";
 import Scroll from 'react-scroll';
 import Spinner from 'react-bootstrap/Spinner'
-
+import axios from "axios";
 function Log(){
     let Element = Scroll.Element;
     let params = useParams();  //url로 정보받아오기
@@ -106,6 +106,28 @@ function Log(){
                 console.log(response.data);
                 console.log("파일 조회 성공")
                 setIsUpload(true);
+                axios({
+                    method: 'GET',   
+                    url: `http://127.0.0.1:8000/profile/audio_file/${response.data.file_id}_${response.data.file_name}.${response.data.file_extension}`,    
+                    headers: {
+                        'Authorization': `jwt ${localStorage.getItem('token')}`
+                    },
+                })
+                    .then((res) => {
+                        const reader = new FileReader();
+                        reader.readAsDataURL(new Blob([res.data], { type: res.headers['content-type'] } ));
+                        reader.onloadend = () => {
+                            setPath(reader.result);
+                        }
+                        // console.log(res);
+                        // setPath(URL.createObjectURL(new Blob([res.data], { type: res.headers['content-type'] })));
+                        // console.log(URL.createObjectURL(new Blob([res.data], { type: res.headers['content-type'] })));
+                        console.log('음성파일 불러오기 성공');
+                    })
+                    .catch(e => {
+                        console.log('음성파일 불러오기 실패');
+                        console.log(e.res);
+                    }) 
 
                 //setPath("https://storage.cloud.google.com/miniminute_voice_file/testquiz.wav?authuser=1");
             })
@@ -125,14 +147,21 @@ function Log(){
         const formdata =new FormData();     
         formdata.append('file',e.target.files[0]);
        
-        const reader = new FileReader();
-        reader.readAsDataURL(e.target.files[0]);
-        reader.onloadend = () => {
-            setPath(reader.result);
-        }
-        setSpinner(true);
-        //setPath("https://miniminute-bucket.s3.ap-northeast-2.amazonaws.com/1_1_test0510.wav");
+        // const reader = new FileReader();
+        // reader.readAsDataURL(e.target.files[0]);
+        // reader.onloadend = () => {
+        //     //setPath(reader.result);
+        //     //console.log(reader.result);
+        // }
+        console.log(file);
+        
+        setPath(URL.createObjectURL(new Blob([file],{ type: 'audio/wav'})));
+        console.log(URL.createObjectURL(new Blob([file],{ type: 'audio/wav'})));
 
+
+        setSpinner(true);
+        // //setPath("https://miniminute-bucket.s3.ap-northeast-2.amazonaws.com/1_1_test0510.wav");
+      
         url.post(`/minutes/${mnId}/file/upload`, formdata)
             .then((response) => {
                 console.log(response.data);
@@ -575,7 +604,7 @@ function Log(){
                                 volume={0.5}
                                 style={{ marginBottom: "40px", width: "100%", boxShadow: "0px 1px 4px 0.5px rgb(0 0 0 / 8%)", borderRadius: "5px" }}
                                 customAdditionalControls={[]}
-                            />
+                            />              
                             }
                         </div>
                         <div className="side-func">
