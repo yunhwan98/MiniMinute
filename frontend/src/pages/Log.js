@@ -12,6 +12,7 @@ import Highlighter from "react-highlight-words";
 import Scroll from 'react-scroll';
 import Spinner from 'react-bootstrap/Spinner'
 import axios from "axios";
+import { ControlPointOutlined } from "@mui/icons-material";
 function Log(){
     let Element = Scroll.Element;
     let params = useParams();  //url로 정보받아오기
@@ -101,35 +102,30 @@ function Log(){
 
     useEffect(() => {   //파일 불러오기
         url.get(
-            `/files/${file}`)   //이상한 데이터 return
+            `/files/${file}`)
             .then((response) => {
                 console.log(response.data);
                 console.log("파일 조회 성공")
                 setIsUpload(true);
-                axios({
-                    method: 'GET',   
-                    url: `http://127.0.0.1:8000/profile/audio_file/${response.data.file_id}_${response.data.file_name}.${response.data.file_extension}`,    
-                    headers: {
-                        'Authorization': `jwt ${localStorage.getItem('token')}`
-                    },
-                })
+                    axios({
+                        method:'GET',
+                        url: `http://127.0.0.1:8000/profile/audio_file/${response.data.file_id}_${response.data.file_name}.${response.data.file_extension}`,
+                        responseType:'blob',
+                        headers: {
+                            'Authorization': `jwt ${localStorage.getItem('token')}`
+                        },
+                    })
                     .then((res) => {
-                        const reader = new FileReader();
-                        reader.readAsDataURL(new Blob([res.data], { type: res.headers['content-type'] } ));
-                        reader.onloadend = () => {
-                            setPath(reader.result);
-                        }
-                        // console.log(res);
-                        // setPath(URL.createObjectURL(new Blob([res.data], { type: res.headers['content-type'] })));
-                        // console.log(URL.createObjectURL(new Blob([res.data], { type: res.headers['content-type'] })));
+                        setPath( window.URL.createObjectURL(new Blob([res.data], { type: res.headers['content-type'] } )));
+                        console.log(window.URL.createObjectURL(new Blob([res.data], { type: res.headers['content-type'] } )));
                         console.log('음성파일 불러오기 성공');
                     })
                     .catch(e => {
                         console.log('음성파일 불러오기 실패');
                         console.log(e.res);
-                    }) 
+                    })     
+                  
 
-                //setPath("https://storage.cloud.google.com/miniminute_voice_file/testquiz.wav?authuser=1");
             })
             .catch((error) => {
                 setIsUpload(false);
@@ -139,10 +135,6 @@ function Log(){
 
     const onAudioHandler = (e) => { //파일 업로드 & 오디오 보이기
         const file = e.target.files[0];
-        let name = file.name.slice(0,file.name.indexOf('.'));
-        let type = file.name.slice(file.name.indexOf('.')+1, undefined);
-        console.log(name);
-        console.log(type);
         setParticipant(false);
         const formdata =new FormData();     
         formdata.append('file',e.target.files[0]);
@@ -160,8 +152,7 @@ function Log(){
 
 
         setSpinner(true);
-        // //setPath("https://miniminute-bucket.s3.ap-northeast-2.amazonaws.com/1_1_test0510.wav");
-      
+
         url.post(`/minutes/${mnId}/file/upload`, formdata)
             .then((response) => {
                 console.log(response.data);
@@ -203,10 +194,10 @@ function Log(){
 
     const moveAudio = (current) => {//클릭시 시간으로 이동
         let start =current;
-        playerInput.current.audio.current.currentTime = start;
-        playerInput.current.audio.current.play();   //오디오객체에 접근해서 플레이 조작
+            playerInput.current.audio.current.currentTime = start;
+            playerInput.current.audio.current.play();   //오디오객체에 접근해서 플레이 조작
 
-    }
+        }
 
     const bookmarkOperate = (current,current2) => {//클릭시 시간으로 이동
         let start = current;
@@ -599,13 +590,13 @@ function Log(){
                                 </Modal>
                             </div>}
                             {isUpload && <AudioPlayer
-                                src={path}   //test audio
+                                src={path}
                                 ref={playerInput}
                                 volume={0.5}
                                 style={{ marginBottom: "40px", width: "100%", boxShadow: "0px 1px 4px 0.5px rgb(0 0 0 / 8%)", borderRadius: "5px" }}
                                 customAdditionalControls={[]}
                             />              
-                            }
+                            }   
                         </div>
                         <div className="side-func">
                             <div className="bookmark">
