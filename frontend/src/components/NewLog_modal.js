@@ -63,10 +63,8 @@ function NewLog_modal(props) {
             .then((response) => {
             console.log(response);
             setSpeakerlist(response.data);
-            // props.setLogShow(false); 
             setSpeakermodal(true);
-            alert('성공');
-            
+            console.log('성공');
             })
             .catch((error) => { //오류메시지 보이게 함
             console.log(error.response);
@@ -90,11 +88,11 @@ function NewLog_modal(props) {
 
             })
             .then((response) => {
-            console.log(response);     
+            console.log(response.data);
             setSpeakermodal(false);
             props.setLogShow(false); 
-            alert('성공');
-            
+            console.log('성공');
+            navigate(`/${drId}/${response.data.minutes.mn_id}/log`);/*클릭시 빈 회의록 페이지 이동*/
             })
             .catch((error) => { //오류메시지 보이게 함
             console.log(error.response);

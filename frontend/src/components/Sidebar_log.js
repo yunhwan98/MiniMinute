@@ -122,7 +122,7 @@ function Sidebar_log(props) {
         setShare(true);    
         url.post(
             `/minutes/share/link`, {
-            "mn_id": mnId       //우선 메모만 추가
+            "mn_id": mnId
         }
         )
             .then((response) => {
@@ -187,7 +187,7 @@ function Sidebar_log(props) {
                     </Modal.Body>
                     <Modal.Footer>
                         <CopyToClipboard text={shareLink}>
-                            <button type="button" id="btn-color" className="modal-btn" onClick={null}>
+                            <button type="button" id="btn-color" className="modal-btn" onClick={()=>alert("복사되었습니다!")}>
                                 복사
                             </button>
                         </CopyToClipboard>

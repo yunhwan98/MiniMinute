@@ -73,10 +73,10 @@ function Emotion (){
             console.log("회의록 정보 불러오기");
             console.log(response.data);
             setMinutes(response.data);
-            if(!response.data.speaker_seq){ //speaker_seq 지정이 안되있을 때 이전페이지 이동
-                alert(`'나'를 지정해주세요`);
-                navigate(-1);
-            }
+                if(!response.data.speaker_seq){ //speaker_seq 지정이 안되있을 때 이전페이지 이동
+                    alert(`'나'를 지정해주세요`);
+                    navigate(-1);
+                }
             })
             .catch((error) => { //오류메시지 보이게 함
             console.log(error.response);
@@ -103,22 +103,42 @@ function Emotion (){
             })
             .catch((error) => { //오류메시지 보이게 함
             console.log(error.response);
+            getSummary();
             });
       }, []);
+
+      const getSummary = () => {
+        url.post(`/summary/${mn_id}`)
+            .then((response)=> {
+                console.log("요약문 생성");
+            })
+            .catch((error)=>{
+                console.log("요약문 생성 실패: "+error);
+            })
+
+        url.post(`/keyword/${mn_id}`)
+            .then((response)=> {
+                console.log("키워드 생성");
+                window.location.reload();
+            })
+            .catch((error)=>{
+                console.log("키워드 생성 실패: "+error);
+            })
+    }
 
     if(loading){
         data_total = [  //임시 데이터
             { title: "무감정", value: totaldata.neutral*100, color: "#E0BFE6" },
-            { title: "행복", value: totaldata.happiness*100, color: "#B5E61D" },
+            { title: "행복", value: totaldata.happiness*100, color: "#FFF200" },
             { title: "분노", value: totaldata.angry*100, color: "#FFAEC9" },
-            { title: "슬픔", value: totaldata.sadness*100, color: "#FFF200" }
+            { title: "슬픔", value: totaldata.sadness*100, color: "#B5D2FF" }
 
         ]
         data_user = [  //임시 데이터
             { title: "무감정", value: userdata.neutral * 100, color: "#E0BFE6" },
-            { title: "행복", value: userdata.happiness * 100, color: "#B5E61D" },
+            { title: "행복", value: userdata.happiness * 100, color: "#FFF200" },
             { title: "분노", value: userdata.angry * 100, color: "#FFAEC9" },
-            { title: "슬픔", value: userdata.sadness * 100, color: "#FFF200" }
+            { title: "슬픔", value: userdata.sadness * 100, color: "#B5D2FF" }
         ]
         data_hate= [hatespeech.hate_rate,hatespeech.offensive_rate,hatespeech.general_rate];
         //data_hate=[10,20,30];
@@ -139,8 +159,7 @@ function Emotion (){
                                     <img src={emo_img} style={{width: '3.0rem'}}/>
                                     <span style={{fontSize:'1.2rem' ,margin:'1rem',fontWeight:'bold'}}>MINI MINUTE 감정분석</span>
                             </div>
-                            <div className='Speech-result' style={{fontSize:"1.4em" , textDecoration: 'underline', textUnderlinePosition: 'under'}}>
-                                    {/* <b>"{user.username}님의 {minutes.mn_title} 회의 스타일은 #행복형 #일반적 대화 #매우 빠름 입니다."</b> */}
+                            <div className='Speech-result' style={{fontSize:"1.4em", paddingLeft: "2.5em"}}>
                                     <b>{result.one_line_review}</b>
                             </div>
                         </div>
@@ -158,8 +177,7 @@ function Emotion (){
                                         <PieChart
                                             data={data_total}
                                             style={{width: "300px", margin: "0 80px 20px 0"}}
-                                            segmentsShift={0.5}
-                                            viewBoxSize={[105, 105]}
+                                            viewBoxSize={[100, 100]}
                                             label={({dataEntry}) => dataEntry.value === 0 ? "" : Math.round(dataEntry.value)+"%"}
                                             labelStyle={{fontSize: "5px", fontWeight: "bold", opacity: "0.8"}}
                                             animate
@@ -174,7 +192,7 @@ function Emotion (){
                                                 <text>무감정</text>
                                             </div>
                                             <div>
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#B5E61D"
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#FFF200"
                                                     className="bi bi-square-fill" viewBox="0 0 16 16">
                                                     <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2z"/>
                                                 </svg>
@@ -188,7 +206,7 @@ function Emotion (){
                                                 <text>분노</text>
                                             </div>
                                             <div>
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#FFF200"
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#B5D2FF"
                                                     className="bi bi-square-fill" viewBox="0 0 16 16">
                                                     <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2z"/>
                                                 </svg>
@@ -197,8 +215,7 @@ function Emotion (){
                                             
                                         </div>
                                     </div>
-                                    <div style={{width:'90%', whiteSpace: 'pre-wrap'}}>
-                                        <h5>MINI MINUTE 감정분석</h5>
+                                    <div style={{width:'90%', whiteSpace: 'pre-wrap', marginTop: "25px"}}>
                                         {totaldata.text}
                                     </div>
                                 </div>
@@ -209,8 +226,7 @@ function Emotion (){
                                         <PieChart
                                             data={data_user}
                                             style={{width: "300px", margin: "0 80px 20px 10px"}}
-                                            segmentsShift={0.5}
-                                            viewBoxSize={[105, 105]}
+                                            viewBoxSize={[100, 100]}
                                             label={({dataEntry}) => dataEntry.value === 0 ? "" : Math.round(dataEntry.value)+"%"}
                                             labelStyle={{fontSize: "5px", fontWeight: "bold", opacity: "0.8"}}
                                             animate
@@ -224,7 +240,7 @@ function Emotion (){
                                                 <text>무감정</text>
                                             </div>
                                             <div>
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#B5E61D"
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#FFF200"
                                                     className="bi bi-square-fill" viewBox="0 0 16 16">
                                                     <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2z"/>
                                                 </svg>
@@ -238,7 +254,7 @@ function Emotion (){
                                                 <text>분노</text>
                                             </div>
                                             <div>
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#FFF200"
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#B5D2FF"
                                                     className="bi bi-square-fill" viewBox="0 0 16 16">
                                                     <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2z"/>
                                                 </svg>
@@ -247,8 +263,7 @@ function Emotion (){
                                             
                                         </div>
                                     </div>
-                                    <div style={{width:'90%',whiteSpace:'pre-wrap'}}>
-                                        <h5>MINI MINUTE 감정분석</h5>
+                                    <div style={{width:'90%',whiteSpace:'pre-wrap', marginTop: "25px"}}>
                                         {userdata.text}
                                     </div>
                                 </div>

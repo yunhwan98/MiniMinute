@@ -23,10 +23,30 @@ export default function Summary(){
             })
             .catch((error) => {
                 console.log("keyword+summary 실패 "+error);
-                alert(`'나'를 지정해주세요!`);
-                navigate(-1);
+                // alert(`'나'를 지정해주세요!`);
+                // navigate(-1);
+                getSummary();
             })
     }, [])
+
+    const getSummary = () => {
+        url.post(`/summary/${mn_id}`)
+            .then((response)=> {
+                console.log("요약문 생성");
+            })
+            .catch((error)=>{
+                console.log("요약문 생성 실패: "+error);
+            })
+
+        url.post(`/keyword/${mn_id}`)
+            .then((response)=> {
+                console.log("키워드 생성");
+                window.location.reload();
+            })
+            .catch((error)=>{
+                console.log("키워드 생성 실패: "+error);
+            })
+    }
 
     return(
         <div>
