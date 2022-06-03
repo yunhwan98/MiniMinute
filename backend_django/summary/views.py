@@ -54,7 +54,7 @@ def set_summary(mn_id):
     mytokenizer: OktTokenizer = OktTokenizer()
     textrank: TextRank = TextRank(mytokenizer)
 
-    k: int = int(num / 2)  # num sentences in the resulting summary
+    k: int = int(num / 3)  # num sentences in the resulting summary
 
     summarized: str = textrank.summarize(text, k)
 
