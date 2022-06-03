@@ -192,7 +192,7 @@ const Home = () => {
                                     <ApexChart options={options} series={series} type="line" height={400} width={600} />
                                 </div>
                                 <div className='speech-analyse' /*style={{backgroundColor: 'rgba( 185, 107, 198, 0.1 )'}}*/ >
-                                    <li style={{fontSize: '1.5em' ,lineHeight: '200%'}}><b>{comment}</b></li>
+                                    <li style={{fontSize: '1.3em' ,lineHeight: '200%'}}><b>{comment}</b></li>
                                 </div>
                             </div>
                         </div>

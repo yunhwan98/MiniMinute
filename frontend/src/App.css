@@ -1140,11 +1140,12 @@ li{
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 3rem;
+  padding: 3rem 0 3rem 3rem;
   white-space: pre-line;
+  word-break: keep-all;
 }
 
 .speech-analyse li{
-  padding: 1rem;
   font-size: 1.2rem;
+  line-height: 200%;
 }
