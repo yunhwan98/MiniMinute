@@ -19,6 +19,7 @@ const Home = () => {
     const [search, setSearch] = useState("");
     const [minGraph, setMinGraph] = useState([]);
     const [recent, setRecent] = useState([]);
+    const [comment,setComment] =useState("");//최근회의록 피드백
 
     useEffect(() => { // 처음에만 정보 받아옴
         url.get(
@@ -46,6 +47,8 @@ const Home = () => {
         )
             .then((response) => {
                 setRecent(response.data.result);
+                console.log(response.data.result.comment.text);
+                setComment(response.data.result.comment.text);
                 console.log(recent);
             })
             .catch((error) => {
@@ -169,6 +172,8 @@ const Home = () => {
         || `${minute.mn_explanation}`.toLowerCase().includes(search)
     ))
 
+
+
     if (isAuthenticated) { //권한이 있을 때만 표시
         return (
             <div>
@@ -187,9 +192,7 @@ const Home = () => {
                                     <ApexChart options={options} series={series} type="line" height={400} width={600} />
                                 </div>
                                 <div className='speech-analyse' /*style={{backgroundColor: 'rgba( 185, 107, 198, 0.1 )'}}*/ >
-                                    <li><b>공격,차별 발언 비율이 매우 높습니다. 회의에 부적절한 태도입니다, 스스로를 돌아볼 필요가 있어요.</b></li>
-                                    <li><b>말의 속도가 너무 빨라요, 전달력이 떨어질 수 있습니다. 조금 천천히 말해주세요.</b></li>
-                                    <li style={{ color: 'red' }}>"<b>공격/차별 발언</b>","<b>발화 속도</b>"에 주의해주세요</li>
+                                    <li style={{fontSize: '1.5em' ,lineHeight: '200%'}}><b>{comment}</b></li>
                                 </div>
                             </div>
                         </div>
