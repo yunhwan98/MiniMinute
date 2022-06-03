@@ -670,7 +670,7 @@ def get_recent_result(request):
         for idx in range(0, len(data)):
             recent_result[str(idx)] = {'hate_speech_rate': data[idx]['hate_rate'] + data[idx]['offensive_rate'],
                                        'speech_rate': data[idx]['speech_rate']}
-    if len(recent_result) <6:
+    if len(recent_result) <5:
         text = "최근 회의록 결과 분석을 위해\n 최소 5개의 회의록 결과가 필요합니다."
         recent_result['comment'] = {'text': text}
         return JsonResponse({'result': recent_result}, status=200)
@@ -678,16 +678,16 @@ def get_recent_result(request):
     text = ""
     hate_speech_result=[0, 0]
     speech_rate_result = [0, 0, 0]
-    for i in range(0,5):
+    for idx in range(0,5):
         hate_speech_rate = data[idx]['hate_rate']+data[idx]['offensive_rate']
         if hate_speech_rate > 20:
             hate_speech_result[0]+=1
         else:
             hate_speech_result[1]+=1
 
-        if data['speech_rate']>265*1.3:
+        if data[idx]['speech_rate']>265*1.3:
             speech_rate_result[2]+=1
-        elif data['speech_rate']<265*0.7:
+        elif data[idx]['speech_rate']<265*0.7:
             speech_rate_result[0]+=1
         else:
             speech_rate_result[1]+=1
