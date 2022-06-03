@@ -670,7 +670,52 @@ def get_recent_result(request):
         for idx in range(0, len(data)):
             recent_result[str(idx)] = {'hate_speech_rate': data[idx]['hate_rate'] + data[idx]['offensive_rate'],
                                        'speech_rate': data[idx]['speech_rate']}
+    if len(recent_result) <6:
+        text = "최근 회의록 결과 분석을 위해\n 최소 5개의 회의록 결과가 필요합니다."
+        recent_result['comment'] = {'text': text}
+        return JsonResponse({'result': recent_result}, status=200)
 
+    text = ""
+    hate_speech_result=[0, 0]
+    speech_rate_result = [0, 0, 0]
+    for i in range(0,5):
+        hate_speech_rate = data[idx]['hate_rate']+data[idx]['offensive_rate']
+        if hate_speech_rate > 20:
+            hate_speech_result[0]+=1
+        else:
+            hate_speech_result[1]+=1
+
+        if data['speech_rate']>265*1.3:
+            speech_rate_result[2]+=1
+        elif data['speech_rate']<265*0.7:
+            speech_rate_result[0]+=1
+        else:
+            speech_rate_result[1]+=1
+
+    if hate_speech_result[0]>hate_speech_result[1]:
+        text += "최근 회의록 중 대다수에서, 공경+차별 발언 비율이 높게 인식되었습니다.\n" \
+                "스스로를 돌아볼 시간이 필요해보이네요.\n"
+    elif hate_speech_result[0] > 0:
+        text += "최근 회의록 중, "
+        text += str(hate_speech_result[0])
+        text += "개의 회의록에서, 공경+차별 발언 비율이 높게 인식되었습니다.\n" \
+                "주의가 필요합니다.\n"
+    else:
+        text += "최근 회의록에서 감지된 공격+차별 발언이 없습니다.\n" \
+                "잘 하고 있습니다!\n"
+
+    if speech_rate_result[1]<4:
+        text += "대화 속도에 주의를 기울일 필요가 있어보입니다.\n" \
+                "원활한 회의를 위해 힘내주세요!\n"
+    elif speech_rate_result[1]==5:
+        text += "적정 발화 속도를 잘 유지하고 계신 것으로 보입니다.\n" \
+                "잘 하고 있습니다!\n"
+    else:
+        text += "최근 회의록 중, "
+        text += str(5 - speech_rate_result[1])
+        text += "개의 회의록에서, 적절치 못한 말 빠르기가 관찰되었습니다.\n" \
+                "주의가 필요합니다.\n"
+    recent_result['comment']={'text': text}
     return JsonResponse({'result': recent_result}, status=200)
 
 # 즐겨찾기된 회의록 조회

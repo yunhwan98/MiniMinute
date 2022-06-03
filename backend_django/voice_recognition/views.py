@@ -244,7 +244,7 @@ def voice_recognition_search(request, mn_id):
         return JsonResponse(context)
 
 
-# 감정인식 테스트 (수정 필요함, 기본적인 기능 연동 끝)
+# 감정인식
 @api_view(['POST'])
 @permission_classes((IsAuthenticated,))
 @authentication_classes((JSONWebTokenAuthentication,))
