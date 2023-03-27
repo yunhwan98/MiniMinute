@@ -1,137 +1,197 @@
-### 감정인식 회의록 Mini Minute
+# Mini Minute
 
-# Rest API 통신 규칙 
-필요 시에 추가나 수정 후 표시 부탁드립니다
+## 프로젝트 설명
+
+![miniminute](https://user-images.githubusercontent.com/79241793/227952472-cb2e2046-1d99-4a93-aa82-2a1b5c2a6a43.png)
+
+## _Miniminute은?_
+
 <br>
-<br>
+참가자들의 회의 내용을 대화 형식으로 저장하고
 
-## Rest HTTP Method
+텍스트와 음성을 기반을 한 감성 인식을 통해
 
- 
-| HTTP Method | 설명             |
-| ----------- | -----------------|
-| GET         | 리소스 조회       |
-| POST        | 리소스 생성       |
-| PUT         | 리소스 전체 수정  |
-| PATCH       | 리소스 부분 수정  |
-| DELETE      | 리소스 삭제       |
-
-## HTTP 응답 코드
- 
-| Code | 설명                 |
-| ---- | -------------------- |
-| 200  | OK                   |
-| 201  | Created              |
-| 202  | Accepted             |
-| 204  | No Content           |
-| 400  | Bad Request          |
-| 401  | Unauthorized         |
-| 403  | Forbidden            |
-| 404  | Not Found            |
-| 500  | Internal Server Error|
+참가자에게 피드백을 제시하는 **_감정인식 AI회의록_**
 <br>
 
-## dJango REST API 주소
-### 이용 시 주의 사항
-> 1. 사용자 개별 정보를 건드릴 때에는 항상 토큰을 같이 실어서 보내야함<br>
-> 2. Authorization header에 토큰 실어 보낼 때 : 토큰 값 앞에 jwt + 한 칸 공백 + 토큰 값
+---
 
-### /api
+## 팀원
 
-> 토큰 발행, 검증, 갱신 관련 주소
+<table>
+  <tr>
+    <td align="center"><b>이승우(팀장)</b></td>
+    <td align="center"><b>허서영</b></td>
+    <td align="center"><b>박윤환</b></td>
+    <td align="center"><b>문지원</b></td>
+  </tr>
+  <tr>
+    <td align="center"><b>🔧Backend + AI</b></td>
+    <td align="center"><b>🔧Backend</b></td>
+    <td align="center"><b>💻Frontend</b></td>
+    <td align="center"><b>💻Frontend</b></td>
+  </tr>
+</table>
+<br>
 
-| Path                          | Method | request | response          | Code | 설명              |
-| ----------------------------- | ------ | ------- | ------------------| ---- | ----------------- |
-|/token|POST|{email, password}|{token}||JWT 토큰 발행|
-|/token/verify|POST|{token}|{token}||JWT 토큰 검증|
-|/token/refresh|POST|{token}|{token}||JWT 토큰 갱신|
+## 📝 논리 구성도
 
-### /rest-auth
+![논리구성도](https://user-images.githubusercontent.com/79241793/227952713-19d37215-dd38-4b29-a73e-68d46e11769c.png)
 
-> 로그인, 회원가입, 비밀번호 변경 주소
+## ⚙ 시스템 아키텍처
 
-| Path                          | Method | request | response          | Code | 설명              |
-| ----------------------------- | ------ | ------- | ------------------| ---- | ----------------- |
-|/login|POST|{email, password}|{token, user{<br>pk, username, email,<br>first_name, last_name}}|200 성공<br>400 실패(아이디 비밀번호 확인)|로그인|
-|/signup|POST|{email, username,<br>password1, password2}|{token, user{<br>pk, username, email,<br>first_name, last_name}}|201 성공<br>400 실패 (빈칸 or 비밀번호 값이 서로 다름)|회원가입|
-|/password/change|POST|{new_password1, new_password2}|{}|200 성공<br>401 실패(토큰 인증 실패)|비밀번호 변경|
+![아키텍쳐](https://user-images.githubusercontent.com/79241793/227952776-8ac51e99-8db8-4cd9-9b2d-163a198fb6a6.png)
 
-### /users
+## 🛠️ 사용 기술 및 라이브러리
 
-> 회원 정보 관련 주소
+<br/>
 
-| Path                          | Method | request | response          | Code | 설명              |
-| ----------------------------- | ------ | ------- | ------------------| ---- | ----------------- |
-|/lists|GET|{email, password|{token, user{<br>pk, username, email,<br>first_name, last_name}}|200 성공<br>400 실패(관리자 계정 아님)<br>401 실패(토큰 인증 실패)|회원 목록 전체 조회<br>(관리자 계정 전용)|
-|/profile|GET|{}|{id, email, user_profile,<br>password, username,<br>user_sign_up_date,<br>user_access_date}|200 성공<br>401 실패(토큰 인증 실패)|회원 조회|
-|/name/change|PUT|{username}|{id, email, user_profile,<br>password, username,<br>user_sign_up_date,<br>user_access_date}|200 성공<br>400 실패(이름 중복)<br>401 실패(토큰 인증 실패)|회원 이름 변경|
-|/email/change|PUT|{email}|{id, email, user_profile,<br>password, username,<br>user_sign_up_date,<br>user_access_date}|200 성공<br>401 실패(토큰 인증 실패)|회원 이메일 변경|
-|/withdraw|DELETE|{}|{}|204 성공<br>401 실패(토큰 인증 실패)|회원 탈퇴|
-|/profile/upload|POST|{}|{id, email, user_profile,<br>password, username,<br>user_sign_up_date,<br>user_access_date}|200 성공<br>401 실패(토큰 인증 실패)|프로필 업로드 및 수정|
-|/profile/<파일이름>|GET|{}|프로필 사진|200 성공<br>404 실패(존재하지 않는 파일)|프로필 불러오기|
-### /directorys
+### Frontend
 
-> 디렉토리 정보 관련 주소
+<img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=white"> <img src="https://img.shields.io/badge/React Router-CA4245?style=for-the-badge&logo=React Router&logoColor=white"> <img src="https://img.shields.io/badge/MUI-007FFF?style=for-the-badge&logo=MUI&logoColor=white"> <img src="https://img.shields.io/badge/Bootstrap-7952B3?style=for-the-badge&logo=Bootstrap&logoColor=white">
 
-| Path                          | Method | request | response          | Code | 설명              |
-| ----------------------------- | ------ | ------- | ------------------| ---- | ----------------- |
-|/lists|GET|{}|[{dr_id, de_name,<br>dr_pid, user_id}]|200 성공<br>401 실패(토큰 인증 실패)|사용자 디렉토리 목록 조회|
-|/lists|POST|{dr_name}|{dr_id, de_name,<br>dr_pid, user_id}|201 성공<br>400 실패(요구되지 않는 필드값)<br>401 실패(토큰 인증 실패)|디렉토리 생성|
-|/<int : 디렉토리 번호>|GET|{}|{dr_id, de_name,<br>dr_pid, user_id}|200 성공<br>401 실패(토큰 인증 실패)<br>500 실패(존재하지 않는 디렉토리)|디렉토리 개별 조회|
-|/<int : 디렉토리 번호>|PUT|{dr_name}|{dr_id, de_name,<br>dr_pid, user_id}|200 성공<br>400 실패(요구되지 않는 필드값)<br>401 실패(토큰 인증 실패)|디렉토리 이름 수정|
-|/<int : 디렉토리 번호>|DELETE|{}|{}|204 성공<br>401 실패(토큰 인증 실패)|디렉토리 삭제|
+### Backend
 
-### /minutes
-> 회의록 관련 주소
+<img src="https://img.shields.io/badge/Django-092E20?style=for-the-badge&logo=Django&logoColor=white"> <img src="https://img.shields.io/badge/MariaDB-003545?style=for-the-badge&logo=MariaDB&logoColor=white">
 
-| Path                                            | Method | request                                                                                             | response                                                                                                                                              | code     | 설명                      |
-|-------------------------------------------------|--------|-----------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------|----------|-------------------------|
-| /lists                                          | GET    | {}                                                                                                  | {mn_id,<br>mn_make_date,<br>mn_title,<br>mn_date,<br>mn_place,<br>mn_explanation,<br>mn_memo,<br>mn_share_link,<br>user_id,<br>dr_id,<br>speaker_seq} | 200 성공<br>401 실패(토큰 인증 실패)                    | 회의록 목록 조회               |
-| /lists/                                         | POST   | {mn_title,dr_id}<br>선택:<br>{mn_date,<br>mn_place,<br>mn_explanation,<br>mn_memo,<br>speaker_seq}    | {mn_id,<br>mn_make_date,<br>mn_title,<br>mn_date,<br>mn_place,<br>mn_explanation,<br>mn_memo,<br>mn_share_link,<br>user_id,<br>dr_id,<br>speaker_seq} | 201 성공<br>400 실패(요구되지 않는 필드값)<br>401 실패(토큰 인증 실패) | 회의록 생성                  |
-| /lists/like                                     | GET    | {}                                                                                                  |                                                                                                                                                       |200 성공| 즐겨찾기 등록된 회의록 조회         |
-| /<int:mn_id >                                   | GET    | {}                                                                                                  | {mn_id,<br>mn_make_date,<br>mn_title,<br>mn_date,<br>mn_place,<br>mn_explanation,<br>mn_memo,<br>mn_share_link,<br>user_id,<br>dr_id,<br>speaker_seq} | 200 성공<br>401 실패(토큰 인증 실패)<br>500 실패(존재하지 않는 회의록) | 회의록 조회                  |
-| /<int:mn_id >                                   | PUT    | 선택:<br>{mn_title,<br>dr_id,<br>mn_date,<br>mn_place,<br>mn_explanation,<br>mn_memo,<br>speaker_seq} | {mn_id,<br>mn_make_date,<br>mn_title,<br>mn_date,<br>mn_place,<br>mn_explanation,<br>mn_memo,<br>mn_share_link,<br>user_id,<br>dr_id,<br>speaker_seq} | 200 성공<br>400 실패(요구되지 않는 필드값)<br>401 실패(토큰 인증 실패) | 회의록 수정                  |
-| /<int:mn_id >                                   | DELETE | {}                                                                                                  |                                                                                                                                                       |204 성공<br>401 실패(토큰 인증 실패)| 회의록 삭제                  |
-| /share/link                                     | POST   | {mn_id}                                                                                             | {}                                                                                                                                                    |      | 공유 링크 생성                |
-| /create/with/share/<br>link/<str:mn_share_link> | GET    | {}                                                                                                  | {}                                                                                                                                                    |      | 공유 링크로 회의록 화자 조회        |
-| /create/with/share/<br>link/<str:mn_share_link> | POST   | {dr_id,speaker_seq}                                                                                 | {}                                                                                                                                                    |      | 화자 선택 후 회의록 복사          |
-| /search?keyword=검색어                             | GET    | {}                                                                                                  | {}                                                                                                                                                    |      | 내 회의록 제목,메모 등으로 검색      |
-| /result/< int:mn_id >                           | GET    | {}                                                                                                  | {keyword, summary, feedback}                                                                                                                          | 200 성공<br> 실패시 회의록 테이블<br> speaker_seq설정<br>되어있는지 확인      | 회의 결과(키워드, 요약문, 피드백) 조회 |
-| /result/recent                                 | GET    | {}                                                                                                  | {최근 5회 hate_speech_rate,<br>speech_rate}                                                                                                              | 200 성공      | 사용자 최근 5개 회의록 결과 내용 조회  |
+### AI
 
+<img src="https://img.shields.io/badge/AWS Transcribe-FFCA28?style=for-the-badge&logo=AWS Transcribe&logoColor=white"><img src="https://img.shields.io/badge/Pytorch-EE4C2C?style=for-the-badge&logo=Pytorch&logoColor=white"><img src="https://img.shields.io/badge/TensorFlow
+-FF6F00?style=for-the-badge&logo=TensorFlow
+&logoColor=white">
 
-### /minutes/<int:mn_id >/bookmark
-> 북마크 관련 주소
+#
 
-| Path           | Method | request                  | response                               | code                                              | 설명  |
-|----------------|--------|--------------------------|----------------------------------------|---------------------------------------------------|-----|
-| /lists         | GET    | {}                       | {bm_seq,bm_start,<br>bm_end,bm_name,mn_id} | 200 성공<br>401 실패(토큰 인증 실패)                        | 북마크 목록 조회 |
-| /lists         | POST   |{bm_start,bm_end,bm_name} | {bm_seq,bm_start,<br>bm_end,bm_name,mn_id} | 201 성공<br>400 실패(요구되지 않는 필드값)<br>401 실패(토큰 인증 실패) | 북마크 생성 |
-| /<int:bm_seq > | GET    |{}| {bm_seq,bm_start,<br>bm_end,bm_name,mn_id} | 200 성공<br>401 실패(토큰 인증 실패)<br>500 실패(존재하지 않는 북마크) | 북마크 조회 |
-| /<int:bm_seq > | PUT    |선택:{bm_start,bm_end,bm_name}| {bm_seq,bm_start,<br>bm_end,bm_name,mn_id} |200 성공<br>400 실패(요구되지 않는 필드값)<br>401 실패(토큰 인증 실패)| 북마크 수정 |
-| /<int:bm_seq > | DELETE |{}|                                       |204 성공<br>401 실패(토큰 인증 실패)| 북마크 삭제 |
+## 🎮 주요 기능
 
-### /minutes/<int:mn_id >/speaker
-> 화자 관련 주소
+<br/>
 
-| Path                | Method | request                  | response                                         |code| 설명  |
-|---------------------|--------|--------------------------|--------------------------------------------------|----|-----|
-| /lists              | GET    |{}|{speaker_seq,speaker_name,mn_id}| 200 성공<br>401 실패(토큰 인증 실패)                       | 화자 목록 조회 |
-| /<int:speaker_seq > | GET    |{}|{speaker_seq,speaker_name,mn_id}| 200 성공<br>401 실패(토큰 인증 실패)<br>500 실패(존재하지 않는 화자) | 화자 조회  |
-| /<int:speaker_seq > | PUT    |{speaker_name}| {speaker_seq,speaker_name,mn_id} | 200 성공<br>400 실패(요구되지 않는 필드값)<br>401 실패(토큰 인증 실패) | 화자 수정 |
-| /<int:speaker_seq > | DELETE |{}|                                                  |204 성공<br>401 실패(토큰 인증 실패)| 화자 삭제 |
+### 로그인 기능
 
-### /voice/recognition
-> 음성 인식 & 감정 인식 관련 주소
+- 회원가입한 e-mail과 pw를 통해 로그인을 합니다.
+- e-mail과 pw가 일치할 경우 BE에서 Token을 부여받고, 토근이 유효한 경우 로그인을 진행합니다.
+  <img width="1280" alt="로그인" src="https://user-images.githubusercontent.com/79241793/227953345-51c8c644-5e83-4ee1-9aa5-9877c5016c25.png">
+  <br/>
 
-| Path                            | Method | request                               | response  | code | 설명                           |
-|---------------------------------|--------|---------------------------------------|-----------|------|-------------------------------|
-| /lists/<int:mn_id>              | GET    | {}                                    | {__all__} |      | 특정 회의록 음성인식 전체 조회   |
-| /lists/<int:mn_id>              | POST   | {speaker_cnt}<br/>총 화자 수           | {__all__} |      | 음성 인식 생성                 |
-| /lists/<int:mn_id>              | DELETE | {}                                    | { }       |      | 특정 회의록 음성인식 결과 전체 삭제|
-| /<int:mn_id>/<int:vr_seq>       | GET    | {}                                    |           |      | 특정 문장 조회                 |
-| /<int:mn_id>/<int:vr_seq>       | PUT    | {vr_text/vr_start/<br/>vr_end/speaker_seq}        |      |      | 특정 문장 수정 (시간, 텍스트, 화자)|
-| /<int:mn_id>/<int:vr_seq>       | DELETE | {}                                    |           |      | 특정 문장 삭제                 |
-| /<int:mn_id>/<int:vr_seq>       | POST   | {vr_text,vr_start,<br/>vr_end,speaker_seq} |      |      | 특정 문장 생성 되긴하는데 seq 안맞아서 일단 보류 |
-| /<int:mn_id>/search?keyword=검색어 | GET  | {}                                    | {}        |      | 음성인식 결과 검색             |
-| /emotion/<int:mn_id>            | POST   | {}                                    | {}        | 200 성공 | 감정인식 실행, 키워드,<br> 요약, 언어 유형 분류,<br> 말빠르기 계산|
+### 회의록 생성 기능
+
+- 새로운 회의록을 생성하는 기능입니다.
+- 회의록 관련된 정보(주제, 날짜, 장소, 설명)를 입력하여 생성합니다.
+  <img width="1274" alt="회의록 생성" src="https://user-images.githubusercontent.com/79241793/227953076-33c443df-11a8-4ab7-8de8-6cccc3a58a08.png">
+  <br/>
+
+### 음성 파일 업로드 기능
+
+- 선택한 음성 파일을 업로드 합니다.
+
+<img width="1285" alt="파일 업로드" src="https://user-images.githubusercontent.com/79241793/227953081-b973abe6-18fb-4f8c-97fa-401ef62ce9f1.png">
+
+<br/>
+
+### 음성 인식 및 감정 인식 기능
+
+- 업로드 된 음성파일을 문자로 변환하고, 목소리를 식별하여 화자를 구분해줍니다.
+- 이 과정에서 Tex +Audio 멀티 모달 감정인식을 진행하여 대화별 감정을 표시해줍니다.
+
+<img width="1285" alt="음성인식" src="https://user-images.githubusercontent.com/79241793/227953084-9d1e5fbd-6c98-4649-8a93-c390e5e7228b.png">
+
+- 참가자들의 이름 변경이 가능하고 '나'를 지정해줄 수 있습니다.
+  <img width="1278" alt="나 지정" src="https://user-images.githubusercontent.com/79241793/227953927-178c0a4c-c51b-4330-b8c1-020b4a2a532d.png">
+
+- 감정 별로 대화를 분류할 수 있습니다.
+  <img width="1278" alt="감정별로 살펴보기" src="https://user-images.githubusercontent.com/79241793/227954008-c21dcd2b-0ccf-446b-a907-5d967c2766c8.png">
+
+<br/>
+
+### 회의록 대화 수정 기능
+
+- 잘 못 인식된 대화 부분을 수정 가능합니다.
+  <img width="1286" alt="수정 기능" src="https://user-images.githubusercontent.com/79241793/227954247-a8a6d9a8-2c4c-4252-95e6-8fa3fc6837b3.png">
+
+### 북마크 기능
+
+- 중요하다고 생각하는 대화 부분을 북마크로 추가할 수 있는 기능입니다.
+  <img width="1288" alt="북마크 추가" src="https://user-images.githubusercontent.com/79241793/227954374-f8ea8efa-6a70-4935-8acb-9eeeb1dee336.png">
+
+- 북마크 클릭 시, 대화와 음성 파일이 해당 위치로 이동합니다.
+  <img width="1282" alt="북마크 클릭시 이동" src="https://user-images.githubusercontent.com/79241793/227954506-23a8824c-7991-41f1-a6d9-84ac3f3675e2.png">
+
+### 회의록 공유 기능
+
+- 공유하고 싶은 회의록에서 공유코드를 생성할 수 있습니다.
+  <img width="1294" alt="회의록 공유코드 생성" src="https://user-images.githubusercontent.com/79241793/227954584-3fcb260e-b25a-405e-9e24-5abe87740919.png">
+
+- 공유를 받은 코드를 통해 회의록에 참여할 수 있습니다.
+  <img width="1284" alt="공유코드로 회의록 생성" src="https://user-images.githubusercontent.com/79241793/227954660-4c5c899e-9adc-4384-8a7f-24148bacb1cc.png">
+  <img width="1278" alt="공유코드로 생성된 회의록" src="https://user-images.githubusercontent.com/79241793/227954689-b3959ca1-fcf6-478b-8592-a1760ff4e3a2.png">
+
+### 회의록 검색 기능
+
+- 회의록 이름 또는 내용을 검색할 수 있습니다.
+  <img width="1284" alt="회의록 검색" src="https://user-images.githubusercontent.com/79241793/227954789-8e9872b1-fbfe-4ff9-a82b-7e75526df559.png">
+
+### 회의록 내용 정리
+
+- 회의록 키워드를 분석해주고, 회의의 내용을 요약해줍니다.
+  <img width="1281" alt="키워드 분석 및 요약" src="https://user-images.githubusercontent.com/79241793/227954844-9d69d290-e7df-486d-9b4f-60fd0209db4a.png">
+
+### 회의록 감정 분석
+
+- 사용자의 감정을 분석해주고 한 줄로 코멘트 해줍니다
+- 전체적인 회의의 감정 분포와 사용자의 감정분포를 나타내줍니다.
+  <img width="1286" alt="피드백 및 감정분포" src="https://user-images.githubusercontent.com/79241793/227955073-8cda8b1a-eb26-407a-87f9-7f4771149717.png">
+
+- 회의에서 문제가 되는 발언을 감지합니다.
+  <img width="1275" alt="문제발언 인식" src="https://user-images.githubusercontent.com/79241793/227955081-aa20bd4f-394b-4339-bef1-feb56ee25ac2.png">
+
+- 사용자의 말 빠르기를 나타내줍니다.
+  <img width="1281" alt="말빠르기 평가" src="https://user-images.githubusercontent.com/79241793/227955084-46acf343-99d7-409c-82c1-ad9254d6cc13.png">
+
+## 💡새롭게 배운 점
+
+<br/>
+
+> ✔️ : 소통과 협업의 중요성
+
+- 첫 협업 프로젝트여서, 담당하는 파트의 분배가 애매모호 했고 서로의 파트에 대해 이해도가 떨어졌습니다.
+
+- 많은 회의 끝에 노션과 디스코드를 이용하여 회의시간 이외에도 소통이 가능해져 프로젝트가 수월하게 진행되었습니다.
+
+> ✔️ : 재사용 가능한 컴포넌트를 사용하기
+
+- 웹 페이지를 제작하다보면 header나 nav같이 중복되는 부분들이 많았습니다. 이럴 때 마다 기존에 제작하였던 header, nav 컴포넌트를 이용하여 재사용을 했습니다.
+- 기초적으로 뼈대가 되는 컴포넌트 설계를 잘 해놓으면 빠르게 개발을 진행할 수 있다는 점을 알게되었습니다.
+
+> ✔️ : 다양한 라이브러리 사용
+
+- 프로젝트를 진행하면서, 하나하나 처음부터 구현하기 어려운 부분들이 있었습니다.(ex 차트, 오디오 플레이어, 아이콘,)
+- mui/icons-material, react-h5-audio-player, apexcharts 등 외부 라이브러리를 이용하며 이를 구현할 필요없이, 설치를 통해 상황에 맞게 사용했습니다.
+- 다양한 라이브러리들을 의도한 바에 맞게 적절히 사용하는 것이 프론트엔드 개발자에게 꼭 필요하다고 생각이 들었습니다.
+
+- 블로깅 (https://fordev-yunhwan.tistory.com/entry/%EA%B7%B8%EB%9E%98%ED%94%84%EA%B7%B8%EB%A6%AC%EA%B8%B0-Apexcharts)
+
+## 🧑🏻‍💻 느낀 점
+
+<br/>
+
+> 😥 : 학습하며 개발과정 중 어려웠던 부분
+
+- 다른 파트와의 협업이 어려웠습니다. REST API를 이용한 동작에서도 백엔드 파트와 많은 소통을 해야했고, 에러가 발생할 때 어느쪽에서 문제가 생긴것인지 찾는 것이 어려웠습니다.
+
+- 외부 라이브러리를 사용할 때마다 공식문서나 사용 예시가 부족해서 사용법을 익히는 데 어려움을 겪었습니다.
+
+- 너무 당연한 소리이지만, 에러의 원인을 파악하지 못할 때가 제일 어려웠습니다.
+  콘솔의 에러를 참고하여도 풀리지 않는 에러들로 새벽까지 붙잡고 있는 경우가 많아서, 개발을 하면서 가장 어려웠던 부분 같습니다.
+
+- 에러 블로깅
+  <br>(https://fordev-yunhwan.tistory.com/entry/%EC%98%A4%EB%A5%98%EB%85%B8%ED%8A%B8)
+  <br>(https://fordev-yunhwan.tistory.com/entry/%EC%98%A4%EB%A5%98%EC%9D%BC%EC%A7%80)
+  <br>(https://fordev-yunhwan.tistory.com/entry/%EA%B0%9C%EB%B0%9C%EC%9D%BC%EC%A7%80)
+
+<br />
+
+> 😥 : 아쉬운 부분
+
+- React의 이해도가 부족하여, useState, useEffect 등 간단한 React Hook 밖에 사용하지 못했습니다. 추가적인 공부를 통해서 부족한 부분을 매꿔야겠습니다.
+
+- 배포를 못한 점이 아쉬웠습니다. 기능 구현을 마쳤지만, 시간이 부족해서 배포를 하지는 못했습니다.개인적으로 기회가 될 때 배포 사이트까지 구현해봐야겠습니다.
