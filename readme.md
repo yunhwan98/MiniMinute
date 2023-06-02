@@ -18,21 +18,10 @@
 
 ## 팀원
 
-<table>
-  <tr>
-    <td align="center"><b>이승우(팀장)</b></td>
-    <td align="center"><b>허서영</b></td>
-    <td align="center"><b>박윤환</b></td>
-    <td align="center"><b>문지원</b></td>
-  </tr>
-  <tr>
-    <td align="center"><b>🔧Backend + AI</b></td>
-    <td align="center"><b>🔧Backend</b></td>
-    <td align="center"><b>💻Frontend</b></td>
-    <td align="center"><b>💻Frontend</b></td>
-  </tr>
-</table>
-<br>
+| 이승우(팀장) | 허서영 | 박윤환 | 문지원 |
+| --- | --- | --- | --- |
+| 🔧Backend + AI | 🔧Backend | 💻Frontend | 💻Frontend |
+| - 감정인식, 키워드, 문서요약, 공격 발언 감지<br>- 말빠르기 계산 기능 구현<br>- 전반적인 피드백 내용 설정| - DB, 장고 orm 설계 <br>- 음성인식 관련 기능 구현 <br>- 회의록 생성 및 북마크/검색/공유 | - UI 설계<br>- 북마크, 감정인식 페이지 구현<br>- 시작, 로그인, 프로필, 회의록(생성, 수정) 페이지 구현| - UI 설계<br>- 디렉토리 관련 기능 구현<br>-  홈/회의록 목록/내용정리/회의록(생성, 수정, 삭제) 페이지 구현 |
 
 ## 📝 논리 구성도
 
