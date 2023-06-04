@@ -23,6 +23,9 @@
 | 🔧Backend + AI | 🔧Backend | 💻Frontend | 💻Frontend |
 | - 감정인식, 키워드, 문서요약, 공격 발언 감지<br>- 말빠르기 계산 기능 구현<br>- 전반적인 피드백 내용 설정| - DB, 장고 orm 설계 <br>- 음성인식 관련 기능 구현 <br>- 회의록 생성 및 북마크/검색/공유 | - UI 설계<br>- 북마크, 감정인식 페이지 구현<br>- 시작, 로그인, 프로필, 회의록(생성, 수정) 페이지 구현| - UI 설계<br>- 디렉토리 관련 기능 구현<br>-  홈/회의록 목록/내용정리/회의록(생성, 수정, 삭제) 페이지 구현 |
 
+## 🎥 시연 영상
+https://www.youtube.com/watch?v=UV3Jwfeni_g
+
 ## 📝 논리 구성도
 
 ![논리구성도](https://user-images.githubusercontent.com/79241793/227952713-19d37215-dd38-4b29-a73e-68d46e11769c.png)
